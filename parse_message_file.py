@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 
 from __future__ import absolute_import, division, print_function, unicode_literals
-import xml.etree.ElementTree as ET
-from xml.dom import minidom
 import json
 import zlib
-import gzip
-import bz2
 import sys
 import os
 import io
@@ -15,14 +11,6 @@ try:
     from html.parser import HTMLParser
 except ImportError:
     from HTMLParser import HTMLParser
-
-try:
-    import lzma
-except ImportError:
-    try:
-        from backports import lzma
-    except ImportError:
-        lzma = None
 
 try:
     from io import StringIO
@@ -67,12 +55,122 @@ if(__version_info__[3] is not None):
 if(__version_info__[3] is None):
  __version__ = str(__version_info__[0]) + "." + str(__version_info__[1]) + "." + str(__version_info__[2]);
 
+compressionsupport = []
+try:
+    import gzip
+    compressionsupport.append("gz")
+    compressionsupport.append("gzip")
+except ImportError:
+    pass
+try:
+    import bz2
+    compressionsupport.append("bz2")
+    compressionsupport.append("bzip2")
+except ImportError:
+    pass
+try:
+    import lz4
+    import lz4.frame
+    compressionsupport.append("lz4")
+except ImportError:
+    pass
+try:
+    import lzo
+    compressionsupport.append("lzo")
+    compressionsupport.append("lzop")
+except ImportError:
+    pass
+try:
+    import zstandard
+    compressionsupport.append("zst")
+    compressionsupport.append("zstd")
+    compressionsupport.append("zstandard")
+except ImportError:
+    try:
+        import pyzstd.zstdfile
+        compressionsupport.append("zst")
+        compressionsupport.append("zstd")
+        compressionsupport.append("zstandard")
+    except ImportError:
+        pass
+try:
+    import lzma
+    compressionsupport.append("lzma")
+    compressionsupport.append("xz")
+except ImportError:
+    try:
+        from backports import lzma
+        compressionsupport.append("lzma")
+        compressionsupport.append("xz")
+    except ImportError:
+        pass
+compressionsupport.append("zlib")
+compressionsupport.append("zl")
+compressionsupport.append("zz")
+compressionsupport.append("Z")
+compressionsupport.append("z")
+
+compressionlist = ['auto']
+compressionlistalt = []
+outextlist = []
+outextlistwd = []
+if('gzip' in compressionsupport):
+    compressionlist.append('gzip')
+    compressionlistalt.append('gzip')
+    outextlist.append('gz')
+    outextlistwd.append('.gz')
+if('bzip2' in compressionsupport):
+    compressionlist.append('bzip2')
+    compressionlistalt.append('bzip2')
+    outextlist.append('bz2')
+    outextlistwd.append('.bz2')
+if('zstd' in compressionsupport):
+    compressionlist.append('zstd')
+    compressionlistalt.append('zstd')
+    outextlist.append('zst')
+    outextlistwd.append('.zst')
+if('lz4' in compressionsupport):
+    compressionlist.append('lz4')
+    compressionlistalt.append('lz4')
+    outextlist.append('lz4')
+    outextlistwd.append('.lz4')
+if('lzo' in compressionsupport):
+    compressionlist.append('lzo')
+    compressionlistalt.append('lzo')
+    outextlist.append('lzo')
+    outextlistwd.append('.lzo')
+if('lzop' in compressionsupport):
+    compressionlist.append('lzop')
+    compressionlistalt.append('lzop')
+    outextlist.append('lzop')
+    outextlistwd.append('.lzop')
+if('lzma' in compressionsupport):
+    compressionlist.append('lzma')
+    compressionlistalt.append('lzma')
+    outextlist.append('lzma')
+    outextlistwd.append('.lzma')
+if('xz' in compressionsupport):
+    compressionlist.append('xz')
+    compressionlistalt.append('xz')
+    outextlist.append('xz')
+    outextlistwd.append('.xz')
+if('zlib' in compressionsupport):
+    compressionlist.append('zlib')
+    compressionlistalt.append('zlib')
+    outextlist.append('zz')
+    outextlistwd.append('.zz')
+    outextlist.append('zl')
+    outextlistwd.append('.zl')
+    outextlist.append('zlib')
+    outextlistwd.append('.zlib')
+
 class ZlibFile:
     def __init__(self, file_path=None, fileobj=None, mode='rb', level=9, wbits=15, encoding=None, errors=None, newline=None):
         if file_path is None and fileobj is None:
             raise ValueError("Either file_path or fileobj must be provided")
         if file_path is not None and fileobj is not None:
-            raise ValueError("Only one of file_path or fileobj should be provided")
+            raise ValueError(
+                "Only one of file_path or fileobj should be provided")
 
         self.file_path = file_path
         self.fileobj = fileobj
@@ -91,7 +189,8 @@ class ZlibFile:
         internal_mode = mode.replace('t', 'b')
 
         if 'w' in mode or 'a' in mode or 'x' in mode:
-            self.file = open(file_path, internal_mode) if file_path else fileobj
+            self.file = open(
+                file_path, internal_mode) if file_path else fileobj
             self._compressor = zlib.compressobj(level, zlib.DEFLATED, wbits)
         elif 'r' in mode:
             if file_path:
@@ -99,58 +198,559 @@ class ZlibFile:
                     self.file = open(file_path, internal_mode)
                     self._load_file()
                 else:
-                    raise FileNotFoundError("No such file: '{}'".format(file_path))
+                    raise FileNotFoundError(
+                        "No such file: '{}'".format(file_path))
             elif fileobj:
                 self.file = fileobj
                 self._load_file()
         else:
             raise ValueError("Mode should be 'rb' or 'wb'")
 
+    def _load_file(self):
+        self.file.seek(0)
+        self._compressed_data = self.file.read()
+        if not self._compressed_data.startswith((b'\x78\x01', b'\x78\x5E', b'\x78\x9C', b'\x78\xDA')):
+            raise ValueError("Invalid zlib file header")
+        self._decompressed_data = zlib.decompress(
+            self._compressed_data, self.wbits)
+        if self._text_mode:
+            self._decompressed_data = self._decompressed_data.decode(
+                self.encoding or 'UTF-8', self.errors or 'strict')
+
     def write(self, data):
-        """Write data to the file, compressing it in the process."""
-        if 'w' not in self.mode and 'a' not in self.mode and 'x' not in self.mode:
-            raise IOError("File not open for writing")
-
-        if self._text_mode and isinstance(data, str):
-            data = data.encode(self.encoding or 'utf-8', errors=self.errors)
-
-        compressed_data = self._compressor.compress(data)
+        if self._text_mode:
+            data = data.encode(self.encoding or 'UTF-8',
+                               self.errors or 'strict')
+        compressed_data = self._compressor.compress(
+            data) + self._compressor.flush(zlib.Z_SYNC_FLUSH)
         self.file.write(compressed_data)
 
-    def close(self):
-        """Close the file, writing any remaining compressed data."""
-        if 'w' in self.mode or 'a' in self.mode or 'x' in self.mode:
-            self.file.write(self._compressor.flush())
-        self.file.close()
-
-    def _load_file(self):
-        """Load and decompress the file content."""
-        self._compressed_data = self.file.read()
-        self._decompressed_data = zlib.decompress(self._compressed_data, self.wbits)
-        self.file.close()
-
     def read(self, size=-1):
-        """Read and return the decompressed data."""
         if size == -1:
             size = len(self._decompressed_data) - self._position
         data = self._decompressed_data[self._position:self._position + size]
         self._position += size
         return data
 
-    def readline(self):
-        """Read and return a single line from the decompressed data."""
-        newline_pos = self._decompressed_data.find(b'\n', self._position)
-        if newline_pos == -1:
-            return self.read()  # Read until the end of the data
-        line = self._decompressed_data[self._position:newline_pos + 1]
-        self._position = newline_pos + 1
-        return line
+    def seek(self, offset, whence=0):
+        if whence == 0:  # absolute file positioning
+            self._position = offset
+        elif whence == 1:  # seek relative to the current position
+            self._position += offset
+        elif whence == 2:  # seek relative to the file's end
+            self._position = len(self._decompressed_data) + offset
+        else:
+            raise ValueError("Invalid value for whence")
+
+        # Ensure the position is within bounds
+        self._position = max(
+            0, min(self._position, len(self._decompressed_data)))
+
+    def tell(self):
+        return self._position
+
+    def flush(self):
+        self.file.flush()
+
+    def fileno(self):
+        if hasattr(self.file, 'fileno'):
+            return self.file.fileno()
+        raise OSError("The underlying file object does not support fileno()")
+
+    def isatty(self):
+        if hasattr(self.file, 'isatty'):
+            return self.file.isatty()
+        return False
+
+    def truncate(self, size=None):
+        if hasattr(self.file, 'truncate'):
+            return self.file.truncate(size)
+        raise OSError("The underlying file object does not support truncate()")
+
+    def close(self):
+        if 'w' in self.mode or 'a' in self.mode or 'x' in self.mode:
+            self.file.write(self._compressor.flush(zlib.Z_FINISH))
+        if self.file_path:
+            self.file.close()
 
     def __enter__(self):
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_value, traceback):
         self.close()
+
+
+def _gzip_compress(data, compresslevel=9):
+    """
+    Compress data with a GZIP wrapper (wbits=31) in one shot.
+    :param data: Bytes to compress.
+    :param compresslevel: 1..9
+    :return: GZIP-compressed bytes.
+    """
+    compobj = zlib.compressobj(compresslevel, zlib.DEFLATED, 31)
+    cdata = compobj.compress(data)
+    cdata += compobj.flush(zlib.Z_FINISH)
+    return cdata
+
+
+def _gzip_decompress(data):
+    """
+    Decompress data with gzip headers/trailers (wbits=31).
+    Single-shot approach.
+    :param data: GZIP-compressed bytes
+    :return: Decompressed bytes
+    """
+    # If you need multi-member support, you'd need a streaming loop here.
+    return zlib.decompress(data, 31)
+
+
+def _gzip_decompress_multimember(data):
+    """
+    Decompress possibly multi-member GZIP data, returning all uncompressed bytes.
+
+    - We loop over each GZIP member.
+    - zlib.decompressobj(wbits=31) stops after the first member it encounters.
+    - We use 'unused_data' to detect leftover data and continue until no more.
+    """
+    result = b""
+    current_data = data
+
+    while current_data:
+        # Create a new decompress object for the next member
+        dobj = zlib.decompressobj(31)
+        try:
+            part = dobj.decompress(current_data)
+        except zlib.error as e:
+            # If there's a decompression error, break or raise
+            raise ValueError("Decompression error: {}".format(str(e)))
+
+        result += part
+        result += dobj.flush()
+
+        if dobj.unused_data:
+            # 'unused_data' holds the bytes after the end of this gzip member
+            # So we move on to the next member
+            current_data = dobj.unused_data
+        else:
+            # No leftover => we reached the end of the data
+            break
+
+    return result
+
+class GzipFile(object):
+    """
+    A file-like wrapper that uses zlib at wbits=31 to mimic gzip compress/decompress,
+    with multi-member support. Works on older Python versions (including Py2),
+    where gzip.compress / gzip.decompress might be unavailable.
+
+    - In read mode: loads entire file, checks GZIP magic if needed, and
+      decompresses all members in a loop.
+    - In write mode: buffers uncompressed data, then writes compressed bytes on close.
+    - 'level' sets compression level (1..9).
+    - Supports text ('t') vs binary modes.
+    """
+
+    # GZIP magic (first 2 bytes)
+    GZIP_MAGIC = b'\x1f\x8b'
+
+    def __init__(self, file_path=None, fileobj=None, mode='rb',
+                 level=9, encoding=None, errors=None, newline=None):
+        """
+        :param file_path: Path to file on disk (optional)
+        :param fileobj:  An existing file-like object (optional)
+        :param mode: e.g. 'rb', 'wb', 'rt', 'wt', etc.
+        :param level: Compression level (1..9)
+        :param encoding: If 't' in mode, text encoding
+        :param errors: Error handling for text encode/decode
+        :param newline: Placeholder for signature compatibility
+        """
+        if file_path is None and fileobj is None:
+            raise ValueError("Either file_path or fileobj must be provided")
+        if file_path is not None and fileobj is not None:
+            raise ValueError("Only one of file_path or fileobj should be provided")
+
+        self.file_path = file_path
+        self.fileobj = fileobj
+        self.mode = mode
+        self.level = level
+        self.encoding = encoding
+        self.errors = errors
+        self.newline = newline
+
+        # If reading, we store fully decompressed data in memory
+        self._decompressed_data = b''
+        self._position = 0
+
+        # If writing, we store uncompressed data in memory, compress at close()
+        self._write_buffer = b''
+
+        # Text mode if 't' in mode
+        self._text_mode = 't' in mode
+
+        # Force binary file I/O mode
+        internal_mode = mode.replace('t', 'b')
+
+        if any(m in mode for m in ('w', 'a', 'x')):
+            # Writing or appending
+            if file_path:
+                self.file = open(file_path, internal_mode)
+            else:
+                self.file = fileobj
+
+        elif 'r' in mode:
+            # Reading
+            if file_path:
+                if os.path.exists(file_path):
+                    self.file = open(file_path, internal_mode)
+                    self._load_file()
+                else:
+                    raise FileNotFoundError("No such file: '{}'".format(file_path))
+            else:
+                # fileobj
+                self.file = fileobj
+                self._load_file()
+        else:
+            raise ValueError("Mode should be 'rb'/'rt' or 'wb'/'wt'")
+
+    def _load_file(self):
+        """
+        Read entire compressed file. Decompress all GZIP members.
+        """
+        self.file.seek(0)
+        compressed_data = self.file.read()
+
+        # (Optional) Check magic if you want to fail early on non-GZIP data
+        # We'll do a quick check to see if it starts with GZIP magic
+        if not compressed_data.startswith(self.GZIP_MAGIC):
+            raise ValueError("Invalid GZIP header (magic bytes missing)")
+
+        self._decompressed_data = _gzip_decompress_multimember(compressed_data)
+
+        # If text mode, decode
+        if self._text_mode:
+            enc = self.encoding or 'UTF-8'
+            err = self.errors or 'strict'
+            self._decompressed_data = self._decompressed_data.decode(enc, err)
+
+    def write(self, data):
+        """
+        Write data to our in-memory buffer.
+        Actual compression (GZIP) occurs on close().
+        """
+        if 'r' in self.mode:
+            raise IOError("File not open for writing")
+
+        if self._text_mode:
+            # Encode text to bytes
+            data = data.encode(self.encoding or 'UTF-8', self.errors or 'strict')
+
+        self._write_buffer += data
+
+    def read(self, size=-1):
+        """
+        Read from the decompressed data buffer.
+        """
+        if 'r' not in self.mode:
+            raise IOError("File not open for reading")
+
+        if size < 0:
+            size = len(self._decompressed_data) - self._position
+        data = self._decompressed_data[self._position : self._position + size]
+        self._position += size
+        return data
+
+    def seek(self, offset, whence=0):
+        """
+        Seek in the decompressed data buffer.
+        """
+        if 'r' not in self.mode:
+            raise IOError("File not open for reading")
+
+        if whence == 0:  # absolute
+            new_pos = offset
+        elif whence == 1:  # relative
+            new_pos = self._position + offset
+        elif whence == 2:  # from the end
+            new_pos = len(self._decompressed_data) + offset
+        else:
+            raise ValueError("Invalid value for whence")
+
+        self._position = max(0, min(new_pos, len(self._decompressed_data)))
+
+    def tell(self):
+        """
+        Return the current position in the decompressed data buffer.
+        """
+        return self._position
+
+    def flush(self):
+        """
+        Flush the underlying file, if possible.
+        (No partial compression flush is performed here.)
+        """
+        if hasattr(self.file, 'flush'):
+            self.file.flush()
+
+    def fileno(self):
+        """
+        Return the file descriptor if available.
+        """
+        if hasattr(self.file, 'fileno'):
+            return self.file.fileno()
+        raise OSError("The underlying file object does not support fileno()")
+
+    def isatty(self):
+        """
+        Return whether the underlying file is a TTY.
+        """
+        if hasattr(self.file, 'isatty'):
+            return self.file.isatty()
+        return False
+
+    def truncate(self, size=None):
+        """
+        Truncate the underlying file if possible.
+        """
+        if hasattr(self.file, 'truncate'):
+            return self.file.truncate(size)
+        raise OSError("The underlying file object does not support truncate()")
+
+    def close(self):
+        """
+        If in write mode, compress the entire buffer with wbits=31 (gzip) at the
+        specified compression level, then write it out. Close file if we opened it.
+        """
+        if any(m in self.mode for m in ('w', 'a', 'x')):
+            compressed = _gzip_compress(self._write_buffer, compresslevel=self.level)
+            self.file.write(compressed)
+
+        if self.file_path:
+            self.file.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
+
+
+class LzopFile(object):
+    """
+    A file-like wrapper around LZO compression/decompression using python-lzo.
+
+    - In read mode (r): Reads the entire file, checks for LZOP magic bytes,
+      then decompresses into memory.
+    - In write mode (w/a/x): Buffers all data in memory. On close, writes
+      the LZOP magic bytes + compressed data.
+    - Supports a 'level' parameter (default=9). python-lzo commonly accepts only
+      level=1 or level=9 for LZO1X_1 or LZO1X_999.
+    """
+    # LZOP magic bytes: b'\x89LZO\x0D\x0A\x1A\n'
+    LZOP_MAGIC = b'\x89LZO\x0D\x0A\x1A\n'
+
+    def __init__(self, file_path=None, fileobj=None, mode='rb',
+                 level=9, encoding=None, errors=None, newline=None):
+        """
+        :param file_path: Path to the file (if any)
+        :param fileobj: An existing file object (if any)
+        :param mode: File mode, e.g., 'rb', 'wb', 'rt', 'wt', etc.
+        :param level: Compression level (int). python-lzo typically supports 1 or 9.
+        :param encoding: Text encoding (for text mode)
+        :param errors: Error handling for encoding/decoding (e.g., 'strict')
+        :param newline: Placeholder to mimic built-in open() signature
+        """
+        if file_path is None and fileobj is None:
+            raise ValueError("Either file_path or fileobj must be provided")
+        if file_path is not None and fileobj is not None:
+            raise ValueError("Only one of file_path or fileobj should be provided")
+
+        self.file_path = file_path
+        self.fileobj = fileobj
+        self.mode = mode
+        self.level = level
+        self.encoding = encoding
+        self.errors = errors
+        self.newline = newline
+        self._decompressed_data = b''
+        self._position = 0
+
+        # For writing, store uncompressed data in memory until close()
+        self._write_buffer = b''
+
+        # Track whether we're doing text mode
+        self._text_mode = 't' in mode
+
+        # Force binary mode internally for file I/O
+        internal_mode = mode.replace('t', 'b')
+
+        if 'w' in mode or 'a' in mode or 'x' in mode:
+            # Open the file if a path was specified; otherwise, use fileobj
+            if file_path:
+                self.file = open(file_path, internal_mode)
+            else:
+                self.file = fileobj
+
+        elif 'r' in mode:
+            # Reading
+            if file_path:
+                if os.path.exists(file_path):
+                    self.file = open(file_path, internal_mode)
+                    self._load_file()
+                else:
+                    raise FileNotFoundError("No such file: '{}'".format(file_path))
+            else:
+                # fileobj provided
+                self.file = fileobj
+                self._load_file()
+
+        else:
+            raise ValueError("Mode should be 'rb'/'rt' or 'wb'/'wt'")
+
+    def _load_file(self):
+        """
+        Read the entire compressed file into memory. Expects LZOP magic bytes
+        at the start. Decompress the remainder into _decompressed_data.
+        """
+        self.file.seek(0)
+        compressed_data = self.file.read()
+
+        # Check for the LZOP magic
+        if not compressed_data.startswith(self.LZOP_MAGIC):
+            raise ValueError("Invalid LZOP file header (magic bytes missing)")
+
+        # Strip the magic; everything after is LZO-compressed data.
+        compressed_data = compressed_data[len(self.LZOP_MAGIC):]
+
+        # Decompress the remainder
+        try:
+            self._decompressed_data = lzo.decompress(compressed_data)
+        except lzo.error as e:
+            raise ValueError("LZO decompression failed: {}".format(str(e)))
+
+        # If we're in text mode, decode from bytes to str
+        if self._text_mode:
+            enc = self.encoding or 'UTF-8'
+            err = self.errors or 'strict'
+            self._decompressed_data = self._decompressed_data.decode(enc, err)
+
+    def write(self, data):
+        """
+        Write data into an internal buffer. The actual compression + file write
+        happens on close().
+        """
+        if 'r' in self.mode:
+            raise IOError("File not open for writing")
+
+        if self._text_mode:
+            # Encode data from str (Py3) or unicode (Py2) to bytes
+            data = data.encode(self.encoding or 'UTF-8', self.errors or 'strict')
+
+        # Accumulate in memory
+        self._write_buffer += data
+
+    def read(self, size=-1):
+        """
+        Read from the decompressed data buffer.
+        """
+        if 'r' not in self.mode:
+            raise IOError("File not open for reading")
+
+        if size < 0:
+            size = len(self._decompressed_data) - self._position
+        data = self._decompressed_data[self._position:self._position + size]
+        self._position += size
+        return data
+
+    def seek(self, offset, whence=0):
+        """
+        Adjust the current read position in the decompressed buffer.
+        """
+        if 'r' not in self.mode:
+            raise IOError("File not open for reading")
+
+        if whence == 0:  # absolute
+            new_pos = offset
+        elif whence == 1:  # relative
+            new_pos = self._position + offset
+        elif whence == 2:  # relative to end
+            new_pos = len(self._decompressed_data) + offset
+        else:
+            raise ValueError("Invalid value for whence")
+
+        self._position = max(0, min(new_pos, len(self._decompressed_data)))
+
+    def tell(self):
+        """
+        Return the current read position in the decompressed buffer.
+        """
+        return self._position
+
+    def flush(self):
+        """
+        Flush the underlying file if supported. (No partial compression flush for LZO.)
+        """
+        if hasattr(self.file, 'flush'):
+            self.file.flush()
+
+    def fileno(self):
+        """
+        Return the file descriptor if available.
+        """
+        if hasattr(self.file, 'fileno'):
+            return self.file.fileno()
+        raise OSError("The underlying file object does not support fileno()")
+
+    def isatty(self):
+        """
+        Return whether the underlying file is a TTY.
+        """
+        if hasattr(self.file, 'isatty'):
+            return self.file.isatty()
+        return False
+
+    def truncate(self, size=None):
+        """
+        Truncate the underlying file if possible.
+        """
+        if hasattr(self.file, 'truncate'):
+            return self.file.truncate(size)
+        raise OSError("The underlying file object does not support truncate()")
+
+    def close(self):
+        """
+        If in write mode, compress the entire accumulated buffer using LZO
+        (with the specified level) and write it (with the LZOP magic) to the file.
+        """
+        if any(x in self.mode for x in ('w', 'a', 'x')):
+            # Write the LZOP magic
+            self.file.write(self.LZOP_MAGIC)
+
+            # Compress the entire buffer
+            try:
+                # python-lzo supports level=1 or level=9 for LZO1X
+                compressed = lzo.compress(self._write_buffer, self.level)
+            except lzo.error as e:
+                raise ValueError("LZO compression failed: {}".format(str(e)))
+
+            self.file.write(compressed)
+
+        if self.file_path:
+            self.file.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
+
+
+        elif filename.endswith('.zst') and "zstandard" in compressionsupport:
+            if 'zstandard' in sys.modules:
+                outfp = ZstdFile(file_path=filename, mode='rb')
+            elif 'pyzstd' in sys.modules:
+                outfp = pyzstd.zstdfile.ZstdFile(filename, mode='rb')
+            else:
+                return Flase
 
 
 def open_compressed_file(filename):
@@ -166,6 +766,15 @@ def open_compressed_file(filename):
             raise ImportError("lzma module is not available")
     elif filename.endswith('.zl') or filename.endswith('.zz'):
         return ZlibFile(file_path=filename, mode='rb')
+    elif filename.endswith('.lzo') and "lzop" in compressionsupport:
+        return LzopFile(file_path=filename, mode='rb')
+    elif filename.endswith('.zst') and "zstandard" in compressionsupport:
+        if 'zstandard' in sys.modules:
+            outfp = ZstdFile(file_path=filename, mode='rb')
+        elif 'pyzstd' in sys.modules:
+            outfp = pyzstd.zstdfile.ZstdFile(filename, mode='rb')
+        else:
+            return Flase
     else:
         return io.open(filename, 'r', encoding='utf-8')
 
@@ -189,6 +798,27 @@ def save_compressed_file(data, filename):
                 file.write(data.encode('utf-8'))
             else:
                 file.write(data)
+    elif filename.endswith('.lzo') and "lzop" in compressionsupport:
+        with LzopFile(file_path=filename, mode='wb') as file:
+            if isinstance(data, str):
+                file.write(data.encode('utf-8'))
+            else:
+                file.write(data)
+    elif filename.endswith('.zst') and "zstandard" in compressionsupport:
+        if 'zstandard' in sys.modules:
+            with ZstdFile(file_path=filename, mode='wb') as file:
+                if isinstance(data, str):
+                    file.write(data.encode('utf-8'))
+                else:
+                    file.write(data)
+        elif 'pyzstd' in sys.modules:
+            with pyzstd.zstdfile.ZstdFile(filename, mode='wb') as file:
+                if isinstance(data, str):
+                    file.write(data.encode('utf-8'))
+                else:
+                    file.write(data)
+        else:
+            return Flase
     else:
         with io.open(filename, 'w', encoding='utf-8') as file:
             file.write(data)
@@ -1019,75 +1649,6 @@ def save_to_json_file(services, json_filename):
     json_data = json.dumps(services, indent=2)
     save_compressed_file(json_data, json_filename)
 
-def to_xml(services):
-    """ Convert the services data structure to an XML string """
-    root = ET.Element("Services")
-    
-    for service in services:
-        service_elem = ET.SubElement(root, "Service")
-        for key, value in service.items():
-            if isinstance(value, list):
-                list_elem = ET.SubElement(service_elem, unicode_type(key))
-                for item in value:
-                    if isinstance(item, dict):
-                        item_elem = ET.SubElement(list_elem, key[:-1])  # singular form
-                        for subkey, subvalue in item.items():
-                            sub_elem = ET.SubElement(item_elem, unicode_type(subkey))
-                            sub_elem.text = unicode_type(subvalue)
-                    else:
-                        item_elem = ET.SubElement(list_elem, key[:-1])
-                        item_elem.text = unicode_type(item)
-            elif isinstance(value, dict):
-                dict_elem = ET.SubElement(service_elem, unicode_type(key))
-                for subkey, subvalue in value.items():
-                    sub_elem = ET.SubElement(dict_elem, unicode_type(subkey))
-                    if isinstance(subvalue, list):
-                        for sub_item in subvalue:
-                            sub_item_elem = ET.SubElement(sub_elem, subkey[:-1])
-                            sub_item_elem.text = unicode_type(sub_item)
-                    else:
-                        sub_elem.text = unicode_type(subvalue)
-            else:
-                elem = ET.SubElement(service_elem, unicode_type(key))
-                elem.text = unicode_type(value)
-    
-    # Convert to string
-    xml_str = ET.tostring(root, encoding='utf-8')
-    if PY2:
-        xml_str = xml_str.decode('utf-8')  # Convert bytes to str in Python 2
-    # Make the XML string pretty
-    xml_str = minidom.parseString(xml_str).toprettyxml(indent="  ")
-    return xml_str
-
-def from_xml(xml_str):
-    """ Convert an XML string back to the services data structure """
-    services = []
-    root = ET.fromstring(xml_str)
-    
-    for service_elem in root.findall('Service'):
-        service = {}
-        for child in service_elem:
-            if list(child):  # If there are nested elements
-                if child.tag in service:
-                    service[child.tag].append(parse_xml_element(child))
-                else:
-                    service[child.tag] = [parse_xml_element(child)]
-            else:
-                service[child.tag] = child.text
-        services.append(service)
-    
-    return services
-
-def parse_xml_element(element):
-    """ Helper function to parse XML elements into a dictionary """
-    result = {}
-    for child in element:
-        if list(child):
-            result[child.tag] = parse_xml_element(child)
-        else:
-            result[child.tag] = child.text
-    return result
-
 def open_compressed_file(filename):
     """ Open a file, trying various compression methods if available. """
     if filename.endswith('.gz'):
@@ -1138,162 +1699,6 @@ def save_compressed_file(data, filename):
             else:
                 file.write(data)
 
-def load_from_xml_file(xml_filename):
-    """ Load the services data structure from an XML file """
-    with open_compressed_file(xml_filename) as file:
-        xml_str = file.read()
-    return from_xml(xml_str)
-
-def save_to_xml_file(services, xml_filename):
-    """ Save the services data structure to an XML file """
-    xml_str = to_xml(services)
-    save_compressed_file(xml_str, xml_filename)
-
-def to_sgml(services):
-    """Convert the services data structure to an SGML string."""
-    lines = ['<Services>']
-    for svc in services:
-        lines.append('  <Service>')
-        for key, val in svc.items():
-            if isinstance(val, list):
-                lines.append('    <{0}>'.format(key))
-                singular = key[:-1] if key.endswith('s') else key
-                for item in val:
-                    if isinstance(item, dict):
-                        lines.append('      <{0}>'.format(singular))
-                        for k, v in item.items():
-                            lines.append('        <{0}>{1}</{0}>'.format(k, unicode_type(v)))
-                        lines.append('      </{0}>'.format(singular))
-                    else:
-                        lines.append('      <{0}>{1}</{0}>'.format(singular, unicode_type(item)))
-                lines.append('    </{0}>'.format(key))
-
-            elif isinstance(val, dict):
-                lines.append('    <{0}>'.format(key))
-                for k, v in val.items():
-                    if isinstance(v, list):
-                        singular = k[:-1] if k.endswith('s') else k
-                        lines.append('      <{0}>'.format(k))
-                        for sub in v:
-                            lines.append('        <{0}>{1}</{0}>'.format(singular, unicode_type(sub)))
-                        lines.append('      </{0}>'.format(k))
-                    else:
-                        lines.append('      <{0}>{1}</{0}>'.format(k, unicode_type(v)))
-                lines.append('    </{0}>'.format(key))
-
-            else:
-                lines.append('    <{0}>{1}</{0}>'.format(key, unicode_type(val)))
-        lines.append('  </Service>')
-    lines.append('</Services>')
-    return "\n".join(lines)
-
-
-class SGMLNode(object):
-    """In-memory SGML node for parsing back to dicts."""
-    def __init__(self, tag):
-        self.tag = tag
-        self.children = []
-        self.text = ''
-
-
-class ServicesSGMLParser(HTMLParser):
-    """Parse SGML into SGMLNode tree."""
-    def __init__(self):
-        if PY2:
-            HTMLParser.__init__(self)
-        else:
-            super(ServicesSGMLParser, self).__init__()
-        self.root = None
-        self.stack = []
-
-    def handle_decl(self, decl):
-        pass
-
-    def handle_pi(self, data):
-        if not data.startswith('xml'):
-            super(ServicesSGMLParser, self).handle_pi(data)
-
-    def handle_starttag(self, tag, attrs):
-        node = SGMLNode(tag)
-        if not self.stack:
-            self.root = node
-        else:
-            self.stack[-1].children.append(node)
-        self.stack.append(node)
-
-    def handle_endtag(self, tag):
-        if self.stack:
-            self.stack.pop()
-
-    def handle_data(self, data):
-        if self.stack:
-            self.stack[-1].text += data
-
-
-def parse_sgml_element(node):
-    """Recursively parse SGMLNode into a Python dict."""
-    result = {}
-    for child in node.children:
-        if child.children:
-            # nested structure
-            value = parse_sgml_element(child)
-            # if tag already present, convert to list
-            if child.tag in result:
-                if not isinstance(result[child.tag], list):
-                    result[child.tag] = [result[child.tag]]
-                result[child.tag].append(value)
-            else:
-                result[child.tag] = value
-        else:
-            text = child.text.strip()
-            if child.tag in result:
-                if not isinstance(result[child.tag], list):
-                    result[child.tag] = [result[child.tag]]
-                result[child.tag].append(text)
-            else:
-                result[child.tag] = text
-    return result
-
-
-def from_sgml(sgml_str):
-    """Convert an SGML string back to the services data structure."""
-    parser = ServicesSGMLParser()
-    parser.feed(sgml_str)
-    parser.close()
-
-    services = []
-    root = parser.root
-    if not root or root.tag != 'Services':
-        return services
-
-    for svc_node in root.children:
-        if svc_node.tag != 'Service':
-            continue
-        service = {}
-        for child in svc_node.children:
-            if child.children:
-                # nested: use parse_sgml_element
-                parsed = parse_sgml_element(child)
-                service.setdefault(child.tag, []).append(parsed)
-            else:
-                service[child.tag] = child.text.strip()
-        services.append(service)
-    return services
-
-def load_from_sgml_file(sgml_filename):
-    """Load the services data structure from a (possibly compressed) SGML file."""
-    with open_compressed_file(sgml_filename) as f:
-        sgml_str = f.read()
-    # if bytes, decode
-    if isinstance(sgml_str, bytes):
-        sgml_str = sgml_str.decode('utf-8')
-    return from_sgml(sgml_str)
-
-
-def save_to_sgml_file(services, sgml_filename):
-    """Save the services data structure to a (possibly compressed) SGML file."""
-    sgml_str = to_sgml(services)
-    save_compressed_file(sgml_str, sgml_filename)
 
 def services_to_string(services):
     """Convert the services structure into a string format suitable for saving to a file."""
