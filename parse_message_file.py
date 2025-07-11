@@ -12,6 +12,11 @@ import os
 import io
 
 try:
+    from html.parser import HTMLParser
+except ImportError:
+    from HTMLParser import HTMLParser
+
+try:
     import lzma
 except ImportError:
     try:
@@ -872,6 +877,11 @@ def load_from_json_file(json_filename):
     with open_compressed_file(json_filename) as file:
         return json.load(file)
 
+def save_to_json_file(services, json_filename):
+    """ Save the services data structure to a JSON file """
+    json_data = json.dumps(services, indent=2)
+    save_compressed_file(json_data, json_filename)
+
 def to_xml(services):
     """ Convert the services data structure to an XML string """
     root = ET.Element("Services")
@@ -1002,10 +1012,151 @@ def save_to_xml_file(services, xml_filename):
     xml_str = to_xml(services)
     save_compressed_file(xml_str, xml_filename)
 
-def save_to_json_file(services, json_filename):
-    """ Save the services data structure to a JSON file """
-    json_data = json.dumps(services, indent=2)
-    save_compressed_file(json_data, json_filename)
+def to_sgml(services):
+    """Convert the services data structure to an SGML string."""
+    lines = ['<Services>']
+    for svc in services:
+        lines.append('  <Service>')
+        for key, val in svc.items():
+            if isinstance(val, list):
+                lines.append('    <{0}>'.format(key))
+                singular = key[:-1] if key.endswith('s') else key
+                for item in val:
+                    if isinstance(item, dict):
+                        lines.append('      <{0}>'.format(singular))
+                        for k, v in item.items():
+                            lines.append('        <{0}>{1}</{0}>'.format(k, unicode_type(v)))
+                        lines.append('      </{0}>'.format(singular))
+                    else:
+                        lines.append('      <{0}>{1}</{0}>'.format(singular, unicode_type(item)))
+                lines.append('    </{0}>'.format(key))
+
+            elif isinstance(val, dict):
+                lines.append('    <{0}>'.format(key))
+                for k, v in val.items():
+                    if isinstance(v, list):
+                        singular = k[:-1] if k.endswith('s') else k
+                        lines.append('      <{0}>'.format(k))
+                        for sub in v:
+                            lines.append('        <{0}>{1}</{0}>'.format(singular, unicode_type(sub)))
+                        lines.append('      </{0}>'.format(k))
+                    else:
+                        lines.append('      <{0}>{1}</{0}>'.format(k, unicode_type(v)))
+                lines.append('    </{0}>'.format(key))
+
+            else:
+                lines.append('    <{0}>{1}</{0}>'.format(key, unicode_type(val)))
+        lines.append('  </Service>')
+    lines.append('</Services>')
+    return "\n".join(lines)
+
+
+class SGMLNode(object):
+    """In-memory SGML node for parsing back to dicts."""
+    def __init__(self, tag):
+        self.tag = tag
+        self.children = []
+        self.text = ''
+
+
+class ServicesSGMLParser(HTMLParser):
+    """Parse SGML into SGMLNode tree."""
+    def __init__(self):
+        if PY2:
+            HTMLParser.__init__(self)
+        else:
+            super(ServicesSGMLParser, self).__init__()
+        self.root = None
+        self.stack = []
+
+    def handle_decl(self, decl):
+        pass
+
+    def handle_pi(self, data):
+        if not data.startswith('xml'):
+            super(ServicesSGMLParser, self).handle_pi(data)
+
+    def handle_starttag(self, tag, attrs):
+        node = SGMLNode(tag)
+        if not self.stack:
+            self.root = node
+        else:
+            self.stack[-1].children.append(node)
+        self.stack.append(node)
+
+    def handle_endtag(self, tag):
+        if self.stack:
+            self.stack.pop()
+
+    def handle_data(self, data):
+        if self.stack:
+            self.stack[-1].text += data
+
+
+def parse_sgml_element(node):
+    """Recursively parse SGMLNode into a Python dict."""
+    result = {}
+    for child in node.children:
+        if child.children:
+            # nested structure
+            value = parse_sgml_element(child)
+            # if tag already present, convert to list
+            if child.tag in result:
+                if not isinstance(result[child.tag], list):
+                    result[child.tag] = [result[child.tag]]
+                result[child.tag].append(value)
+            else:
+                result[child.tag] = value
+        else:
+            text = child.text.strip()
+            if child.tag in result:
+                if not isinstance(result[child.tag], list):
+                    result[child.tag] = [result[child.tag]]
+                result[child.tag].append(text)
+            else:
+                result[child.tag] = text
+    return result
+
+
+def from_sgml(sgml_str):
+    """Convert an SGML string back to the services data structure."""
+    parser = ServicesSGMLParser()
+    parser.feed(sgml_str)
+    parser.close()
+
+    services = []
+    root = parser.root
+    if not root or root.tag != 'Services':
+        return services
+
+    for svc_node in root.children:
+        if svc_node.tag != 'Service':
+            continue
+        service = {}
+        for child in svc_node.children:
+            if child.children:
+                # nested: use parse_sgml_element
+                parsed = parse_sgml_element(child)
+                service.setdefault(child.tag, []).append(parsed)
+            else:
+                service[child.tag] = child.text.strip()
+        services.append(service)
+    return services
+
+def load_from_sgml_file(sgml_filename):
+    """Load the services data structure from a (possibly compressed) SGML file."""
+    with open_compressed_file(sgml_filename) as f:
+        sgml_str = f.read()
+    # if bytes, decode
+    if isinstance(sgml_str, bytes):
+        sgml_str = sgml_str.decode('utf-8')
+    return from_sgml(sgml_str)
+
+
+def save_to_sgml_file(services, sgml_filename):
+    """Save the services data structure to a (possibly compressed) SGML file."""
+    sgml_str = to_sgml(services)
+    save_compressed_file(sgml_str, sgml_filename)
 
 def services_to_string(services):
     """Convert the services structure into a string format suitable for saving to a file."""
