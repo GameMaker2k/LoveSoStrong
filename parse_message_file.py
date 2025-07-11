@@ -244,7 +244,7 @@ def parse_lines(lines, validate_only=False, verbose=False):
     current_poll = None
     current_polls = []
     categorization_values = {'Categories': [], 'Forums': []}
-    category_ids = {'Categories': set(), 'Forums': set()}
+    category_ids = {'Categories': [], 'Forums': []}
     post_id = 1
 
     def parse_include_files(file_list):
@@ -349,7 +349,7 @@ def parse_lines(lines, validate_only=False, verbose=False):
                         kind_split = category.get('Kind', '').split(",")
                         category['Type'] = kind_split[0].strip() if len(kind_split) > 0 else ""
                         category['Level'] = kind_split[1].strip() if len(kind_split) > 1 else ""
-                        category_ids[category['Type']].add(category['ID'])
+                        category_ids[category['Type']].append(category['ID'])
                 continue
             elif in_section['include_categories']:
                 include_files.append(line)
@@ -398,7 +398,7 @@ def parse_lines(lines, validate_only=False, verbose=False):
                     if current_category['InSub'] != 0 and current_category['InSub'] not in category_ids[current_category['Type']]:
                         raise ValueError("InSub value '{0}' on line {1} does not match any existing ID values.".format(current_category['InSub'], line_number))
                     current_service['Categories'].append(current_category)
-                    category_ids[current_category['Type']].add(current_category['ID'])
+                    category_ids[current_category['Type']].append(current_category['ID'])
                 current_category = None
                 if verbose:
                     print("Line {0}: {1} (Ending category list)".format(line_number, line))
@@ -661,16 +661,17 @@ def parse_lines(lines, validate_only=False, verbose=False):
                         post_value = validate_non_negative_integer(value, "Post", line_number)
                         current_message['Post'] = post_value
                         if 'post_ids' not in current_thread:
-                            current_thread['post_ids'] = set()
-                        current_thread['post_ids'].add(post_value)
+                            current_thread['post_ids'] = []
+                        if post_value not in current_thread['post_ids']:
+                            current_thread['post_ids'].append(post_value)
                         if verbose:
                             print("Line {0}: Post ID set to {1}".format(line_number, post_value))
                     elif key == "Nested":
                         nested_value = validate_non_negative_integer(value, "Nested", line_number)
-                        if nested_value != 0 and nested_value not in current_thread.get('post_ids', set()):
+                        if nested_value != 0 and nested_value not in current_thread.get('post_ids', []):
                             raise ValueError(
                                 "Nested value '{0}' on line {1} does not match any existing Post values in the current thread. Existing Post IDs: {2}".format(
-                                    nested_value, line_number, list(current_thread.get('post_ids', set())))
+                                    nested_value, line_number, list(current_thread.get('post_ids', [])))
                             )
                         current_message['Nested'] = nested_value
                         if verbose:
@@ -890,20 +891,20 @@ def to_xml(services):
         service_elem = ET.SubElement(root, "Service")
         for key, value in service.items():
             if isinstance(value, list):
-                list_elem = ET.SubElement(service_elem, key)
+                list_elem = ET.SubElement(service_elem, unicode_type(key))
                 for item in value:
                     if isinstance(item, dict):
                         item_elem = ET.SubElement(list_elem, key[:-1])  # singular form
                         for subkey, subvalue in item.items():
-                            sub_elem = ET.SubElement(item_elem, subkey)
+                            sub_elem = ET.SubElement(item_elem, unicode_type(subkey))
                             sub_elem.text = unicode_type(subvalue)
                     else:
                         item_elem = ET.SubElement(list_elem, key[:-1])
                         item_elem.text = unicode_type(item)
             elif isinstance(value, dict):
-                dict_elem = ET.SubElement(service_elem, key)
+                dict_elem = ET.SubElement(service_elem, unicode_type(key))
                 for subkey, subvalue in value.items():
-                    sub_elem = ET.SubElement(dict_elem, subkey)
+                    sub_elem = ET.SubElement(dict_elem, unicode_type(subkey))
                     if isinstance(subvalue, list):
                         for sub_item in subvalue:
                             sub_item_elem = ET.SubElement(sub_elem, subkey[:-1])
@@ -911,7 +912,7 @@ def to_xml(services):
                     else:
                         sub_elem.text = unicode_type(subvalue)
             else:
-                elem = ET.SubElement(service_elem, key)
+                elem = ET.SubElement(service_elem, unicode_type(key))
                 elem.text = unicode_type(value)
     
     # Convert to string
