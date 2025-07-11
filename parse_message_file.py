@@ -32,6 +32,14 @@ except ImportError:
     except ImportError:
         from StringIO import StringIO
 
+# Cross-version HTML escape
+try:
+    # Python 3
+    from html import escape
+except ImportError:
+    # Python 2 fallback
+    from xml.sax.saxutils import escape
+
 PY2 = sys.version_info[0] == 2
 
 # Compatibility for different string types between Python 2 and 3
@@ -863,6 +871,134 @@ def save_services_to_file(services, filename, line_ending="lf"):
 
     # Save the data to the file with the appropriate compression
     save_compressed_file(data, filename)
+
+
+def services_to_html(services):
+    """
+    Render the services list as a styled HTML document string.
+
+    Args:
+        services (list of dict): Parsed services data structure.
+
+    Returns:
+        str: A complete HTML page.
+    """
+    lines = []
+    # Document head
+    lines.append('<!DOCTYPE html>')
+    lines.append('<html lang="en">')
+    lines.append('<head>')
+    lines.append('  <meta charset="UTF-8">')
+    lines.append('  <meta name="viewport" content="width=device-width, initial-scale=1.0">')
+    lines.append('  <title>Services Report</title>')
+    lines.append('  <style>')
+    lines.append('    body { font-family: Arial, sans-serif; margin: 20px; background: #f9f9f9; }')
+    lines.append('    .service-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }')
+    lines.append('    .service-card h2 { margin-top: 0; color: #333; }')
+    lines.append('    .thread-card { background: #fafafa; border-left: 4px solid #007BFF; padding: 12px; margin: 10px 0; }')
+    lines.append('    .message-list { list-style: none; padding-left: 0; }')
+    lines.append('    .message-list li { margin-bottom: 10px; }')
+    lines.append('    .poll-card { background: #f0f8ff; border: 1px solid #cce; border-radius: 4px; padding: 10px; margin: 10px 0; }')
+    lines.append('  </style>')
+    lines.append('</head>')
+    lines.append('<body>')
+    lines.append('<div class="services-container">')
+
+    # Service cards
+    for svc in services:
+        entry = svc.get('Entry', '')
+        name = svc.get('Service', '')
+        lines.append('<div class="service-card">')
+        lines.append('  <h2>Service Entry: {0} — {1}</h2>'.format(
+            escape(unicode_type(entry)), escape(unicode_type(name))))
+
+        # Info
+        info = svc.get('Info', '').strip()
+        if info:
+            lines.append('  <p style="white-space: pre;"><strong>Info:</strong> {0}</p>'.format(
+                escape(unicode_type(info))))
+
+        # Interactions & Status
+        interactions = svc.get('Interactions', [])
+        if interactions:
+            items = ', '.join(escape(unicode_type(i)) for i in interactions)
+            lines.append('  <p><strong>Interactions:</strong> {0}</p>'.format(items))
+        status = svc.get('Status', [])
+        if status:
+            items = ', '.join(escape(unicode_type(s)) for s in status)
+            lines.append('  <p><strong>Status:</strong> {0}</p>'.format(items))
+
+        # Categories
+        cats = svc.get('Categories', [])
+        if cats:
+            lines.append('  <h3>Categories</h3>')
+            lines.append('  <ul>')
+            for cat in cats:
+                headline = cat.get('Headline', '')
+                level = cat.get('Level', '')
+                lines.append('    <li>{0} (<em>{1}</em>)</li>'.format(
+                    escape(unicode_type(headline)), escape(unicode_type(level))))
+            lines.append('  </ul>')
+
+        # Users
+        users = svc.get('Users', {})
+        if users:
+            lines.append('  <h3>Users</h3>')
+            lines.append('  <ul>')
+            for uid, u in users.items():
+                uname = u.get('Name', '')
+                handle = u.get('Handle', '')
+                bio = u.get('Bio', '').strip()
+                lines.append('    <li><strong>{0}</strong>: {1} ({2})</li>'.format(
+                    escape(unicode_type(uid)), escape(unicode_type(uname)), escape(unicode_type(handle))))
+                if bio:
+                    lines.append('      <blockquote style="white-space: pre;">{0}</blockquote>'.format(
+                        escape(unicode_type(bio))))
+            lines.append('  </ul>')
+
+        # Message Threads
+        threads = svc.get('MessageThreads', [])
+        if threads:
+            lines.append('  <h3>Message Threads</h3>')
+            for th in threads:
+                title = th.get('Title', '')
+                lines.append('  <div class="thread-card">')
+                lines.append('    <h4>{0}</h4>'.format(
+                    escape(unicode_type(title))))
+
+                msgs = th.get('Messages', [])
+                if msgs:
+                    lines.append('    <ul class="message-list">')
+                    for msg in msgs:
+                        author = msg.get('Author', '')
+                        body = msg.get('Message', '').strip()
+                        lines.append('      <li style="white-space: pre;"><strong>{0}</strong>: \n{1}</li>'.format(
+                            escape(unicode_type(author)), escape(unicode_type(body))))
+                    lines.append('    </ul>')
+                lines.append('  </div>')
+
+        lines.append('</div>')
+
+    lines.append('</div>')
+    lines.append('</body>')
+    lines.append('</html>')
+
+    return '\n'.join(lines)
+
+
+def save_services_to_html_file(services, filename):
+    """
+    Generate styled HTML from services and save to the given filename.
+    Works on both Python 2 and 3.
+
+    Args:
+        services (list of dict): Parsed services.
+        filename (str): Path to write the HTML file.
+    """
+    html_content = services_to_html(services)
+    # Use io.open for Py2/3 compatibility
+    with io.open(filename, 'w', encoding='utf-8') as f:
+        f.write(html_content)
 
 
 def to_json(services):
