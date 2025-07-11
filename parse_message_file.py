@@ -915,7 +915,7 @@ def services_to_html(services):
         # Info
         info = svc.get('Info', '').strip()
         if info:
-            lines.append('  <p style="white-space: pre-wrap;"><strong>Info:</strong> {0}</p>'.format(
+            lines.append('  <p><strong>Info:</strong> <blockquote style="white-space: pre-wrap;">{0}</blockquote></p>'.format(
                 escape(unicode_type(info))))
 
         # Interactions & Status
@@ -944,7 +944,7 @@ def services_to_html(services):
         users = svc.get('Users', {})
         if users:
             lines.append('  <h3>Users</h3>')
-            lines.append('  <ul>')
+            lines.append('  <ul')
             for uid, u in users.items():
                 uname = u.get('Name', '')
                 handle = u.get('Handle', '')
@@ -972,7 +972,7 @@ def services_to_html(services):
                     for msg in msgs:
                         author = msg.get('Author', '')
                         body = msg.get('Message', '').strip()
-                        lines.append('      <li style="white-space: pre-wrap;"><strong>{0}</strong>: \n{1}</li>'.format(
+                        lines.append('      <li><strong>{0}</strong>: <blockquote style="white-space: pre-wrap;">{1}</blockquote></li>'.format(
                             escape(unicode_type(author)), escape(unicode_type(body))))
                     lines.append('    </ul>')
                 lines.append('  </div>')
