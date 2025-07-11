@@ -915,7 +915,7 @@ def services_to_html(services):
         # Info
         info = svc.get('Info', '').strip()
         if info:
-            lines.append('  <p style="white-space: pre;"><strong>Info:</strong> {0}</p>'.format(
+            lines.append('  <p style="white-space: pre-wrap;"><strong>Info:</strong> {0}</p>'.format(
                 escape(unicode_type(info))))
 
         # Interactions & Status
@@ -952,7 +952,7 @@ def services_to_html(services):
                 lines.append('    <li><strong>{0}</strong>: {1} ({2})</li>'.format(
                     escape(unicode_type(uid)), escape(unicode_type(uname)), escape(unicode_type(handle))))
                 if bio:
-                    lines.append('      <blockquote style="white-space: pre;">{0}</blockquote>'.format(
+                    lines.append('      <blockquote style="white-space: pre-wrap;">{0}</blockquote>'.format(
                         escape(unicode_type(bio))))
             lines.append('  </ul>')
 
@@ -972,7 +972,7 @@ def services_to_html(services):
                     for msg in msgs:
                         author = msg.get('Author', '')
                         body = msg.get('Message', '').strip()
-                        lines.append('      <li style="white-space: pre;"><strong>{0}</strong>: \n{1}</li>'.format(
+                        lines.append('      <li style="white-space: pre-wrap;"><strong>{0}</strong>: \n{1}</li>'.format(
                             escape(unicode_type(author)), escape(unicode_type(body))))
                     lines.append('    </ul>')
                 lines.append('  </div>')
