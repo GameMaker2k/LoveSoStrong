@@ -1618,8 +1618,7 @@ def save_services_to_html_file(services, filename):
     """
     html_content = services_to_html(services)
     # Use io.open for Py2/3 compatibility
-    with io.open(filename, 'w', encoding='utf-8') as f:
-        f.write(html_content)
+    save_compressed_file(html_content, filename)
 
 
 def to_json(services):
