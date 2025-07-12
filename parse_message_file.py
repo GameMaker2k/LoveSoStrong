@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import platform
+import logging
 import json
 import zlib
 import sys
@@ -1760,7 +1761,7 @@ def save_to_json_file(services, json_filename):
     save_compressed_file(json_data, json_filename)
 
 
-def services_to_string(services):
+def services_to_string(services, line_ending="lf"):
     """Convert the services structure into a string format suitable for saving to a file."""
     output = []
     
