@@ -1,0 +1,11 @@
+[project]
+    name = "PyUPC-EAN"
+    version = "0.0.6"
+    readme = "README.md"
+    license = { text = "BSD-3-Clause" }
+    keywords = []
+    description = "Love so Strong it's Creepy 😳"
+    authors = [
+        { name = "Kazuki Przyborowski", email = "kazuki.przyborowski@gmail.com" },
+    ]
+    
