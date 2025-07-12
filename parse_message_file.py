@@ -744,15 +744,6 @@ class LzopFile(object):
         self.close()
 
 
-        elif filename.endswith('.zst') and "zstandard" in compressionsupport:
-            if 'zstandard' in sys.modules:
-                outfp = ZstdFile(file_path=filename, mode='rb')
-            elif 'pyzstd' in sys.modules:
-                outfp = pyzstd.zstdfile.ZstdFile(filename, mode='rb')
-            else:
-                return Flase
-
-
 def open_compressed_file(filename):
     """ Open a file, trying various compression methods if available. """
     if filename.endswith('.gz'):
@@ -770,9 +761,9 @@ def open_compressed_file(filename):
         return LzopFile(file_path=filename, mode='rb')
     elif filename.endswith('.zst') and "zstandard" in compressionsupport:
         if 'zstandard' in sys.modules:
-            outfp = ZstdFile(file_path=filename, mode='rb')
+            return ZstdFile(file_path=filename, mode='rb')
         elif 'pyzstd' in sys.modules:
-            outfp = pyzstd.zstdfile.ZstdFile(filename, mode='rb')
+            return pyzstd.zstdfile.ZstdFile(filename, mode='rb')
         else:
             return Flase
     else:
