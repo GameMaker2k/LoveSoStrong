@@ -1,5 +1,5 @@
 [project]
-    name = "PyUPC-EAN"
+    name = "PyTextArchive"
     version = "0.0.6"
     readme = "README.md"
     license = { text = "BSD-3-Clause" }
