@@ -1639,56 +1639,6 @@ def save_to_json_file(services, json_filename):
     json_data = json.dumps(services, indent=2)
     save_compressed_file(json_data, json_filename)
 
-def open_compressed_file(filename):
-    """ Open a file, trying various compression methods if available. """
-    if filename.endswith('.gz'):
-        import gzip
-        return gzip.open(filename, 'rt', encoding='utf-8') if not PY2 else gzip.open(filename, 'r')
-    elif filename.endswith('.bz2'):
-        import bz2
-        return bz2.open(filename, 'rt', encoding='utf-8') if not PY2 else bz2.open(filename, 'r')
-    elif filename.endswith('.xz') or filename.endswith('.lzma'):
-        try:
-            import lzma
-        except ImportError:
-            from backports import lzma
-        return lzma.open(filename, 'rt', encoding='utf-8') if not PY2 else lzma.open(filename, 'r')
-    else:
-        return open(filename, 'r', encoding='utf-8') if not PY2 else open(filename, 'r')
-
-def save_compressed_file(data, filename):
-    """ Save data to a file, using various compression methods if specified. """
-    if filename.endswith('.gz'):
-        import gzip
-        with gzip.open(filename, 'wt', encoding='utf-8') if not PY2 else gzip.open(filename, 'w') as file:
-            if PY2:
-                file.write(data.encode('utf-8'))
-            else:
-                file.write(data)
-    elif filename.endswith('.bz2'):
-        import bz2
-        with bz2.open(filename, 'wt', encoding='utf-8') if not PY2 else bz2.open(filename, 'w') as file:
-            if PY2:
-                file.write(data.encode('utf-8'))
-            else:
-                file.write(data)
-    elif filename.endswith('.xz') or filename.endswith('.lzma'):
-        try:
-            import lzma
-        except ImportError:
-            from backports import lzma
-        with lzma.open(filename, 'wt', encoding='utf-8') if not PY2 else lzma.open(filename, 'w') as file:
-            if PY2:
-                file.write(data.encode('utf-8'))
-            else:
-                file.write(data)
-    else:
-        with open(filename, 'w', encoding='utf-8') if not PY2 else open(filename, 'w') as file:
-            if PY2:
-                file.write(data.encode('utf-8'))
-            else:
-                file.write(data)
-
 
 def services_to_string(services):
     """Convert the services structure into a string format suitable for saving to a file."""
