@@ -4,7 +4,7 @@
     readme = "README.md"
     license = { text = "BSD-3-Clause" }
     keywords = []
-    description = "Love so Strong it's Creepy 😳"
+    description = "A text archive format for message boards or social media."
     authors = [
         { name = "Kazuki Przyborowski", email = "kazuki.przyborowski@gmail.com" },
     ]
