@@ -1,2 +1,2 @@
-# LoveSoStrong
-Love so Strong it's Creepy 😳
+# PyTextArchive
+A text archive format for message boards or social media
