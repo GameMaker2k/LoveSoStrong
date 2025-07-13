@@ -10,6 +10,9 @@ for file in *_lf.txt; do
 
     # Convert to CR (Mac-style) line endings
     unix2mac -n "$file" "${base_name}_cr.txt"
+
+    # Convert to JSON file
+    python3 ../display_message_file.py "$file" --to-json "${base_name}.json"
 done
 
 echo "Conversion completed!"
