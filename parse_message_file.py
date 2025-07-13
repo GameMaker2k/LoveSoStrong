@@ -877,14 +877,14 @@ def open_compressed_file(filename):
         else:
             raise ImportError("lzma module is not available")
     elif filename.endswith('.zl') or filename.endswith('.zz'):
-        return ZlibFile(file_path=filename, mode='rb')
+        return ZlibFile(file_path=filename, mode='rt')
     elif filename.endswith('.lzo') and "lzop" in compressionsupport:
-        return LzopFile(file_path=filename, mode='rb')
+        return LzopFile(file_path=filename, mode='rt')
     elif filename.endswith('.zst') and "zstandard" in compressionsupport:
         if 'zstandard' in sys.modules:
-            return ZstdFile(file_path=filename, mode='rb')
+            return ZstdFile(file_path=filename, mode='rt')
         elif 'pyzstd' in sys.modules:
-            return pyzstd.zstdfile.ZstdFile(filename, mode='rb')
+            return pyzstd.zstdfile.ZstdFile(filename, mode='rt')
         else:
             return Flase
     else:
@@ -1744,7 +1744,7 @@ def save_services_to_html_file(services, filename):
 
 def to_json(services):
     """ Convert the services data structure to JSON """
-    return json.dumps(services, indent=2)
+    return json.dumps(services, indent=2, ensure_ascii=False)
 
 def from_json(json_str):
     """ Convert a JSON string back to the services data structure """
@@ -1757,7 +1757,7 @@ def load_from_json_file(json_filename):
 
 def save_to_json_file(services, json_filename):
     """ Save the services data structure to a JSON file """
-    json_data = json.dumps(services, indent=2)
+    json_data = json.dumps(services, indent=2, ensure_ascii=False)
     save_compressed_file(json_data, json_filename)
 
 
