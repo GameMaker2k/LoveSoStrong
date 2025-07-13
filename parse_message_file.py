@@ -1686,7 +1686,7 @@ def services_to_html(services):
         users = svc.get('Users', {})
         if users:
             lines.append('  <h3>Users</h3>')
-            lines.append('  <ul')
+            lines.append('  <ul>')
             for uid, u in users.items():
                 uname = u.get('Name', '')
                 handle = u.get('Handle', '')
