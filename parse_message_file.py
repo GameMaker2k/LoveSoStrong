@@ -962,26 +962,114 @@ def parse_string(data, validate_only=False, verbose=False):
     lines = StringIO(data).readlines()
     return parse_lines(lines, validate_only, verbose)
 
-def decode_format(text):
+import re
+
+def decode_format(text, include_parsers=None, verbose=False):
     """
-    Parse an archive text into a nested list/dict structure.
-    Supports both the alt_crlf (format 2) and msgboard_crlf (format 3) styles.
-    Returns: A list of blocks; each block is a dict:
-      { 'name': <block name>,
-        'content': [ dict(key=..., value=...) or {'text': ...} or nested blocks ]
-      }
+    Parse an archive text into a nested list/dict structure,
+    handling both:
+      • arbitrary Include sections (as before), and
+      • Comment Section blocks (preserved verbatim as 'text' nodes).
+
+    Parameters:
+      - text: the entire archive as one string.
+      - include_parsers: optional dict mapping section names to functions
+          that take a list of file-paths (strings) and return a list of
+          parsed dicts.
+      - verbose: if True, prints debugging info.
+
+    Returns:
+      A list of top-level items, where each item is one of:
+        • {'name':…, 'content': […]}      — a named block
+        • {'key':…, 'value':…}            — a key/value line
+        • {'text':…}                      — a freeform line (including comments)
+        • {'include':…, 'files': […]}     — an unparsed include section
+        • or, if a parser is provided, whatever the parser returned
     """
-    # we'll treat CRLF, LF, or CR uniformly
     lines = text.splitlines(True)
+
+    # Block markers
     start_re = re.compile(r'^--- Start (.+?) ---\s*$')
     end_re   = re.compile(r'^--- End (.+?) ---\s*$')
 
-    # stack holds nested blocks; seed with a root pseudo-block
+    # Include markers
+    inc_start_re = re.compile(r'^--- Include (.+?) Start ---\s*$')
+    inc_end_re   = re.compile(r'^--- Include (.+?) End ---\s*$')
+
+    # Comment Section markers
+    comment_start_re = re.compile(r'^--- Start Comment Section ---\s*$')
+    comment_end_re   = re.compile(r'^--- End Comment Section ---\s*$')
+
+    include_parsers = include_parsers or {}
+    in_include = False
+    include_name = None
+    include_files = []
+
+    in_comment = False
+
+    # Root stack
     root = {'name': None, 'content': []}
     stack = [root]
 
-    for line in lines:
-        # check for start of a new block
+    for idx, raw in enumerate(lines, 1):
+        line = raw.rstrip('\r\n')
+
+        # 1) Comment-section handling (preserve verbatim, skip parsing)
+        if not in_comment and comment_start_re.match(line):
+            stack[-1]['content'].append({'text': line})
+            in_comment = True
+            if verbose:
+                print(f"Line {idx}: Entering Comment Section")
+            continue
+
+        if in_comment:
+            # collect everything until the End marker
+            stack[-1]['content'].append({'text': line})
+            if comment_end_re.match(line):
+                in_comment = False
+                if verbose:
+                    print(f"Line {idx}: Exiting Comment Section")
+            continue
+
+        # 2) Include-section start?
+        if not in_include:
+            m = inc_start_re.match(line)
+            if m:
+                include_name = m.group(1)
+                in_include = True
+                include_files = []
+                if verbose:
+                    print(f"Line {idx}: Starting Include '{include_name}'")
+                continue
+
+        # 3) Inside include?
+        if in_include:
+            m = inc_end_re.match(line)
+            if m:
+                if verbose:
+                    print(f"Line {idx}: Ending Include '{include_name}' → {len(include_files)} files")
+                parser = include_parsers.get(include_name)
+                if parser:
+                    # splice in parsed output
+                    parsed = parser(include_files)
+                    stack[-1]['content'].extend(parsed)
+                else:
+                    # raw include node
+                    stack[-1]['content'].append({
+                        'include': include_name,
+                        'files': include_files[:]
+                    })
+                in_include = False
+                include_name = None
+                include_files = []
+                continue
+            else:
+                include_files.append(line)
+                if verbose:
+                    print(f"Line {idx}:  ↳ include file: {line}")
+                continue
+
+        # 4) Normal block-start?
         m = start_re.match(line)
         if m:
             name = m.group(1)
@@ -990,25 +1078,23 @@ def decode_format(text):
             stack.append(blk)
             continue
 
-        # check for end of the current block
+        # 5) Normal block-end?
         m = end_re.match(line)
         if m:
             stack.pop()
             continue
 
-        # otherwise, parse key: value or raw text
+        # 6) key:value or text
         parent = stack[-1]
         if ':' in line:
-            # split on first colon
             k, v = line.split(':', 1)
             parent['content'].append({
                 'key':   k.strip(),
-                'value': v.rstrip('\r\n').strip()
+                'value': v.strip()
             })
         else:
-            # raw text line (e.g. within bodies)
             parent['content'].append({
-                'text': line.rstrip('\r\n')
+                'text': line
             })
 
     return root['content']
@@ -1016,41 +1102,52 @@ def decode_format(text):
 
 def encode_format(structure):
     """
-    Reconstruct the original archive text (with CRLF line endings)
-    from the nested list/dict structure produced by decode_format.
+    Reconstruct the original archive text (with CRLF endings)
+    from the nested structure returned by decode_format,
+    including re-emitting Comment Sections verbatim.
     """
     lines = []
 
     def _rec(item):
+        # Named block
         if isinstance(item, dict) and 'name' in item and 'content' in item:
-            # block boundary
-            lines.append("--- Start {} ---".format(item['name']))
+            lines.append(f"--- Start {item['name']} ---")
             for c in item['content']:
                 _rec(c)
-            lines.append("--- End {} ---".format(item['name']))
+            lines.append(f"--- End {item['name']} ---")
 
+        # Raw include section
+        elif isinstance(item, dict) and 'include' in item and 'files' in item:
+            sect = item['include']
+            lines.append(f"--- Include {sect} Start ---")
+            for f in item['files']:
+                lines.append(f)
+            lines.append(f"--- Include {sect} End ---")
+
+        # Key/value
         elif isinstance(item, dict) and 'key' in item:
-            lines.append("{}: {}".format(item['key'], item['value']))
+            lines.append(f"{item['key']}: {item['value']}")
 
+        # Any raw text (including comment markers & comment lines)
         elif isinstance(item, dict) and 'text' in item:
             lines.append(item['text'])
 
+        # A flat list
         elif isinstance(item, list):
             for elt in item:
                 _rec(elt)
 
+        # Else ignore
         else:
-            # ignore any unexpected elements
             pass
 
-    # top-level may be a list or a single block dict
+    # Top‐level dispatch
     if isinstance(structure, dict):
         _rec(structure)
     else:
         for blk in structure:
             _rec(blk)
 
-    # join with CRLF so that we round-trip exactly
     return "\r\n".join(lines) + "\r\n"
 
 
