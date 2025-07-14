@@ -988,46 +988,41 @@ def decode_format(text, include_parsers=None, verbose=False):
     lines = text.splitlines(True)
 
     # Block markers
-    start_re = re.compile(r'^--- Start (.+?) ---\s*$')
-    end_re   = re.compile(r'^--- End (.+?) ---\s*$')
-
-    # Include markers
-    inc_start_re = re.compile(r'^--- Include (.+?) Start ---\s*$')
-    inc_end_re   = re.compile(r'^--- Include (.+?) End ---\s*$')
-
-    # Comment Section markers
-    comment_start_re = re.compile(r'^--- Start Comment Section ---\s*$')
-    comment_end_re   = re.compile(r'^--- End Comment Section ---\s*$')
+    start_re        = re.compile(r'^--- Start (.+?) ---\s*$')
+    end_re          = re.compile(r'^--- End (.+?) ---\s*$')
+    inc_start_re    = re.compile(r'^--- Include (.+?) Start ---\s*$')
+    inc_end_re      = re.compile(r'^--- Include (.+?) End ---\s*$')
+    comment_start_re= re.compile(r'^--- Start Comment Section ---\s*$')
+    comment_end_re  = re.compile(r'^--- End Comment Section ---\s*$')
 
     include_parsers = include_parsers or {}
-    in_include = False
-    include_name = None
-    include_files = []
+    in_include      = False
+    include_name    = None
+    include_files   = []
 
-    in_comment = False
+    in_comment      = False
 
     # Root stack
-    root = {'name': None, 'content': []}
+    root  = {'name': None, 'content': []}
     stack = [root]
 
     for idx, raw in enumerate(lines, 1):
         line = raw.rstrip('\r\n')
 
-        # 1) Comment-section handling (preserve verbatim, skip parsing)
+        # 1) Comment-section handling (preserve verbatim)
         if not in_comment and comment_start_re.match(line):
             stack[-1]['content'].append({'text': line})
             in_comment = True
             if verbose:
-                print(f"Line {idx}: Entering Comment Section")
+                print("Line {0}: Entering Comment Section".format(idx))
             continue
 
         if in_comment:
-            # collect everything until the End marker
             stack[-1]['content'].append({'text': line})
             if comment_end_re.match(line):
                 in_comment = False
                 if verbose:
-                    print(f"Line {idx}: Exiting Comment Section")
+                    print("Line {0}: Exiting Comment Section".format(idx))
             continue
 
         # 2) Include-section start?
@@ -1035,10 +1030,10 @@ def decode_format(text, include_parsers=None, verbose=False):
             m = inc_start_re.match(line)
             if m:
                 include_name = m.group(1)
-                in_include = True
-                include_files = []
+                in_include   = True
+                include_files= []
                 if verbose:
-                    print(f"Line {idx}: Starting Include '{include_name}'")
+                    print("Line {0}: Starting Include '{1}'".format(idx, include_name))
                 continue
 
         # 3) Inside include?
@@ -1046,33 +1041,30 @@ def decode_format(text, include_parsers=None, verbose=False):
             m = inc_end_re.match(line)
             if m:
                 if verbose:
-                    print(f"Line {idx}: Ending Include '{include_name}' → {len(include_files)} files")
+                    print("Line {0}: Ending Include '{1}' → {2} files".format(
+                        idx, include_name, len(include_files)))
                 parser = include_parsers.get(include_name)
                 if parser:
-                    # splice in parsed output
-                    parsed = parser(include_files)
-                    stack[-1]['content'].extend(parsed)
+                    stack[-1]['content'].extend(parser(include_files))
                 else:
-                    # raw include node
                     stack[-1]['content'].append({
                         'include': include_name,
-                        'files': include_files[:]
+                        'files':   include_files[:]
                     })
                 in_include = False
                 include_name = None
-                include_files = []
+                include_files= []
                 continue
             else:
                 include_files.append(line)
                 if verbose:
-                    print(f"Line {idx}:  ↳ include file: {line}")
+                    print("Line {0}:  ↳ include file: {1}".format(idx, line))
                 continue
 
         # 4) Normal block-start?
         m = start_re.match(line)
         if m:
-            name = m.group(1)
-            blk = {'name': name, 'content': []}
+            blk = {'name': m.group(1), 'content': []}
             stack[-1]['content'].append(blk)
             stack.append(blk)
             continue
@@ -1099,39 +1091,55 @@ def decode_format(text, include_parsers=None, verbose=False):
     return root['content']
 
 
-def encode_format(structure):
+def encode_format(structure, eol='crlf'):
     """
-    Reconstruct the original archive text (with CRLF endings)
-    from the nested structure returned by decode_format,
+    Reconstruct the archive text from the nested structure returned by decode_format,
     including re-emitting Comment Sections verbatim.
+
+    Parameters:
+      - structure: the list/dict output of decode_format.
+      - eol: one of 'cr', 'lf', or 'crlf' (default) to choose line endings.
+
+    Returns:
+      A single string with the chosen line endings.
     """
+    # map eol mode to actual separator
+    eols = {
+        'cr':   '\r',
+        'lf':   '\n',
+        'crlf': '\r\n',
+    }
+    sep = eols.get(eol.lower())
+    if sep is None:
+        raise ValueError("eol must be one of: 'cr', 'lf', or 'crlf'")
+
     lines = []
 
     def _rec(item):
         # Named block
         if isinstance(item, dict) and 'name' in item and 'content' in item:
-            lines.append(f"--- Start {item['name']} ---")
+            lines.append("--- Start {0} ---".format(item['name']))
             for c in item['content']:
                 _rec(c)
-            lines.append(f"--- End {item['name']} ---")
+            lines.append("--- End {0} ---".format(item['name']))
 
         # Raw include section
         elif isinstance(item, dict) and 'include' in item and 'files' in item:
             sect = item['include']
-            lines.append(f"--- Include {sect} Start ---")
+            lines.append("--- Include {0} Start ---".format(sect))
             for f in item['files']:
                 lines.append(f)
-            lines.append(f"--- Include {sect} End ---")
+            lines.append("--- Include {0} End ---".format(sect))
 
         # Key/value
         elif isinstance(item, dict) and 'key' in item:
-            lines.append(f"{item['key']}: {item['value']}")
+            lines.append("{0}: {1}".format(item['key'], item['value']))
 
-        # Any raw text (including comment markers & comment lines)
+        # Any raw text (including comments)
         elif isinstance(item, dict) and 'text' in item:
             lines.append(item['text'])
 
-        # A flat list
+        # A list of items
         elif isinstance(item, list):
             for elt in item:
                 _rec(elt)
@@ -1140,14 +1148,15 @@ def encode_format(structure):
         else:
             pass
 
-    # Top‐level dispatch
+    # Top-level dispatch
     if isinstance(structure, dict):
         _rec(structure)
     else:
         for blk in structure:
             _rec(blk)
 
-    return "\r\n".join(lines) + "\r\n"
+    # join and append final EOL
+    return sep.join(lines) + sep
 
 
 def parse_lines(lines, validate_only=False, verbose=False):
