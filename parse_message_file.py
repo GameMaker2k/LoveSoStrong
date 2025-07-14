@@ -8,6 +8,7 @@ import zlib
 import sys
 import os
 import io
+import re
 
 try:
     from html.parser import HTMLParser
@@ -960,6 +961,98 @@ def parse_file(filename, validate_only=False, verbose=False):
 def parse_string(data, validate_only=False, verbose=False):
     lines = StringIO(data).readlines()
     return parse_lines(lines, validate_only, verbose)
+
+def decode_format(text):
+    """
+    Parse an archive text into a nested list/dict structure.
+    Supports both the alt_crlf (format 2) and msgboard_crlf (format 3) styles.
+    Returns: A list of blocks; each block is a dict:
+      { 'name': <block name>,
+        'content': [ dict(key=..., value=...) or {'text': ...} or nested blocks ]
+      }
+    """
+    # we'll treat CRLF, LF, or CR uniformly
+    lines = text.splitlines(True)
+    start_re = re.compile(r'^--- Start (.+?) ---\s*$')
+    end_re   = re.compile(r'^--- End (.+?) ---\s*$')
+
+    # stack holds nested blocks; seed with a root pseudo-block
+    root = {'name': None, 'content': []}
+    stack = [root]
+
+    for line in lines:
+        # check for start of a new block
+        m = start_re.match(line)
+        if m:
+            name = m.group(1)
+            blk = {'name': name, 'content': []}
+            stack[-1]['content'].append(blk)
+            stack.append(blk)
+            continue
+
+        # check for end of the current block
+        m = end_re.match(line)
+        if m:
+            stack.pop()
+            continue
+
+        # otherwise, parse key: value or raw text
+        parent = stack[-1]
+        if ':' in line:
+            # split on first colon
+            k, v = line.split(':', 1)
+            parent['content'].append({
+                'key':   k.strip(),
+                'value': v.rstrip('\r\n').strip()
+            })
+        else:
+            # raw text line (e.g. within bodies)
+            parent['content'].append({
+                'text': line.rstrip('\r\n')
+            })
+
+    return root['content']
+
+
+def encode_format(structure):
+    """
+    Reconstruct the original archive text (with CRLF line endings)
+    from the nested list/dict structure produced by decode_format.
+    """
+    lines = []
+
+    def _rec(item):
+        if isinstance(item, dict) and 'name' in item and 'content' in item:
+            # block boundary
+            lines.append("--- Start {} ---".format(item['name']))
+            for c in item['content']:
+                _rec(c)
+            lines.append("--- End {} ---".format(item['name']))
+
+        elif isinstance(item, dict) and 'key' in item:
+            lines.append("{}: {}".format(item['key'], item['value']))
+
+        elif isinstance(item, dict) and 'text' in item:
+            lines.append(item['text'])
+
+        elif isinstance(item, list):
+            for elt in item:
+                _rec(elt)
+
+        else:
+            # ignore any unexpected elements
+            pass
+
+    # top-level may be a list or a single block dict
+    if isinstance(structure, dict):
+        _rec(structure)
+    else:
+        for blk in structure:
+            _rec(blk)
+
+    # join with CRLF so that we round-trip exactly
+    return "\r\n".join(lines) + "\r\n"
+
 
 def parse_lines(lines, validate_only=False, verbose=False):
     services = []
