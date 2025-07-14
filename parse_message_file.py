@@ -962,7 +962,6 @@ def parse_string(data, validate_only=False, verbose=False):
     lines = StringIO(data).readlines()
     return parse_lines(lines, validate_only, verbose)
 
-import re
 
 def decode_format(text, include_parsers=None, verbose=False):
     """
