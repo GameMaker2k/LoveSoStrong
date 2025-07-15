@@ -14,6 +14,9 @@ for file in *_lf.txt; do
     # Convert to JSON file
     python3 ../display_message_file.py "$file" --to-json "${base_name}.json"
 
+    # Convert to YAML file
+    python3 ../display_message_file.py "$file" --to-yaml "${base_name}.yaml"
+
     # Convert to HTML file
     python3 ../display_message_file.py "$file" --to-html "${base_name}.html"
 done

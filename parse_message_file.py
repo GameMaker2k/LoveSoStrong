@@ -6,9 +6,16 @@ import logging
 import json
 import zlib
 import sys
+import ast
 import os
 import io
 import re
+
+try:
+    import yaml
+    HAS_YAML = True
+except ImportError:
+    HAS_YAML = False
 
 try:
     from html.parser import HTMLParser
@@ -1776,6 +1783,53 @@ def save_to_json_file(services, json_filename):
     """ Save the services data structure to a JSON file """
     json_data = json.dumps(services, indent=2, ensure_ascii=False)
     save_compressed_file(json_data, json_filename)
+
+
+def to_yaml(data):
+    """Convert data to a YAML string, if possible."""
+    if not HAS_YAML:
+        return False
+    return yaml.safe_dump(data, default_flow_style=False, allow_unicode=True)
+
+def from_yaml(yaml_str):
+    """Convert a YAML string to a Python data structure."""
+    if not HAS_YAML:
+        return False
+    return yaml.safe_load(yaml_str)
+
+def load_from_yaml_file(filename):
+    """Load YAML data from a file."""
+    if not HAS_YAML:
+        return False
+    with open_compressed_file(filename, mode='rt', encoding='utf-8') as file:
+        return yaml.safe_load(file)
+
+def save_to_yaml_file(data, filename):
+    """Save data as YAML to a file."""
+    if not HAS_YAML:
+        return False
+    yaml_data = yaml.safe_dump(data, default_flow_style=False, allow_unicode=True)
+    save_compressed_file(yaml_data + "\n", filename)
+    return True
+
+
+def to_array(data):
+    """Convert data to a string (like a Python literal)."""
+    return str(data)
+
+def from_array(data_str):
+    """Convert a string back to data (safe evaluation)."""
+    return ast.literal_eval(data_str)
+
+def load_from_array_file(array_filename):
+    """ Load the data structure from a raw array-format file """
+    with open_compressed_file(array_filename, mode='rt', encoding='utf-8') as file:
+        return ast.literal_eval(file.read())
+
+def save_to_array_file(data, array_filename):
+    """ Save the data structure to a raw array-format file """
+    data_str = str(data)
+    save_compressed_file(data_str + "\n", array_filename)
 
 
 def services_to_string(services, line_ending="lf"):

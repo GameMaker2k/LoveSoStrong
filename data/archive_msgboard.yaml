@@ -1,0 +1,179 @@
+- Categories:
+  - Description: ''
+    Headline: General Discussion
+    ID: 1
+    InSub: 0
+    Kind: Categories, Main Category
+    Level: Main Category
+    Type: Categories
+  - Description: ''
+    Headline: Feedback
+    ID: 2
+    InSub: 0
+    Kind: Categories, Main Category
+    Level: Main Category
+    Type: Categories
+  - Description: ''
+    Headline: Subcategory of Feedback
+    ID: 3
+    InSub: 2
+    Kind: Categories, Subcategory
+    Level: Subcategory
+    Type: Categories
+  - Description: ''
+    Headline: Introductions
+    ID: 4
+    InSub: 0
+    Kind: Forums, Main Forum
+    Level: Main Forum
+    Type: Forums
+  - Description: ''
+    Headline: Site Feedback
+    ID: 5
+    InSub: 0
+    Kind: Forums, Main Forum
+    Level: Main Forum
+    Type: Forums
+  - Description: ''
+    Headline: Subforum of Site Feedback
+    ID: 6
+    InSub: 5
+    Kind: Forums, Subforum
+    Level: Subforum
+    Type: Forums
+  Categorization:
+    Categories:
+    - General Discussion
+    - Feedback
+    - Subcategory of Feedback
+    Forums:
+    - Introductions
+    - Site Feedback
+    - Subforum of Site Feedback
+  Entry: 1
+  Info: 'This is an example message board archive using all possible elements of the
+    format.
+
+    It includes multiple services, users, categories, forums, message threads, posts,
+    and polls.'
+  Interactions:
+  - Post
+  - Reply
+  - Poll
+  MessageThreads:
+  - Category:
+    - General Discussion
+    Forum:
+    - Introductions
+    Messages:
+    - Author: '@johndoe'
+      Date: Jan 2, 2020
+      Message: Hello everyone! I'm excited to be part of this community.
+      Nested: 0
+      Post: 1
+      SubTitle: Welcome to the Community!
+      SubType: Post
+      Tags: ''
+      Time: 9:00 AM
+    - Author: '@janesmith'
+      Date: Jan 2, 2020
+      Message: Welcome, @johndoe! Looking forward to your contributions.
+      Nested: 1
+      Post: 2
+      SubTitle: 'Re: Welcome to the Community!'
+      SubType: Reply
+      Tags: ''
+      Time: 10:00 AM
+    State: Pinned
+    Thread: 1
+    Title: Welcome to the Community!
+    Type: Topic
+    post_ids:
+    - 1
+    - 2
+  - Category:
+    - Feedback
+    Forum:
+    - Site Feedback
+    Messages:
+    - Author: '@janesmith'
+      Date: Feb 5, 2020
+      Message: I wanted to gather some opinions on the new site features. What do
+        you all think?
+      Nested: 0
+      Post: 1
+      SubTitle: What do you think about the new site features?
+      SubType: Post
+      Tags: ''
+      Time: 2:00 PM
+    - Author: '@johndoe'
+      Date: Feb 5, 2020
+      Message: I think the new features are great! They really improve the user experience.
+      Nested: 1
+      Post: 2
+      SubTitle: 'Re: What do you think about the new site features?'
+      SubType: Reply
+      Tags: ''
+      Time: 3:00 PM
+    - Author: '@janesmith'
+      Date: Feb 5, 2020
+      Message: Glad to hear that! Let's see what others think.
+      Nested: 2
+      Post: 3
+      SubTitle: 'Re: What do you think about the new site features?'
+      SubType: Reply
+      Tags: ''
+      Time: 3:30 PM
+    - Author: '@janesmith'
+      Date: Feb 5, 2020
+      Message: I've set up a poll to gather opinions. Please vote!
+      Nested: 2
+      Polls:
+      - Answers:
+        - 'Yes'
+        - 'No'
+        - Maybe
+        Num: '1'
+        Percentage:
+        - '76.92'
+        - '15.38'
+        - '7.69'
+        Question: Do you like the new site features?
+        Results:
+        - '10'
+        - '2'
+        - '1'
+        Votes: '13'
+      Post: 4
+      SubType: Poll
+      Tags: ''
+      Time: 4:00 PM
+    State: Hot
+    Thread: 2
+    Title: What do you think about the new site features?
+    Type: Topic
+    post_ids:
+    - 1
+    - 2
+    - 3
+    - 4
+  Service: Example Message Board
+  Status:
+  - Active
+  TimeZone: UTC
+  Users:
+    1:
+      Bio: Just an example user enjoying the discussions.
+      Birthday: Jan 1, 1990
+      Handle: '@johndoe'
+      Joined: Jan 1, 2020
+      Location: Earth
+      Name: John Doe
+    2:
+      Bio: I love giving feedback and helping improve the site.
+      Birthday: Feb 1, 1992
+      Handle: '@janesmith'
+      Joined: Feb 1, 2020
+      Location: Mars
+      Name: Jane Smith
+

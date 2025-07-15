@@ -1,0 +1,266 @@
+- Categories:
+  - Description: ''
+    Headline: General
+    ID: 1
+    InSub: 0
+    Kind: Categories, Main Category
+    Level: Main Category
+    Type: Categories
+  - Description: ''
+    Headline: Tech Talk
+    ID: 2
+    InSub: 0
+    Kind: Forums, Main Forum
+    Level: Main Forum
+    Type: Forums
+  Categorization:
+    Categories:
+    - General
+    - Tech
+    - Movies
+    Forums:
+    - General Discussion
+    - Tech Talk
+    - Movie Reviews
+  Entry: 1
+  Info: This is an example forum for general discussions on various topics.
+  Interactions:
+  - Topic
+  - Post
+  - Reply
+  MessageThreads:
+  - Category:
+    - Tech
+    Forum:
+    - Tech Talk
+    Messages:
+    - Author: '@alice_j'
+      Date: Jan 15, 2024
+      Message: What are your favorite tech gadgets of 2024?
+      Nested: 0
+      Post: 1
+      SubTitle: Favorite Tech Gadgets of 2024
+      SubType: Post
+      Tags: ''
+      Time: 10:00 AM
+    - Author: '@bob_s'
+      Date: Jan 15, 2024
+      Message: I really like the new smartwatches. They're getting so advanced!
+      Nested: 1
+      Post: 2
+      SubTitle: 'Re: Favorite Tech Gadgets of 2024'
+      SubType: Reply
+      Tags: ''
+      Time: 11:00 AM
+    State: Active
+    Thread: 1
+    Title: Favorite Tech Gadgets of 2024
+    Type: Topic
+    post_ids:
+    - 1
+    - 2
+  Service: Example Discussion Forum
+  Status:
+  - Active
+  TimeZone: UTC
+  Users:
+    1:
+      Bio: Tech enthusiast and avid reader.
+      Birthday: Jan 1, 1995
+      Handle: '@alice_j'
+      Joined: Jan 1, 2023
+      Location: USA
+      Name: Alice Johnson
+    2:
+      Bio: Loves discussing movies and books.
+      Birthday: Feb 1, 1990
+      Handle: '@bob_s'
+      Joined: Feb 1, 2023
+      Location: Canada
+      Name: Bob Smith
+- Categories:
+  - Description: ''
+    Headline: Latest Releases
+    ID: 1
+    InSub: 0
+    Kind: Forums, Main Forum
+    Level: Main Forum
+    Type: Forums
+  Categorization:
+    Categories:
+    - Movies
+    - Reviews
+    Forums:
+    - Latest Releases
+    - Classic Films
+  Entry: 2
+  Info: A place to discuss and review the latest movies.
+  Interactions:
+  - Review
+  - Post
+  - Poll
+  MessageThreads:
+  - Category:
+    - Movies
+    Forum:
+    - Latest Releases
+    Messages:
+    - Author: '@charlie_d'
+      Date: Jun 15, 2024
+      Message: Vote for the best movie of 2024!
+      Nested: 0
+      Polls:
+      - Answers:
+        - Movie A
+        - Movie B
+        - Movie C
+        Num: '1'
+        Percentage:
+        - '50.0'
+        - '30.0'
+        - '20.0'
+        Question: What was the best movie of 2024?
+        Results:
+        - '25'
+        - '15'
+        - '10'
+        Votes: '50'
+      Post: 1
+      SubType: Poll
+      Tags: ''
+      Time: 2:00 PM
+    State: Active
+    Thread: 1
+    Title: Best Movie of 2024
+    Type: Poll
+    post_ids:
+    - 1
+  Service: Movie Review Forum
+  Status:
+  - Active
+  Users:
+    1:
+      Bio: Movie buff and critic.
+      Birthday: Mar 1, 1992
+      Handle: '@charlie_d'
+      Joined: Mar 1, 2023
+      Location: UK
+      Name: Charlie Doe
+    2:
+      Bio: A lover of all things cinema.
+      Birthday: Apr 1, 1993
+      Handle: '@dana_w'
+      Joined: Apr 1, 2023
+      Location: Australia
+      Name: Dana White
+- Categories:
+  - Description: ''
+    Headline: Fiction
+    ID: 1
+    InSub: 0
+    Kind: Categories, Main Category
+    Level: Main Category
+    Type: Categories
+  - Description: ''
+    Headline: Book Reviews
+    ID: 2
+    InSub: 0
+    Kind: Forums, Main Forum
+    Level: Main Forum
+    Type: Forums
+  Categorization:
+    Categories:
+    - Fiction
+    - Non-Fiction
+    - Fantasy
+    Forums:
+    - Book Reviews
+    - Author Discussions
+    - Genre Talks
+  Entry: 3
+  Info: Discuss and review your favorite books and authors.
+  Interactions:
+  - Discussion
+  - Post
+  - Reply
+  MessageThreads:
+  - Category:
+    - Fiction
+    Forum:
+    - Book Reviews
+    Messages:
+    - Author: '@emily_c'
+      Date: Jul 10, 2024
+      Message: What are your all-time favorite books?
+      Nested: 0
+      Post: 1
+      SubTitle: Favorite Books of All Time
+      SubType: Post
+      Tags: ''
+      Time: 10:00 AM
+    - Author: '@frank_m'
+      Date: Jul 10, 2024
+      Message: I absolutely love "The Lord of the Rings" trilogy. It's a masterpiece!
+      Nested: 1
+      Post: 2
+      SubTitle: 'Re: Favorite Books of All Time'
+      SubType: Reply
+      Tags: ''
+      Time: 11:00 AM
+    State: Active
+    Thread: 1
+    Title: Favorite Books of All Time
+    Type: Discussion
+    post_ids:
+    - 1
+    - 2
+  - Category:
+    - Fiction
+    Forum:
+    - Genre Talks
+    Messages:
+    - Author: '@frank_m'
+      Date: Jul 15, 2024
+      Message: What new fantasy books are you excited about this year?
+      Nested: 0
+      Post: 1
+      SubTitle: 'Re: Favorite Books of All Time'
+      SubType: Post
+      Tags: ''
+      Time: 2:00 PM
+    - Author: '@emily_c'
+      Date: Jul 15, 2024
+      Message: I'm looking forward to the new book by Brandon Sanderson. It's supposed
+        to be amazing!
+      Nested: 1
+      Post: 2
+      SubTitle: 'Re: Favorite Books of All Time'
+      SubType: Reply
+      Tags: ''
+      Time: 3:00 PM
+    State: Active
+    Thread: 2
+    Title: New Releases in Fantasy
+    Type: Discussion
+    post_ids:
+    - 1
+    - 2
+  Service: Literature Discussion Board
+  Status:
+  - Active
+  Users:
+    1:
+      Bio: Avid reader and aspiring writer.
+      Birthday: May 1, 1985
+      Handle: '@emily_c'
+      Joined: May 1, 2023
+      Location: USA
+      Name: Emily Clark
+    2:
+      Bio: Loves fantasy novels and historical fiction.
+      Birthday: Jun 1, 1980
+      Handle: '@frank_m'
+      Joined: Jun 1, 2023
+      Location: Canada
+      Name: Frank Miller
+

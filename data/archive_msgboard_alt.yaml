@@ -1,0 +1,102 @@
+- Categories:
+  - Description: ''
+    Headline: Game Maker 2k
+    ID: 1
+    InSub: 0
+    Kind: Categories, Category
+    Level: Category
+    Type: Categories
+  - Description: ''
+    Headline: General Discussion
+    ID: 1
+    InSub: 0
+    Kind: Forums, Fourm
+    Level: Fourm
+    Type: Forums
+  Categorization:
+    Categories:
+    - Category
+    Forums:
+    - Fourm
+    - SubFourm
+  Entry: 1
+  Info: A simple message board for communicating about anything. ^_^
+  Interactions:
+  - Topic
+  - Post
+  - Reply
+  MessageThreads:
+  - Category:
+    - Game Maker 2k
+    Forum:
+    - General Discussion
+    Messages:
+    - Author: '@kazuki.suzuki'
+      Date: Jul 1, 2024
+      Message: Hello, World! ^_^
+      Nested: 0
+      Post: 1
+      SubTitle: Hello, World!
+      SubType: Post
+      Tags: ''
+      Time: 8:00 AM
+    - Author: '@cooldude2k'
+      Date: Jul 1, 2024
+      Message: Why did you say "Hello, World!" O_o
+      Nested: 1
+      Post: 2
+      SubTitle: 'Re: Hello, World!'
+      SubType: Reply
+      Tags: ''
+      Time: 10:00 AM
+    - Author: '@kazuki.suzuki'
+      Date: Jul 1, 2024
+      Message: 'I don''t know.
+
+        I thought it would be cool. ^_^'
+      Nested: 2
+      Post: 3
+      SubTitle: 'Re: Hello, World!'
+      SubType: Reply
+      Tags: ''
+      Time: 12:00 PM
+    - Author: '@cooldude2k'
+      Date: Jul 1, 2024
+      Message: What ever dude! <_<
+      Nested: 3
+      Post: 4
+      SubTitle: 'Re: Hello, World!'
+      SubType: Reply
+      Tags: ''
+      Time: 2:00 PM
+    State: Pinned
+    Thread: 1
+    Title: Hello, World!
+    Type: Topic
+    post_ids:
+    - 1
+    - 2
+    - 3
+    - 4
+  Service: Message Board
+  Status:
+  - Pinned
+  - Hot
+  - Hot Pinned
+  TimeZone: UTC
+  Users:
+    1:
+      Bio: I'm just a very cool dude! ^_^
+      Birthday: Jul 1, 1987
+      Handle: '@cooldude2k'
+      Joined: Jul 1, 2024
+      Location: Somewhere
+      Name: Cool Dude 2k
+    2:
+      Bio: Hello it's just me Kazuki. :P
+      Birthday: Jun 1, 1987
+      Handle: '@kazuki.suzuki'
+      Joined: Jul 1, 2024
+      Location: Anywhere
+      Name: Kazuki Suzuki
+
