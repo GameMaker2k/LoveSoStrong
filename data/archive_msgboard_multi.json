@@ -27,6 +27,8 @@
             "Time": "10:00 AM",
             "Date": "Jan 15, 2024",
             "SubType": "Post",
+            "SubTitle": "Favorite Tech Gadgets of 2024",
+            "Tags": "",
             "Post": 1,
             "Nested": 0,
             "Message": "What are your favorite tech gadgets of 2024?"
@@ -36,6 +38,8 @@
             "Time": "11:00 AM",
             "Date": "Jan 15, 2024",
             "SubType": "Reply",
+            "SubTitle": "Re: Favorite Tech Gadgets of 2024",
+            "Tags": "",
             "Post": 2,
             "Nested": 1,
             "Message": "I really like the new smartwatches. They're getting so advanced!"
@@ -96,6 +100,7 @@
     "Info": "This is an example forum for general discussions on various topics.",
     "Entry": 1,
     "Service": "Example Discussion Forum",
+    "TimeZone": "UTC",
     "Status": [
       "Active"
     ]
@@ -128,6 +133,7 @@
             "Time": "2:00 PM",
             "Date": "Jun 15, 2024",
             "SubType": "Poll",
+            "Tags": "",
             "Post": 1,
             "Nested": 0,
             "Message": "Vote for the best movie of 2024!",
@@ -230,6 +236,8 @@
             "Time": "10:00 AM",
             "Date": "Jul 10, 2024",
             "SubType": "Post",
+            "SubTitle": "Favorite Books of All Time",
+            "Tags": "",
             "Post": 1,
             "Nested": 0,
             "Message": "What are your all-time favorite books?"
@@ -239,6 +247,8 @@
             "Time": "11:00 AM",
             "Date": "Jul 10, 2024",
             "SubType": "Reply",
+            "SubTitle": "Re: Favorite Books of All Time",
+            "Tags": "",
             "Post": 2,
             "Nested": 1,
             "Message": "I absolutely love \"The Lord of the Rings\" trilogy. It's a masterpiece!"
@@ -266,6 +276,8 @@
             "Time": "2:00 PM",
             "Date": "Jul 15, 2024",
             "SubType": "Post",
+            "SubTitle": "Re: Favorite Books of All Time",
+            "Tags": "",
             "Post": 1,
             "Nested": 0,
             "Message": "What new fantasy books are you excited about this year?"
@@ -275,6 +287,8 @@
             "Time": "3:00 PM",
             "Date": "Jul 15, 2024",
             "SubType": "Reply",
+            "SubTitle": "Re: Favorite Books of All Time",
+            "Tags": "",
             "Post": 2,
             "Nested": 1,
             "Message": "I'm looking forward to the new book by Brandon Sanderson. It's supposed to be amazing!"

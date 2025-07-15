@@ -953,176 +953,15 @@ def validate_non_negative_integer(value, key, line_number):
     except ValueError as e:
         raise ValueError("Invalid integer '{0}' for key '{1}' on line {2}".format(value, key, line_number))
 
-def decode_format(text, include_parsers=None, verbose=False):
-    """
-    Parse an archive text into a nested list/dict structure, handling:
-      • arbitrary named blocks:  --- Start Foo --- … --- End Foo ---
-      • Include sections:        --- Include Bar Start --- … --- Include Bar End ---
-      • Comment sections:        --- Start Comment Section --- … --- End Comment Section ---
 
-    Parameters:
-      - text: the entire archive as one string.
-      - include_parsers: optional dict mapping include-names to functions
-          that take a list of file-paths and return a list of parsed dicts.
-      - verbose: if True, prints debug info to stdout.
+def parse_file(filename, validate_only=False, verbose=False):
+    with open_compressed_file(filename) as file:
+        lines = file.readlines()
+    return parse_lines(lines, validate_only, verbose)
 
-    Returns:
-      A list of top-level items, each of which is one of:
-        • {'name':…, 'content': […]}      – a named block
-        • {'key':…, 'value':…}            – a key/value line
-        • {'text':…}                      – a raw text line
-        • {'include':…, 'files': […]}     – an unparsed include section
-        • or, if a parser is provided, whatever the parser returned
-    """
-    # normalize into lines preserving endings
-    lines          = text.splitlines(True)
-    start_re       = re.compile(r'^--- Start (.+?) ---\s*$')
-    end_re         = re.compile(r'^--- End (.+?) ---\s*$')
-    inc_start_re   = re.compile(r'^--- Include (.+?) Start ---\s*$')
-    inc_end_re     = re.compile(r'^--- Include (.+?) End ---\s*$')
-    comment_start  = re.compile(r'^--- Start Comment Section ---\s*$')
-    comment_end    = re.compile(r'^--- End Comment Section ---\s*$')
-
-    include_parsers = include_parsers or {}
-
-    # root container & stack
-    root  = {'name': None, 'content': []}
-    stack = [root]
-
-    for idx, raw in enumerate(lines, 1):
-        line = raw.rstrip('\r\n')
-
-        # —— comment section starts ——
-        if comment_start.match(line):
-            blk = {'name': 'Comment Section', 'content': []}
-            stack[-1]['content'].append(blk)
-            stack.append(blk)
-            if verbose: print("Line {0}: ▶ Enter Comment".format(idx))
-            continue
-        if comment_end.match(line):
-            if verbose: print("Line {0}: ◀ Exit Comment".format(idx))
-            stack.pop()
-            continue
-
-        # —— include section starts ——
-        m = inc_start_re.match(line)
-        if m:
-            name = m.group(1)
-            blk  = {'include': name, 'files': []}
-            stack[-1]['content'].append(blk)
-            stack.append(blk)
-            if verbose: print("Line {0}: ▶ Enter Include '{1}'".format(idx, name))
-            continue
-        if inc_end_re.match(line):
-            blk = stack.pop()
-            name, files = blk['include'], blk['files']
-            if verbose: print("Line {0}: ◀ Exit Include '{1}' ({2} files)".format(idx, name, len(files)))
-            parser = include_parsers.get(name)
-            if parser:
-                # replace the raw-include node with the parser output
-                parent = stack[-1]
-                parent['content'].pop()
-                parent['content'].extend(parser(files))
-            continue
-        # if we're inside an include, accumulate filenames
-        if 'include' in stack[-1]:
-            stack[-1]['files'].append(line)
-            if verbose: print("Line {0}:    + include-file: {1}".format(idx, line))
-            continue
-
-        # —— generic named block starts ——
-        m = start_re.match(line)
-        if m:
-            name = m.group(1)
-            blk  = {'name': name, 'content': []}
-            stack[-1]['content'].append(blk)
-            stack.append(blk)
-            if verbose: print("Line {0}: ▶ Start '{1}'".format(idx, name))
-            continue
-        if end_re.match(line):
-            popped = stack.pop()
-            if verbose:
-                nm = popped.get('name') or '<root>'
-                print("Line {0}: ◀ End '{1}'".format(idx, nm))
-            continue
-
-        # —— key/value or raw text ——
-        parent = stack[-1]
-        if ':' in line:
-            k, v = line.split(':', 1)
-            parent['content'].append({
-                'key':   k.strip(),
-                'value': v.strip()
-            })
-        else:
-            parent['content'].append({
-                'text': line
-            })
-
-    return root['content']
-
-
-def encode_format(structure, eol='crlf'):
-    """
-    Reconstruct an archive text from the nested structure produced by decode_format.
-    Parameters:
-      - structure: list/dict output of decode_format
-      - eol: 'cr', 'lf', or 'crlf' to choose line endings (default 'crlf')
-    Returns:
-      A single string using the chosen EOL.
-    """
-    eols = {'cr':'\r', 'lf':'\n', 'crlf':'\r\n'}
-    sep = eols.get(eol.lower())
-    if sep is None:
-        raise ValueError("eol must be one of 'cr', 'lf', or 'crlf'")
-
-    lines = []
-
-    def _rec(item):
-        # list dispatch
-        if isinstance(item, list):
-            for elt in item:
-                _rec(elt)
-            return
-
-        # dict dispatch
-        if 'include' in item and 'files' in item:
-            name = item['include']
-            lines.append("--- Include {0} Start ---".format(name))
-            for f in item['files']:
-                lines.append(f)
-            lines.append("--- Include {0} End ---".format(name))
-            return
-
-        if item.get('name') == 'Comment Section' and 'content' in item:
-            lines.append("--- Start Comment Section ---")
-            for c in item['content']:
-                lines.append(c['text'])
-            lines.append("--- End Comment Section ---")
-            return
-
-        if 'name' in item and 'content' in item:
-            nm = item['name']
-            lines.append("--- Start {0} ---".format(nm))
-            for c in item['content']:
-                _rec(c)
-            lines.append("--- End {0} ---".format(nm))
-            return
-
-        if 'key' in item and 'value' in item:
-            lines.append("{0}: {1}".format(item['key'], item['value']))
-            return
-
-        if 'text' in item:
-            lines.append(item['text'])
-            return
-
-        # anything else is ignored
-
-    # start recursion
-    _rec(structure)
-    # join & final EOL
-    return sep.join(lines) + sep
+def parse_string(data, validate_only=False, verbose=False):
+    lines = StringIO(data).readlines()
+    return parse_lines(lines, validate_only, verbose)
 
 
 def parse_lines(lines, validate_only=False, verbose=False):
@@ -1391,6 +1230,8 @@ def parse_lines(lines, validate_only=False, verbose=False):
                     current_service['Entry'] = validate_non_negative_integer(value, "Entry", line_number)
                 elif key == "Service":
                     current_service['Service'] = value
+                elif key == "TimeZone":
+                    current_service['TimeZone'] = value
                 elif key == "Categories":
                     current_service['Categorization']['Categories'] = [category.strip() for category in value.split(",")]
                     if verbose:
@@ -1571,6 +1412,14 @@ def parse_lines(lines, validate_only=False, verbose=False):
                         current_message['SubType'] = value
                         if verbose:
                             print("Line {0}: SubType set to {1}".format(line_number, value))
+                    elif key == "SubTitle":
+                        current_message['SubTitle'] = value
+                        if verbose:
+                            print("Line {0}: SubTitle set to {1}".format(line_number, value))
+                    elif key == "Tags":
+                        current_message['Tags'] = value
+                        if verbose:
+                            print("Line {0}: Tags set to {1}".format(line_number, value))
                     elif key == "Post":
                         post_value = validate_non_negative_integer(value, "Post", line_number)
                         current_message['Post'] = post_value
@@ -1622,6 +1471,7 @@ def display_services(services):
     for service in services:
         print("Service Entry: {0}".format(service['Entry']))
         print("Service: {0}".format(service['Service']))
+        print("TimeZone: {0}".format(service['TimeZone']))
         
         if 'Info' in service and service['Info']:
             print("Info: {0}".format(service['Info'].strip().replace("\n", "\n      ")))
@@ -1697,6 +1547,7 @@ def save_services_to_file(services, filename, line_ending="lf"):
 
         output.append("Entry: {0}".format(service.get('Entry', 'N/A')))
         output.append("Service: {0}".format(service.get('Service', 'N/A')))
+        output.append("TimeZone: {0}".format(service.get('TimeZone', 'N/A')))
 
         if 'Info' in service:
             output.append("Info: {0}".format(service.get('Info', '<No information provided>')))
@@ -1734,6 +1585,8 @@ def save_services_to_file(services, filename, line_ending="lf"):
                         output.append("  Time: {0}".format(message.get('Time', 'N/A')))
                         output.append("  Date: {0}".format(message.get('Date', 'N/A')))
                         output.append("  SubType: {0}".format(message.get('SubType', 'N/A')))
+                        output.append("  SubTitle: {0}".format(message.get('SubTitle', 'N/A')))
+                        output.append("  Tags: {0}".format(message.get('Tags', 'N/A')))
                         output.append("  Post: {0}".format(message.get('Post', 'N/A')))
                         output.append("  Nested: {0}".format(message.get('Nested', 'N/A')))
 
@@ -1934,6 +1787,7 @@ def services_to_string(services, line_ending="lf"):
         
         output.append("Entry: {0}".format(service.get('Entry', 'N/A')))
         output.append("Service: {0}".format(service.get('Service', 'N/A')))
+        output.append("TimeZone: {0}".format(service.get('TimeZone', 'N/A')))
         
         if 'Info' in service:
             output.append("Info: {0}".format(service.get('Info', '<No information provided>')))
@@ -1971,6 +1825,8 @@ def services_to_string(services, line_ending="lf"):
                         output.append("  Time: {0}".format(message.get('Time', 'N/A')))
                         output.append("  Date: {0}".format(message.get('Date', 'N/A')))
                         output.append("  SubType: {0}".format(message.get('SubType', 'N/A')))
+                        output.append("  SubTitle: {0}".format(message.get('SubTitle', 'N/A')))
+                        output.append("  Tags: {0}".format(message.get('Tags', 'N/A')))
                         output.append("  Post: {0}".format(message.get('Post', 'N/A')))
                         output.append("  Nested: {0}".format(message.get('Nested', 'N/A')))
                         
@@ -2019,11 +1875,12 @@ def save_services_to_file(services, filename, line_ending="lf"):
     data = services_to_string(services, line_ending)
     save_compressed_file(data, filename)
 
-def init_empty_service(entry, service_name, info=''):
+def init_empty_service(entry, service_name, time_zone="UTC", info=''):
     """ Initialize an empty service structure """
     return {
         'Entry': entry,
         'Service': service_name,
+        'TimeZone': time_zone,
         'Users': {},
         'MessageThreads': [],
         'Categories': [],
@@ -2075,7 +1932,7 @@ def add_message_thread(service, thread_id, title='', category='', forum='', thre
     }
     service['MessageThreads'].append(thread)
 
-def add_message_post(service, thread_id, author, time, date, subtype, post_id, nested, message):
+def add_message_post(service, thread_id, author, time, date, subtype, tags, post_id, nested, message):
     thread = next((t for t in service['MessageThreads'] if t['Thread'] == thread_id), None)
     if thread is not None:
         new_post = {
@@ -2083,6 +1940,8 @@ def add_message_post(service, thread_id, author, time, date, subtype, post_id, n
             'Time': time,
             'Date': date,
             'SubType': subtype,
+            'SubTitle': subtitle,
+            'Tags': tags,
             'Post': post_id,
             'Nested': nested,
             'Message': message
@@ -2143,10 +2002,11 @@ def remove_message_post(service, thread_id, post_id):
     else:
         raise ValueError("Thread ID {0} not found in service.".format(thread_id))
 
-def add_service(services, entry, service_name, info=None):
+def add_service(services, entry, service_name, time_zone="UTC", info=None):
     new_service = {
         'Entry': entry,
         'Service': service_name,
+        'TimeZone': time_zone,
         'Info': info if info else '',
         'Interactions': [],
         'Status': [],

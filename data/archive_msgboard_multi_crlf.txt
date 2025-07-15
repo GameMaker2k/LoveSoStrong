@@ -1,6 +1,7 @@
 --- Start Archive Service ---
 Entry: 1
 Service: Example Discussion Forum
+TimeZone: UTC
 Info: 
 --- Start Info Body ---
 This is an example forum for general discussions on various topics.
@@ -78,6 +79,8 @@ Author: @alice_j
 Time: 10:00 AM
 Date: Jan 15, 2024
 SubType: Post
+SubTitle: Favorite Tech Gadgets of 2024
+Tags: 
 Post: 1
 Nested: 0
 Message:
@@ -91,6 +94,8 @@ Author: @bob_s
 Time: 11:00 AM
 Date: Jan 15, 2024
 SubType: Reply
+SubTitle: Re: Favorite Tech Gadgets of 2024
+Tags: 
 Post: 2
 Nested: 1
 Message:
@@ -172,6 +177,7 @@ Author: @charlie_d
 Time: 2:00 PM
 Date: Jun 15, 2024
 SubType: Poll
+Tags: 
 Post: 1
 Nested: 0
 Message:
@@ -276,6 +282,8 @@ Author: @emily_c
 Time: 10:00 AM
 Date: Jul 10, 2024
 SubType: Post
+SubTitle: Favorite Books of All Time
+Tags: 
 Post: 1
 Nested: 0
 Message:
@@ -289,6 +297,8 @@ Author: @frank_m
 Time: 11:00 AM
 Date: Jul 10, 2024
 SubType: Reply
+SubTitle: Re: Favorite Books of All Time
+Tags: 
 Post: 2
 Nested: 1
 Message:
@@ -311,6 +321,8 @@ Author: @frank_m
 Time: 2:00 PM
 Date: Jul 15, 2024
 SubType: Post
+SubTitle: Re: Favorite Books of All Time
+Tags: 
 Post: 1
 Nested: 0
 Message:
@@ -324,6 +336,8 @@ Author: @emily_c
 Time: 3:00 PM
 Date: Jul 15, 2024
 SubType: Reply
+SubTitle: Re: Favorite Books of All Time
+Tags: 
 Post: 2
 Nested: 1
 Message:

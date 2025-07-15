@@ -27,6 +27,8 @@
             "Time": "8:00 AM",
             "Date": "Jul 1, 2024",
             "SubType": "Post",
+            "SubTitle": "Hello, World!",
+            "Tags": "",
             "Post": 1,
             "Nested": 0,
             "Message": "Hello, World! ^_^"
@@ -36,6 +38,8 @@
             "Time": "10:00 AM",
             "Date": "Jul 1, 2024",
             "SubType": "Reply",
+            "SubTitle": "Re: Hello, World!",
+            "Tags": "",
             "Post": 2,
             "Nested": 1,
             "Message": "Why did you say \"Hello, World!\" O_o"
@@ -45,6 +49,8 @@
             "Time": "12:00 PM",
             "Date": "Jul 1, 2024",
             "SubType": "Reply",
+            "SubTitle": "Re: Hello, World!",
+            "Tags": "",
             "Post": 3,
             "Nested": 2,
             "Message": "I don't know.\nI thought it would be cool. ^_^"
@@ -54,6 +60,8 @@
             "Time": "2:00 PM",
             "Date": "Jul 1, 2024",
             "SubType": "Reply",
+            "SubTitle": "Re: Hello, World!",
+            "Tags": "",
             "Post": 4,
             "Nested": 3,
             "Message": "What ever dude! <_<"
@@ -113,6 +121,7 @@
     "Info": "A simple message board for communicating about anything. ^_^",
     "Entry": 1,
     "Service": "Message Board",
+    "TimeZone": "UTC",
     "Status": [
       "Pinned",
       "Hot",

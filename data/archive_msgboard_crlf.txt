@@ -1,6 +1,7 @@
 --- Start Archive Service ---
 Entry: 1
 Service: Example Message Board
+TimeZone: UTC
 Info:
 --- Start Info Body ---
 This is an example message board archive using all possible elements of the format.
@@ -125,6 +126,8 @@ Author: @johndoe
 Time: 9:00 AM
 Date: Jan 2, 2020
 SubType: Post
+SubTitle: Welcome to the Community!
+Tags: 
 Post: 1
 Nested: 0
 Message:
@@ -138,6 +141,8 @@ Author: @janesmith
 Time: 10:00 AM
 Date: Jan 2, 2020
 SubType: Reply
+SubTitle: Re: Welcome to the Community!
+Tags: 
 Post: 2
 Nested: 1
 Message:
@@ -160,6 +165,8 @@ Author: @janesmith
 Time: 2:00 PM
 Date: Feb 5, 2020
 SubType: Post
+SubTitle: What do you think about the new site features?
+Tags: 
 Post: 1
 Nested: 0
 Message:
@@ -173,6 +180,8 @@ Author: @johndoe
 Time: 3:00 PM
 Date: Feb 5, 2020
 SubType: Reply
+SubTitle: Re: What do you think about the new site features?
+Tags: 
 Post: 2
 Nested: 1
 Message:
@@ -186,6 +195,8 @@ Author: @janesmith
 Time: 3:30 PM
 Date: Feb 5, 2020
 SubType: Reply
+SubTitle: Re: What do you think about the new site features?
+Tags: 
 Post: 3
 Nested: 2
 Message:
@@ -199,6 +210,7 @@ Author: @janesmith
 Time: 4:00 PM
 Date: Feb 5, 2020
 SubType: Poll
+Tags: 
 Post: 4
 Nested: 2
 Message:

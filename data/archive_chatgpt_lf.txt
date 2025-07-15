@@ -1,6 +1,7 @@
 --- Start Archive Service ---
 Entry: 1
 Service: ChatGPT Interaction Log
+TimeZone: UTC
 Info: 
 --- Start Info Body ---
 ChatGPT is a chatbot and virtual assistant developed by OpenAI and launched on November 30, 2022.
@@ -80,6 +81,8 @@ Author: @user123
 Time: 8:00 AM
 Date: August 7, 2024
 SubType: Post
+SubTitle: Getting Started with ChatGPT
+Tags: 
 Post: 1
 Nested: 0
 Message:
@@ -93,6 +96,8 @@ Author: @chatgpt
 Time: 8:02 AM
 Date: August 7, 2024
 SubType: Reply
+SubTitle: Re: Getting Started with ChatGPT
+Tags: 
 Post: 2
 Nested: 1
 Message:
@@ -114,6 +119,8 @@ Author: @user123
 Time: 9:00 AM
 Date: August 7, 2024
 SubType: Post
+SubTitle: Asking About History
+Tags: 
 Post: 1
 Nested: 0
 Message:
@@ -126,7 +133,9 @@ Can you tell me about the history of the Titanic?
 Author: @chatgpt
 Time: 9:02 AM
 Date: August 7, 2024
-Type: Reply
+SubType: Reply
+SubTitle: Re: Asking About History
+Tags: 
 Post: 2
 Nested: 1
 Message:

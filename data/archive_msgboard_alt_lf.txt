@@ -1,6 +1,7 @@
 --- Start Archive Service ---
 Entry: 1
 Service: Message Board
+TimeZone: UTC
 Info: 
 --- Start Info Body ---
 A simple message board for communicating about anything. ^_^
@@ -80,6 +81,8 @@ Author: @kazuki.suzuki
 Time: 8:00 AM
 Date: Jul 1, 2024
 SubType: Post
+SubTitle: Hello, World!
+Tags: 
 Post: 1
 Nested: 0
 Message:
@@ -93,6 +96,8 @@ Author: @cooldude2k
 Time: 10:00 AM
 Date: Jul 1, 2024
 SubType: Reply
+SubTitle: Re: Hello, World!
+Tags: 
 Post: 2
 Nested: 1
 Message:
@@ -106,6 +111,8 @@ Author: @kazuki.suzuki
 Time: 12:00 PM
 Date: Jul 1, 2024
 SubType: Reply
+SubTitle: Re: Hello, World!
+Tags: 
 Post: 3
 Nested: 2
 Message:
@@ -120,6 +127,8 @@ Author: @cooldude2k
 Time: 2:00 PM
 Date: Jul 1, 2024
 SubType: Reply
+SubTitle: Re: Hello, World!
+Tags: 
 Post: 4
 Nested: 3
 Message:
