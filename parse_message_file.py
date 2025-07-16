@@ -1247,6 +1247,22 @@ def parse_lines(lines, validate_only=False, verbose=False):
                     current_service['Categorization']['Forums'] = [forum.strip() for forum in value.split(",")]
                     if verbose:
                         print("Line {0}: Forums set to {1}".format(line_number, current_service['Categorization']['Forums']))
+                elif line == "--- Start Description Body ---" and in_section['category_list']:
+                    # Begin capturing multi-line category Description
+                    in_section['description_body'] = True
+                    _desc_lines = []
+                    continue
+                elif line == "--- End Description Body ---" and in_section['category_list']:
+                    # Finish the multi-line description
+                    in_section['description_body'] = False
+                    # Join and store
+                    current_category['Description'] = "\n".join(_desc_lines)
+                    del _desc_lines
+                    continue
+                elif in_section['description_body'] and in_section['category_list']:
+                    # Accumulate each body‑line
+                    _desc_lines.append(line)
+                    continue
                 elif in_section['category_list']:
                     if key == "Kind":
                         current_category['Kind'] = value
