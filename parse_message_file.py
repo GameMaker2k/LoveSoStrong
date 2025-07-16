@@ -3,6 +3,8 @@
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import platform
 import logging
+import marshal
+import pickle
 import json
 import zlib
 import sys
@@ -1740,6 +1742,44 @@ def save_to_yaml_file(data, filename):
     yaml_data = yaml.safe_dump(data, default_flow_style=False, allow_unicode=True)
     save_compressed_file(yaml_data + "\n", filename)
     return True
+
+
+def to_marshal(services):
+    """Convert the services data structure to a marshaled byte string"""
+    return marshal.dumps(services)
+
+def from_marshal(marshal_bytes):
+    """Convert a marshaled byte string back to the services data structure"""
+    return marshal.loads(marshal_bytes)
+
+def load_from_marshal_file(marshal_filename):
+    """Load the services data structure from a marshal file"""
+    with open_compressed_file(marshal_filename, mode='rb') as file:
+        return marshal.load(file)
+
+def save_to_marshal_file(services, marshal_filename):
+    """Save the services data structure to a marshal file"""
+    marshal_data = marshal.dumps(services)
+    save_compressed_file(marshal_data, marshal_filename, mode='wb')
+
+
+def to_pickle(services):
+    """Convert the services data structure to a pickled byte string"""
+    return pickle.dumps(services)
+
+def from_pickle(pickle_bytes):
+    """Convert a pickled byte string back to the services data structure"""
+    return pickle.loads(pickle_bytes)
+
+def load_from_pickle_file(pickle_filename):
+    """Load the services data structure from a pickle file"""
+    with open_compressed_file(pickle_filename, mode='rb') as file:
+        return pickle.load(file)
+
+def save_to_pickle_file(services, pickle_filename):
+    """Save the services data structure to a pickle file"""
+    pickle_data = pickle.dumps(services)
+    save_compressed_file(pickle_data, pickle_filename, mode='wb')
 
 
 def to_array(data):
