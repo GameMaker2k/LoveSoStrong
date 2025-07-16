@@ -1367,6 +1367,11 @@ def parse_lines(lines, validate_only=False, verbose=False):
                             current_service['Users'][user_id]['Location'] = value
                             if verbose:
                                 print("Line {0}: Location set to {1}".format(line_number, value))
+                    elif key == "Website":
+                        if user_id is not None:
+                            current_service['Users'][user_id]['Website'] = value
+                            if verbose:
+                                print("Line {0}: Website set to {1}".format(line_number, value))
                     elif key == "Joined":
                         if user_id is not None:
                             current_service['Users'][user_id]['Joined'] = value
@@ -1521,6 +1526,7 @@ def display_services(services):
             print("    Name: {0}".format(user_info['Name']))
             print("    Handle: {0}".format(user_info['Handle']))
             print("    Location: {0}".format(user_info.get('Location', 'N/A')))
+            print("    Website: {0}".format(user_info.get('Website', 'N/A')))
             print("    Joined: {0}".format(user_info.get('Joined', 'N/A')))
             print("    Birthday: {0}".format(user_info.get('Birthday', 'N/A')))
             print("    Bio:")
@@ -1788,6 +1794,7 @@ def services_to_string(services, line_ending='lf'):
                 output.append('Name: {0}'.format(user.get('Name', 'N/A')))
                 output.append('Handle: {0}'.format(user.get('Handle', 'N/A')))
                 output.append('Location: {0}'.format(user.get('Location', 'N/A')))
+                output.append('Website: {0}'.format(user.get('Website', 'N/A')))
                 if 'Joined' in user:
                     output.append('Joined: {0}'.format(user['Joined']))
                 if 'Birthday' in user:
@@ -1921,12 +1928,13 @@ def init_empty_service(entry, service_name, time_zone="UTC", info=''):
         'Info': info,
     }
 
-def add_user(service, user_id, name, handle, location='', joined='', birthday='', bio=''):
+def add_user(service, user_id, name, handle, location='', website='', joined='', birthday='', bio=''):
     """ Add a user to the service """
     service['Users'][user_id] = {
         'Name': name,
         'Handle': handle,
         'Location': location,
+        'Website': website,
         'Joined': joined,
         'Birthday': birthday,
         'Bio': bio
