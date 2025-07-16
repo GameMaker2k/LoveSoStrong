@@ -1767,7 +1767,7 @@ def services_to_string(services, line_ending='lf'):
         output.append('--- Start Archive Service ---')
         output.append('Entry: {0}'.format(service.get('Entry', 'N/A')))
         output.append('Service: {0}'.format(service.get('Service', 'N/A')))
-        output.append('TimeZone: {0}'.format(service.get('TimeZone', 'N/A')))
+        output.append('TimeZone: {0}'.format(service.get('TimeZone', 'UTC')))
 
         # Info section
         if 'Info' in service:
