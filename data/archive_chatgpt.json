@@ -104,7 +104,7 @@
         "ID": 1,
         "InSub": 0,
         "Headline": "General Interaction",
-        "Description": "",
+        "Description": "General conversation and interactions with ChatGPT.",
         "Type": "Categories",
         "Level": "Category"
       },
@@ -113,7 +113,7 @@
         "ID": 1,
         "InSub": 0,
         "Headline": "Chat Sessions",
-        "Description": "",
+        "Description": "Logs of chat sessions between users and ChatGPT.",
         "Type": "Forums",
         "Level": "Forum"
       }
