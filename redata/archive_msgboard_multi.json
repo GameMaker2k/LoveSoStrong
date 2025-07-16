@@ -1,0 +1,358 @@
+[
+  {
+    "Users": {
+      "1": {
+        "Bio": "Tech enthusiast and avid reader.",
+        "Name": "Alice Johnson",
+        "Handle": "@alice_j",
+        "Location": "USA",
+        "Joined": "Jan 1, 2023",
+        "Birthday": "Jan 1, 1995"
+      },
+      "2": {
+        "Bio": "Loves discussing movies and books.",
+        "Name": "Bob Smith",
+        "Handle": "@bob_s",
+        "Location": "Canada",
+        "Joined": "Feb 1, 2023",
+        "Birthday": "Feb 1, 1990"
+      }
+    },
+    "MessageThreads": [
+      {
+        "Title": "Favorite Tech Gadgets of 2024",
+        "Messages": [
+          {
+            "Author": "@alice_j",
+            "Time": "10:00 AM",
+            "Date": "Jan 15, 2024",
+            "SubType": "Post",
+            "SubTitle": "Favorite Tech Gadgets of 2024",
+            "Tags": "",
+            "Post": 1,
+            "Nested": 0,
+            "Message": "What are your favorite tech gadgets of 2024?"
+          },
+          {
+            "Author": "@bob_s",
+            "Time": "11:00 AM",
+            "Date": "Jan 15, 2024",
+            "SubType": "Reply",
+            "SubTitle": "Re: Favorite Tech Gadgets of 2024",
+            "Tags": "",
+            "Post": 2,
+            "Nested": 1,
+            "Message": "I really like the new smartwatches. They're getting so advanced!"
+          }
+        ],
+        "Thread": 1,
+        "Type": "Topic",
+        "State": "Active",
+        "Category": [
+          "Tech"
+        ],
+        "Forum": [
+          "Tech Talk"
+        ],
+        "post_ids": [
+          1,
+          2
+        ]
+      }
+    ],
+    "Categories": [
+      {
+        "Kind": "Categories, Main Category",
+        "ID": 1,
+        "InSub": 0,
+        "Headline": "General",
+        "Description": "",
+        "Type": "Categories",
+        "Level": "Main Category"
+      },
+      {
+        "Kind": "Forums, Main Forum",
+        "ID": 2,
+        "InSub": 0,
+        "Headline": "Tech Talk",
+        "Description": "",
+        "Type": "Forums",
+        "Level": "Main Forum"
+      }
+    ],
+    "Interactions": [
+      "Topic",
+      "Post",
+      "Reply"
+    ],
+    "Categorization": {
+      "Categories": [
+        "General",
+        "Tech",
+        "Movies"
+      ],
+      "Forums": [
+        "General Discussion",
+        "Tech Talk",
+        "Movie Reviews"
+      ]
+    },
+    "Info": "This is an example forum for general discussions on various topics.",
+    "Entry": 1,
+    "Service": "Example Discussion Forum",
+    "TimeZone": "UTC",
+    "Status": [
+      "Active"
+    ]
+  },
+  {
+    "Users": {
+      "1": {
+        "Bio": "Movie buff and critic.",
+        "Name": "Charlie Doe",
+        "Handle": "@charlie_d",
+        "Location": "UK",
+        "Joined": "Mar 1, 2023",
+        "Birthday": "Mar 1, 1992"
+      },
+      "2": {
+        "Bio": "A lover of all things cinema.",
+        "Name": "Dana White",
+        "Handle": "@dana_w",
+        "Location": "Australia",
+        "Joined": "Apr 1, 2023",
+        "Birthday": "Apr 1, 1993"
+      }
+    },
+    "MessageThreads": [
+      {
+        "Title": "Best Movie of 2024",
+        "Messages": [
+          {
+            "Author": "@charlie_d",
+            "Time": "2:00 PM",
+            "Date": "Jun 15, 2024",
+            "SubType": "Poll",
+            "Tags": "",
+            "Post": 1,
+            "Nested": 0,
+            "Message": "Vote for the best movie of 2024!",
+            "Polls": [
+              {
+                "Num": "1",
+                "Question": "What was the best movie of 2024?",
+                "Answers": [
+                  "Movie A",
+                  "Movie B",
+                  "Movie C"
+                ],
+                "Results": [
+                  "25",
+                  "15",
+                  "10"
+                ],
+                "Percentage": [
+                  "50.0",
+                  "30.0",
+                  "20.0"
+                ],
+                "Votes": "50"
+              }
+            ]
+          }
+        ],
+        "Thread": 1,
+        "Type": "Poll",
+        "State": "Active",
+        "Category": [
+          "Movies"
+        ],
+        "Forum": [
+          "Latest Releases"
+        ],
+        "post_ids": [
+          1
+        ]
+      }
+    ],
+    "Categories": [
+      {
+        "Kind": "Forums, Main Forum",
+        "ID": 1,
+        "InSub": 0,
+        "Headline": "Latest Releases",
+        "Description": "",
+        "Type": "Forums",
+        "Level": "Main Forum"
+      }
+    ],
+    "Interactions": [
+      "Review",
+      "Post",
+      "Poll"
+    ],
+    "Categorization": {
+      "Categories": [
+        "Movies",
+        "Reviews"
+      ],
+      "Forums": [
+        "Latest Releases",
+        "Classic Films"
+      ]
+    },
+    "Info": "A place to discuss and review the latest movies.",
+    "Entry": 2,
+    "Service": "Movie Review Forum",
+    "TimeZone": "N/A",
+    "Status": [
+      "Active"
+    ]
+  },
+  {
+    "Users": {
+      "1": {
+        "Bio": "Avid reader and aspiring writer.",
+        "Name": "Emily Clark",
+        "Handle": "@emily_c",
+        "Location": "USA",
+        "Joined": "May 1, 2023",
+        "Birthday": "May 1, 1985"
+      },
+      "2": {
+        "Bio": "Loves fantasy novels and historical fiction.",
+        "Name": "Frank Miller",
+        "Handle": "@frank_m",
+        "Location": "Canada",
+        "Joined": "Jun 1, 2023",
+        "Birthday": "Jun 1, 1980"
+      }
+    },
+    "MessageThreads": [
+      {
+        "Title": "Favorite Books of All Time",
+        "Messages": [
+          {
+            "Author": "@emily_c",
+            "Time": "10:00 AM",
+            "Date": "Jul 10, 2024",
+            "SubType": "Post",
+            "SubTitle": "Favorite Books of All Time",
+            "Tags": "",
+            "Post": 1,
+            "Nested": 0,
+            "Message": "What are your all-time favorite books?"
+          },
+          {
+            "Author": "@frank_m",
+            "Time": "11:00 AM",
+            "Date": "Jul 10, 2024",
+            "SubType": "Reply",
+            "SubTitle": "Re: Favorite Books of All Time",
+            "Tags": "",
+            "Post": 2,
+            "Nested": 1,
+            "Message": "I absolutely love \"The Lord of the Rings\" trilogy. It's a masterpiece!"
+          }
+        ],
+        "Thread": 1,
+        "Type": "Discussion",
+        "State": "Active",
+        "Category": [
+          "Fiction"
+        ],
+        "Forum": [
+          "Book Reviews"
+        ],
+        "post_ids": [
+          1,
+          2
+        ]
+      },
+      {
+        "Title": "New Releases in Fantasy",
+        "Messages": [
+          {
+            "Author": "@frank_m",
+            "Time": "2:00 PM",
+            "Date": "Jul 15, 2024",
+            "SubType": "Post",
+            "SubTitle": "Re: Favorite Books of All Time",
+            "Tags": "",
+            "Post": 1,
+            "Nested": 0,
+            "Message": "What new fantasy books are you excited about this year?"
+          },
+          {
+            "Author": "@emily_c",
+            "Time": "3:00 PM",
+            "Date": "Jul 15, 2024",
+            "SubType": "Reply",
+            "SubTitle": "Re: Favorite Books of All Time",
+            "Tags": "",
+            "Post": 2,
+            "Nested": 1,
+            "Message": "I'm looking forward to the new book by Brandon Sanderson. It's supposed to be amazing!"
+          }
+        ],
+        "Thread": 2,
+        "Type": "Discussion",
+        "State": "Active",
+        "Category": [
+          "Fiction"
+        ],
+        "Forum": [
+          "Genre Talks"
+        ],
+        "post_ids": [
+          1,
+          2
+        ]
+      }
+    ],
+    "Categories": [
+      {
+        "Kind": "Categories, Main Category",
+        "ID": 1,
+        "InSub": 0,
+        "Headline": "Fiction",
+        "Description": "",
+        "Type": "Categories",
+        "Level": "Main Category"
+      },
+      {
+        "Kind": "Forums, Main Forum",
+        "ID": 2,
+        "InSub": 0,
+        "Headline": "Book Reviews",
+        "Description": "",
+        "Type": "Forums",
+        "Level": "Main Forum"
+      }
+    ],
+    "Interactions": [
+      "Discussion",
+      "Post",
+      "Reply"
+    ],
+    "Categorization": {
+      "Categories": [
+        "Fiction",
+        "Non-Fiction",
+        "Fantasy"
+      ],
+      "Forums": [
+        "Book Reviews",
+        "Author Discussions",
+        "Genre Talks"
+      ]
+    },
+    "Info": "Discuss and review your favorite books and authors.",
+    "Entry": 3,
+    "Service": "Literature Discussion Board",
+    "TimeZone": "N/A",
+    "Status": [
+      "Active"
+    ]
+  }
+]

@@ -1,0 +1,229 @@
+[
+  {
+    "Users": {
+      "1": {
+        "Bio": "Just an example user enjoying the discussions.",
+        "Name": "John Doe",
+        "Handle": "@johndoe",
+        "Location": "Earth",
+        "Joined": "Jan 1, 2020",
+        "Birthday": "Jan 1, 1990"
+      },
+      "2": {
+        "Bio": "I love giving feedback and helping improve the site.",
+        "Name": "Jane Smith",
+        "Handle": "@janesmith",
+        "Location": "Mars",
+        "Joined": "Feb 1, 2020",
+        "Birthday": "Feb 1, 1992"
+      }
+    },
+    "MessageThreads": [
+      {
+        "Title": "Welcome to the Community!",
+        "Messages": [
+          {
+            "Author": "@johndoe",
+            "Time": "9:00 AM",
+            "Date": "Jan 2, 2020",
+            "SubType": "Post",
+            "SubTitle": "Welcome to the Community!",
+            "Tags": "",
+            "Post": 1,
+            "Nested": 0,
+            "Message": "Hello everyone! I'm excited to be part of this community."
+          },
+          {
+            "Author": "@janesmith",
+            "Time": "10:00 AM",
+            "Date": "Jan 2, 2020",
+            "SubType": "Reply",
+            "SubTitle": "Re: Welcome to the Community!",
+            "Tags": "",
+            "Post": 2,
+            "Nested": 1,
+            "Message": "Welcome, @johndoe! Looking forward to your contributions."
+          }
+        ],
+        "Thread": 1,
+        "Type": "Topic",
+        "State": "Pinned",
+        "Category": [
+          "General Discussion"
+        ],
+        "Forum": [
+          "Introductions"
+        ],
+        "post_ids": [
+          1,
+          2
+        ]
+      },
+      {
+        "Title": "What do you think about the new site features?",
+        "Messages": [
+          {
+            "Author": "@janesmith",
+            "Time": "2:00 PM",
+            "Date": "Feb 5, 2020",
+            "SubType": "Post",
+            "SubTitle": "What do you think about the new site features?",
+            "Tags": "",
+            "Post": 1,
+            "Nested": 0,
+            "Message": "I wanted to gather some opinions on the new site features. What do you all think?"
+          },
+          {
+            "Author": "@johndoe",
+            "Time": "3:00 PM",
+            "Date": "Feb 5, 2020",
+            "SubType": "Reply",
+            "SubTitle": "Re: What do you think about the new site features?",
+            "Tags": "",
+            "Post": 2,
+            "Nested": 1,
+            "Message": "I think the new features are great! They really improve the user experience."
+          },
+          {
+            "Author": "@janesmith",
+            "Time": "3:30 PM",
+            "Date": "Feb 5, 2020",
+            "SubType": "Reply",
+            "SubTitle": "Re: What do you think about the new site features?",
+            "Tags": "",
+            "Post": 3,
+            "Nested": 2,
+            "Message": "Glad to hear that! Let's see what others think."
+          },
+          {
+            "Author": "@janesmith",
+            "Time": "4:00 PM",
+            "Date": "Feb 5, 2020",
+            "SubType": "Poll",
+            "Tags": "",
+            "Post": 4,
+            "Nested": 2,
+            "Message": "I've set up a poll to gather opinions. Please vote!",
+            "Polls": [
+              {
+                "Num": "1",
+                "Question": "Do you like the new site features?",
+                "Answers": [
+                  "Yes",
+                  "No",
+                  "Maybe"
+                ],
+                "Results": [
+                  "10",
+                  "2",
+                  "1"
+                ],
+                "Percentage": [
+                  "76.9",
+                  "15.4",
+                  "7.7"
+                ],
+                "Votes": "13"
+              }
+            ]
+          }
+        ],
+        "Thread": 2,
+        "Type": "Topic",
+        "State": "Hot",
+        "Category": [
+          "Feedback"
+        ],
+        "Forum": [
+          "Site Feedback"
+        ],
+        "post_ids": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ],
+    "Categories": [
+      {
+        "Kind": "Categories, Main Category",
+        "ID": 1,
+        "InSub": 0,
+        "Headline": "General Discussion",
+        "Description": "",
+        "Type": "Categories",
+        "Level": "Main Category"
+      },
+      {
+        "Kind": "Categories, Main Category",
+        "ID": 2,
+        "InSub": 0,
+        "Headline": "Feedback",
+        "Description": "",
+        "Type": "Categories",
+        "Level": "Main Category"
+      },
+      {
+        "Kind": "Categories, Subcategory",
+        "ID": 3,
+        "InSub": 2,
+        "Headline": "Subcategory of Feedback",
+        "Description": "",
+        "Type": "Categories",
+        "Level": "Subcategory"
+      },
+      {
+        "Kind": "Forums, Main Forum",
+        "ID": 4,
+        "InSub": 0,
+        "Headline": "Introductions",
+        "Description": "",
+        "Type": "Forums",
+        "Level": "Main Forum"
+      },
+      {
+        "Kind": "Forums, Main Forum",
+        "ID": 5,
+        "InSub": 0,
+        "Headline": "Site Feedback",
+        "Description": "",
+        "Type": "Forums",
+        "Level": "Main Forum"
+      },
+      {
+        "Kind": "Forums, Subforum",
+        "ID": 6,
+        "InSub": 5,
+        "Headline": "Subforum of Site Feedback",
+        "Description": "",
+        "Type": "Forums",
+        "Level": "Subforum"
+      }
+    ],
+    "Interactions": [
+      "Post",
+      "Reply",
+      "Poll"
+    ],
+    "Categorization": {
+      "Categories": [
+        "General Discussion",
+        "Feedback",
+        "Subcategory of Feedback"
+      ],
+      "Forums": [
+        "Introductions",
+        "Site Feedback",
+        "Subforum of Site Feedback"
+      ]
+    },
+    "Info": "This is an example message board archive using all possible elements of the format.\nIt includes multiple services, users, categories, forums, message threads, posts, and polls.",
+    "Entry": 1,
+    "Service": "Example Message Board",
+    "TimeZone": "UTC",
+    "Status": [
+      "Active"
+    ]
+  }
+]
