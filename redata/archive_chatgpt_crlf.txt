@@ -48,6 +48,7 @@ InSub: 0
 Headline: General Interaction
 Description:
 --- Start Description Body ---
+General conversation and interactions with ChatGPT.
 --- End Description Body ---
 --- End Category List ---
 
@@ -58,6 +59,7 @@ InSub: 0
 Headline: Chat Sessions
 Description:
 --- Start Description Body ---
+Logs of chat sessions between users and ChatGPT.
 --- End Description Body ---
 --- End Category List ---
 

@@ -48,6 +48,7 @@ InSub: 0
 Headline: General
 Description:
 --- Start Description Body ---
+A place for general discussions on any topic.
 --- End Description Body ---
 --- End Category List ---
 
@@ -58,6 +59,7 @@ InSub: 0
 Headline: Tech Talk
 Description:
 --- Start Description Body ---
+Discussions about the latest in technology.
 --- End Description Body ---
 --- End Category List ---
 
@@ -159,6 +161,7 @@ InSub: 0
 Headline: Latest Releases
 Description:
 --- Start Description Body ---
+Discuss the latest movies here.
 --- End Description Body ---
 --- End Category List ---
 
@@ -255,6 +258,7 @@ InSub: 0
 Headline: Fiction
 Description:
 --- Start Description Body ---
+Discuss fictional works, including novels, short stories, and more.
 --- End Description Body ---
 --- End Category List ---
 
@@ -265,6 +269,7 @@ InSub: 0
 Headline: Book Reviews
 Description:
 --- Start Description Body ---
+Review and discuss the latest and greatest books.
 --- End Description Body ---
 --- End Category List ---
 

@@ -48,6 +48,7 @@ InSub: 0
 Headline: Game Maker 2k
 Description:
 --- Start Description Body ---
+Just talk about anything.
 --- End Description Body ---
 --- End Category List ---
 
@@ -58,6 +59,7 @@ InSub: 0
 Headline: General Discussion
 Description:
 --- Start Description Body ---
+Just talk about anything.
 --- End Description Body ---
 --- End Category List ---
 

@@ -66,7 +66,7 @@
         "ID": 1,
         "InSub": 0,
         "Headline": "General",
-        "Description": "",
+        "Description": "A place for general discussions on any topic.",
         "Type": "Categories",
         "Level": "Main Category"
       },
@@ -75,7 +75,7 @@
         "ID": 2,
         "InSub": 0,
         "Headline": "Tech Talk",
-        "Description": "",
+        "Description": "Discussions about the latest in technology.",
         "Type": "Forums",
         "Level": "Main Forum"
       }
@@ -181,7 +181,7 @@
         "ID": 1,
         "InSub": 0,
         "Headline": "Latest Releases",
-        "Description": "",
+        "Description": "Discuss the latest movies here.",
         "Type": "Forums",
         "Level": "Main Forum"
       }
@@ -316,7 +316,7 @@
         "ID": 1,
         "InSub": 0,
         "Headline": "Fiction",
-        "Description": "",
+        "Description": "Discuss fictional works, including novels, short stories, and more.",
         "Type": "Categories",
         "Level": "Main Category"
       },
@@ -325,7 +325,7 @@
         "ID": 2,
         "InSub": 0,
         "Headline": "Book Reviews",
-        "Description": "",
+        "Description": "Review and discuss the latest and greatest books.",
         "Type": "Forums",
         "Level": "Main Forum"
       }

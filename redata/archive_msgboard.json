@@ -151,7 +151,7 @@
         "ID": 1,
         "InSub": 0,
         "Headline": "General Discussion",
-        "Description": "",
+        "Description": "This category is for general discussions on any topic.",
         "Type": "Categories",
         "Level": "Main Category"
       },
@@ -160,7 +160,7 @@
         "ID": 2,
         "InSub": 0,
         "Headline": "Feedback",
-        "Description": "",
+        "Description": "This category is for feedback on the site and its features.",
         "Type": "Categories",
         "Level": "Main Category"
       },
@@ -169,7 +169,7 @@
         "ID": 3,
         "InSub": 2,
         "Headline": "Subcategory of Feedback",
-        "Description": "",
+        "Description": "This is a subcategory under Feedback for more specific discussions.",
         "Type": "Categories",
         "Level": "Subcategory"
       },
@@ -178,7 +178,7 @@
         "ID": 4,
         "InSub": 0,
         "Headline": "Introductions",
-        "Description": "",
+        "Description": "A forum for new members to introduce themselves.",
         "Type": "Forums",
         "Level": "Main Forum"
       },
@@ -187,7 +187,7 @@
         "ID": 5,
         "InSub": 0,
         "Headline": "Site Feedback",
-        "Description": "",
+        "Description": "A forum dedicated to gathering feedback about the site.",
         "Type": "Forums",
         "Level": "Main Forum"
       },
@@ -196,7 +196,7 @@
         "ID": 6,
         "InSub": 5,
         "Headline": "Subforum of Site Feedback",
-        "Description": "",
+        "Description": "This is a subforum under Site Feedback for detailed discussions.",
         "Type": "Forums",
         "Level": "Subforum"
       }
