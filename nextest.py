@@ -9,8 +9,8 @@ services = []
 new_service = add_service(services, entry=1, service_name="Message Board", "UTC", info="A simple message board for communicating about anything. ^_^")
 
 # Add users
-add_user(new_service, user_id=1, name="Cool Dude 2k", handle="@cooldude2k", location="Somewhere", joined="Jul 1, 2024", birthday="Jul 1, 1987", bio="I'm just a very cool dude! ^_^")
-add_user(new_service, user_id=2, name="Kazuki Suzuki", handle="@kazuki.suzuki", location="Anywhere", joined="Jul 1, 2024", birthday="Jun 1, 1987", bio="Hello it's just me Kazuki. :P")
+add_user(new_service, user_id=1, name="Cool Dude 2k", handle="@cooldude2k", location="Somewhere", website="", joined="Jul 1, 2024", birthday="Jul 1, 1987", bio="I'm just a very cool dude! ^_^")
+add_user(new_service, user_id=2, name="Kazuki Suzuki", handle="@kazuki.suzuki", location="Anywhere", website="", joined="Jul 1, 2024", birthday="Jun 1, 1987", bio="Hello it's just me Kazuki. :P")
 
 # Add categories
 add_category(new_service, kind="Categories", category_type="Category", category_level="Main Category", category_id=1, insub=0, headline="Game Maker 2k", description="Just talk about anything.")
