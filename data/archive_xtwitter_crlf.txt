@@ -253,6 +253,8 @@ Nested: 0
 Message:
 --- Start Message Body ---
 i want forever with you.
+--- End Message Body ---
+--- End Message Post ---
 
 --- Start Message Post ---
 Author: @Yehoshua035
