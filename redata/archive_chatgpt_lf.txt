@@ -13,6 +13,7 @@ User: 1
 Name: ChatGPT
 Handle: @chatgpt
 Location: Virtual
+Website: https://chatgpt.com/
 Joined: November, 2022
 Birthday: November 30, 2022
 Bio:
@@ -26,6 +27,7 @@ User: 2
 Name: User
 Handle: @user123
 Location: Midwest, USA
+Website: 
 Joined: August, 2024
 Birthday: 
 Bio:
