@@ -87,6 +87,7 @@ User: 1
 Name: John Doe
 Handle: @johndoe
 Location: Earth
+Website: 
 Joined: Jan 1, 2020
 Birthday: Jan 1, 1990
 Bio:
@@ -100,6 +101,7 @@ User: 2
 Name: Jane Smith
 Handle: @janesmith
 Location: Mars
+Website: 
 Joined: Feb 1, 2020
 Birthday: Feb 1, 1992
 Bio:
