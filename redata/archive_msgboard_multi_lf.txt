@@ -114,7 +114,7 @@ I really like the new smartwatches. They're getting so advanced!
 --- Start Archive Service ---
 Entry: 2
 Service: Movie Review Forum
-TimeZone: N/A
+TimeZone: UTC
 Info:
 --- Start Info Body ---
 A place to discuss and review the latest movies.
@@ -211,7 +211,7 @@ Votes: 50
 --- Start Archive Service ---
 Entry: 3
 Service: Literature Discussion Board
-TimeZone: N/A
+TimeZone: UTC
 Info:
 --- Start Info Body ---
 Discuss and review your favorite books and authors.

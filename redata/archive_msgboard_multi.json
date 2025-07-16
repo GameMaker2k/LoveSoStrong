@@ -204,7 +204,7 @@
     "Info": "A place to discuss and review the latest movies.",
     "Entry": 2,
     "Service": "Movie Review Forum",
-    "TimeZone": "N/A",
+    "TimeZone": "UTC",
     "Status": [
       "Active"
     ]
@@ -350,7 +350,7 @@
     "Info": "Discuss and review your favorite books and authors.",
     "Entry": 3,
     "Service": "Literature Discussion Board",
-    "TimeZone": "N/A",
+    "TimeZone": "UTC",
     "Status": [
       "Active"
     ]
