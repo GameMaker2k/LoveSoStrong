@@ -181,12 +181,11 @@ def main():
     parser.add_argument("--json", default="out.json", help="Output JSON file")
     parser.add_argument("--yaml", default="out.yaml", help="Output YAML file")
     parser.add_argument("--print", action="store_true", help="Print parsed service data")
-    args = parser.parse_args()
     parser.add_argument("--export-txt", help="Export full archive format file")
+    parser.add_argument("--write-txt", help="Recreate original-style .txt output")
+    args = parser.parse_args()
     if args.export_txt:
         write_services_to_txt_file([service], args.export_txt)
-
-    parser.add_argument("--write-txt", help="Recreate original-style .txt output")
 
     if args.write_txt:
         write_service_to_txt(service, args.write_txt)
@@ -247,7 +246,6 @@ def write_service_to_txt(service, out_path):
             f.write("--- End Message Thread ---\n\n")
 
     print("[✔] Service structure written back to {}".format(out_path))
-\n
 
 def services_to_string(services, line_ending='lf'):
     output = []
@@ -381,5 +379,6 @@ def write_services_to_txt_file(services, out_path, line_ending='lf'):
     with io.open(out_path, 'w', encoding='utf-8') as f:
         f.write(content)
     print("[✔] Wrote full archive file to {}".format(out_path))
-\nif __name__ == "__main__":
+
+if __name__ == "__main__":
     main()
