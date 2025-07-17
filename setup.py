@@ -69,14 +69,14 @@ pymodule['keywords'] = 'pytextarchive textarchive archive text backup'
 pymodule['url'] = 'https://github.com/GameMaker2k/PyTextArchive'
 pymodule['downloadurl'] = 'https://github.com/GameMaker2k/PyTextArchive/archive/master.tar.gz'
 pymodule['packages'] = find_packages();
-pymodule['packagedata'] = {'data': ['*.txt']}
+pymodule['packagedata'] = {'data': ['*.txt', '*.json', '*.yaml', '*.html']}
 pymodule['longdescription'] = "" 
 '''
 pymodule['keywords'] = 'love loveisokifnotextreme extremeloveisnotok lovesostrong lovesostrongitscreepy lovesostrongitiscreepy extreamelove excessivelove yanderelove unbendinglove loveyoucantbelievein whydidthishappentomelove creepylove loveinabundance morelovemoreextreme weheardyoulikelovesowegotyoulove iloveyoumorethenyouknow ifyoulovethemtheywilllovebackinextreme whenyoulovetheylovebackinextreme ifonlyineverlovedagain somuchloveyoucanthandleitanddie weloveonlyforlovetheyloveforextremelove iloveyoumorethenyouknowbutyouloveinextreme isextremeloverealyinhighdemand lovesostrongitscreepy lovesostrongitiscreepy extreamelove excessivelove yanderelove unbendinglove loveyoucantbelievein whydidthishappentomelove creepylove loveinabundance isloverealyinhighdemand morelovemoreextreme weheardyoulikelovesowegotyoulove iloveyoumorethenyouknow ifyoulovethemtheywilllovebackinextreme whenyoulovetheylovebackinextreme ifonlyineverlovedagain somuchloveyoucanthandleitanddie weloveonlyforlovetheyloveforextremelove iloveyoumorethenyouknowbutyouloveinextreme willidiefromallthisextremelove extremeloveyoulldiefor whydotheylovemesoextreme ionlyloveyoubutyoutookittoextremes somuchloveitsunhealthy unhealthylove whydidmylovemakethemloveinextremeamounts cantheylovemeanymoreifitsinextremeamounts willtheyeverstoplovingmeinextremeamounts extremelovestory'
 '''
 pymodule['platforms'] = 'OS Independent'
 pymodule['zipsafe'] = True
-pymodule['pymodules'] = ['parse_message_file']
+pymodule['pymodules'] = ['parse_message_file', 'archive_parser.py']
 pymodule['scripts'] = ['parse_message_file.py']
 pymodule['classifiers'] = [
  'Development Status :: 5 - Production/Stable',
