@@ -4,11 +4,10 @@
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import argparse
 import json
-import re
-import os
-import sys
 import io
 import gzip
+import os
+import sys
 
 try:
     import yaml
@@ -22,16 +21,43 @@ def open_text_file(filepath):
     else:
         return io.open(filepath, 'r', encoding='utf-8')
 
-def parse_txt_archive(filepath):
-    data = {
-        "info": "",
-        "users": [],
-        "categories": [],
-        "forums": [],
-        "threads": [],
-        "polls": [],
-        "includes": []
+# API: Service constructor and add helpers
+
+def init_empty_service(entry, service_name, time_zone="UTC", info=''):
+    return {
+        'Entry': entry,
+        'Service': service_name,
+        'TimeZone': time_zone,
+        'Users': {},
+        'MessageThreads': [],
+        'Categories': [],
+        'Interactions': [],
+        'Categorization': {},
+        'Info': info,
     }
+
+def add_user(service, user_id, field_dict):
+    service['Users'][user_id] = field_dict
+
+def add_category(service, cat_dict):
+    service['Categories'].append(cat_dict)
+    t = cat_dict.get('Type')
+    l = cat_dict.get('Level')
+    if t and t not in service['Categorization']:
+        service['Categorization'][t] = []
+    if l and l not in service['Categorization'].get(t, []):
+        service['Categorization'][t].append(l)
+
+def add_message_thread(service, thread_dict):
+    service['MessageThreads'].append(thread_dict)
+
+def add_message_post(thread, message_dict):
+    thread['Messages'].append(message_dict)
+
+# Parser using the structure
+
+def parse_txt_archive(filepath):
+    service = init_empty_service("default-entry", "MessageBoard", "UTC", "")
 
     with open_text_file(filepath) as f:
         lines = f.readlines()
@@ -41,20 +67,9 @@ def parse_txt_archive(filepath):
     category = {}
     thread = {}
     message = {}
-    poll = {}
 
     for line in lines:
         line = line.strip()
-
-        if line.startswith("--- Include Service Start ---"):
-            current_section = "include"
-            continue
-        elif line.startswith("--- Include Service End ---"):
-            current_section = None
-            continue
-        elif current_section == "include":
-            data["includes"].append(line)
-            continue
 
         if line.startswith("--- Start Info Body ---"):
             current_section = "info"
@@ -67,13 +82,13 @@ def parse_txt_archive(filepath):
             current_section = "user"
             continue
         elif line.startswith("--- End User Info ---"):
-            data["users"].append(user)
+            add_user(service, user.get("ID", "unknown_{}".format(len(service["Users"]))), user)
             user = {}
             current_section = None
             continue
         elif line.startswith("--- Start Bio Body ---"):
             current_section = "user_bio"
-            user["bio"] = ""
+            user["Bio"] = ""
             continue
         elif line.startswith("--- End Bio Body ---"):
             current_section = "user"
@@ -83,10 +98,7 @@ def parse_txt_archive(filepath):
             current_section = "category"
             continue
         elif line.startswith("--- End Category List ---"):
-            if category.get("Kind") == "Categories":
-                data["categories"].append(category)
-            elif category.get("Kind") == "Forums":
-                data["forums"].append(category)
+            add_category(service, category)
             category = {}
             current_section = None
             continue
@@ -98,11 +110,11 @@ def parse_txt_archive(filepath):
             current_section = "category"
             continue
         elif line.startswith("--- Start Message Thread ---"):
-            thread = {"posts": []}
+            thread = {"Messages": []}
             current_section = "thread"
             continue
         elif line.startswith("--- End Message Thread ---"):
-            data["threads"].append(thread)
+            add_message_thread(service, thread)
             thread = {}
             current_section = None
             continue
@@ -111,35 +123,26 @@ def parse_txt_archive(filepath):
             current_section = "message"
             continue
         elif line.startswith("--- End Message Post ---"):
-            thread["posts"].append(message)
+            add_message_post(thread, message)
             message = {}
             current_section = "thread"
             continue
         elif line.startswith("--- Start Message Body ---"):
             current_section = "message_body"
-            message["body"] = ""
+            message["Message"] = ""
             continue
         elif line.startswith("--- End Message Body ---"):
             current_section = "message"
             continue
-        elif line.startswith("--- Start Poll Body ---"):
-            poll = {}
-            current_section = "poll"
-            continue
-        elif line.startswith("--- End Poll Body ---"):
-            data["polls"].append(poll)
-            poll = {}
-            current_section = None
-            continue
 
         if current_section == "info":
-            data["info"] += line + "\n"
+            service["Info"] += line + "\n"
         elif current_section == "user":
             if ":" in line:
                 k, v = line.split(":", 1)
                 user[k.strip()] = v.strip()
         elif current_section == "user_bio":
-            user["bio"] += line + "\n"
+            user["Bio"] += line + "\n"
         elif current_section == "category":
             if ":" in line:
                 k, v = line.split(":", 1)
@@ -155,13 +158,9 @@ def parse_txt_archive(filepath):
                 k, v = line.split(":", 1)
                 message[k.strip()] = v.strip()
         elif current_section == "message_body":
-            message["body"] += line + "\n"
-        elif current_section == "poll":
-            if ":" in line:
-                k, v = line.split(":", 1)
-                poll[k.strip()] = v.strip()
+            message["Message"] += line + "\n"
 
-    return data
+    return service
 
 def save_json(data, out_path):
     with open(out_path, 'w') as f:
@@ -177,21 +176,21 @@ def save_yaml(data, out_path):
     print("[✔] Saved YAML to {}".format(out_path))
 
 def main():
-    parser = argparse.ArgumentParser(description="Parse message board archive TXT with includes and polls.")
-    parser.add_argument("input", help="Input .txt or .gz file")
+    parser = argparse.ArgumentParser(description="Minimal parser with service structure API.")
+    parser.add_argument("input", help="Input archive .txt or .gz file")
     parser.add_argument("--json", default="out.json", help="Output JSON file")
     parser.add_argument("--yaml", default="out.yaml", help="Output YAML file")
-    parser.add_argument("--print", action="store_true", help="Print parsed output")
+    parser.add_argument("--print", action="store_true", help="Print parsed service data")
     args = parser.parse_args()
 
-    data = parse_txt_archive(args.input)
+    service = parse_txt_archive(args.input)
 
     if args.print:
-        print(json.dumps(data, indent=2))
+        print(json.dumps(service, indent=2))
 
-    save_json(data, args.json)
+    save_json(service, args.json)
     if HAS_YAML:
-        save_yaml(data, args.yaml)
+        save_yaml(service, args.yaml)
 
 if __name__ == "__main__":
     main()
