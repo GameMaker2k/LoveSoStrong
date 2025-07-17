@@ -76,7 +76,7 @@ pymodule['keywords'] = 'love loveisokifnotextreme extremeloveisnotok lovesostron
 pymodule['platforms'] = 'OS Independent'
 pymodule['zipsafe'] = True
 pymodule['pymodules'] = ['parse_message_file']
-pymodule['scripts'] = ['nextest.py', 'parse_message_file.py']
+pymodule['scripts'] = ['parse_message_file.py']
 pymodule['classifiers'] = [
  'Development Status :: 5 - Production/Stable',
  'Intended Audience :: Developers',
