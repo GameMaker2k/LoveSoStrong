@@ -10,15 +10,15 @@
     Headline: General Discussion
     ID: 1
     InSub: 0
-    Kind: Forums, Fourm
-    Level: Fourm
+    Kind: Forums, Forum
+    Level: Forum
     Type: Forums
   Categorization:
     Categories:
     - Category
     Forums:
-    - Fourm
-    - SubFourm
+    - Forum
+    - SubForum
   Entry: 1
   Info: A simple message board for communicating about anything. ^_^
   Interactions:
