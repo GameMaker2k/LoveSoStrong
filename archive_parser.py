@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import argparse
 import json
 import re
 import os
 import sys
+import io
+import gzip
 
 try:
     import yaml
@@ -14,16 +16,24 @@ try:
 except ImportError:
     HAS_YAML = False
 
+def open_text_file(filepath):
+    if filepath.endswith(".gz"):
+        return gzip.open(filepath, 'rt')
+    else:
+        return io.open(filepath, 'r', encoding='utf-8')
+
 def parse_txt_archive(filepath):
     data = {
         "info": "",
         "users": [],
         "categories": [],
         "forums": [],
-        "threads": []
+        "threads": [],
+        "polls": [],
+        "includes": []
     }
 
-    with open(filepath, 'r') as f:
+    with open_text_file(filepath) as f:
         lines = f.readlines()
 
     current_section = None
@@ -31,9 +41,20 @@ def parse_txt_archive(filepath):
     category = {}
     thread = {}
     message = {}
+    poll = {}
 
     for line in lines:
         line = line.strip()
+
+        if line.startswith("--- Include Service Start ---"):
+            current_section = "include"
+            continue
+        elif line.startswith("--- Include Service End ---"):
+            current_section = None
+            continue
+        elif current_section == "include":
+            data["includes"].append(line)
+            continue
 
         if line.startswith("--- Start Info Body ---"):
             current_section = "info"
@@ -101,6 +122,15 @@ def parse_txt_archive(filepath):
         elif line.startswith("--- End Message Body ---"):
             current_section = "message"
             continue
+        elif line.startswith("--- Start Poll Body ---"):
+            poll = {}
+            current_section = "poll"
+            continue
+        elif line.startswith("--- End Poll Body ---"):
+            data["polls"].append(poll)
+            poll = {}
+            current_section = None
+            continue
 
         if current_section == "info":
             data["info"] += line + "\n"
@@ -126,6 +156,10 @@ def parse_txt_archive(filepath):
                 message[k.strip()] = v.strip()
         elif current_section == "message_body":
             message["body"] += line + "\n"
+        elif current_section == "poll":
+            if ":" in line:
+                k, v = line.split(":", 1)
+                poll[k.strip()] = v.strip()
 
     return data
 
@@ -143,23 +177,21 @@ def save_yaml(data, out_path):
     print("[✔] Saved YAML to {}".format(out_path))
 
 def main():
-    parser = argparse.ArgumentParser(description="Parse message board archive TXT to JSON/YAML.")
-    parser.add_argument("input", help="Path to input .txt file")
-    parser.add_argument("--json", help="Output JSON file", default="archive.json")
-    parser.add_argument("--yaml", help="Output YAML file", default="archive.yaml")
-    parser.add_argument("--print", action="store_true", help="Print parsed output to terminal")
-
+    parser = argparse.ArgumentParser(description="Parse message board archive TXT with includes and polls.")
+    parser.add_argument("input", help="Input .txt or .gz file")
+    parser.add_argument("--json", default="out.json", help="Output JSON file")
+    parser.add_argument("--yaml", default="out.yaml", help="Output YAML file")
+    parser.add_argument("--print", action="store_true", help="Print parsed output")
     args = parser.parse_args()
 
-    parsed = parse_txt_archive(args.input)
+    data = parse_txt_archive(args.input)
 
     if args.print:
-        print(json.dumps(parsed, indent=2))
+        print(json.dumps(data, indent=2))
 
-    save_json(parsed, args.json)
-
+    save_json(data, args.json)
     if HAS_YAML:
-        save_yaml(parsed, args.yaml)
+        save_yaml(data, args.yaml)
 
 if __name__ == "__main__":
     main()
