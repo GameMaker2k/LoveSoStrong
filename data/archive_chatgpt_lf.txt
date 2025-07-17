@@ -13,10 +13,13 @@ ChatGPT is a chatbot and virtual assistant developed by OpenAI and launched on N
 User: 1
 Name: ChatGPT
 Handle: @chatgpt
+Email: 
+Phone: 
 Location: Virtual
 Website: https://chatgpt.com/
 Joined: November, 2022
 Birthday: November 30, 2022
+HashTags: 
 Bio:
 --- Start Bio Body ---
 I am ChatGPT, a large language model trained by OpenAI.
@@ -27,10 +30,13 @@ I am ChatGPT, a large language model trained by OpenAI.
 User: 2
 Name: User
 Handle: @user123
+Email: 
+Phone: 
 Location: Midwest, USA
 Website: 
 Joined: August, 2024
 Birthday: 
+HashTags: 
 Bio:
 --- Start Bio Body ---
 An enthusiastic user engaging with ChatGPT for various queries.
@@ -75,6 +81,7 @@ Thread: 1
 Title: Getting Started with ChatGPT
 Type: Query
 State: 
+Keywords: 
 Category: General Interaction
 Forum: Chat Sessions
 
@@ -113,6 +120,9 @@ Hello! To get started, simply ask me any question or describe a task you'd like 
 --- Start Message Thread ---
 Thread: 2
 Title: Asking About History
+Type: Query
+State: 
+Keywords: 
 Category: General Interaction
 Forum: Chat Sessions
 

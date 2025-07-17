@@ -5,19 +5,25 @@
         "Bio": "I'm just a very cool dude! ^_^",
         "Name": "Cool Dude 2k",
         "Handle": "@cooldude2k",
+        "Email": "",
+        "Phone": "",
         "Location": "Somewhere",
         "Website": "",
         "Joined": "Jul 1, 2024",
-        "Birthday": "Jul 1, 1987"
+        "Birthday": "Jul 1, 1987",
+        "HashTags": ""
       },
       "2": {
         "Bio": "Hello it's just me Kazuki. :P",
         "Name": "Kazuki Suzuki",
         "Handle": "@kazuki.suzuki",
+        "Email": "",
+        "Phone": "",
         "Location": "Anywhere",
         "Website": "",
         "Joined": "Jul 1, 2024",
-        "Birthday": "Jun 1, 1987"
+        "Birthday": "Jun 1, 1987",
+        "HashTags": ""
       }
     },
     "MessageThreads": [
@@ -72,6 +78,7 @@
         "Thread": 1,
         "Type": "Topic",
         "State": "Pinned",
+        "Keywords": "",
         "Category": [
           "Game Maker 2k"
         ],

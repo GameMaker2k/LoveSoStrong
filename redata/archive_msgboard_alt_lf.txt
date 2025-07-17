@@ -12,10 +12,13 @@ A simple message board for communicating about anything. ^_^
 User: 1
 Name: Cool Dude 2k
 Handle: @cooldude2k
+Email: 
+Phone: 
 Location: Somewhere
 Website: 
 Joined: Jul 1, 2024
 Birthday: Jul 1, 1987
+HashTags: 
 Bio:
 --- Start Bio Body ---
 I'm just a very cool dude! ^_^
@@ -26,10 +29,13 @@ I'm just a very cool dude! ^_^
 User: 2
 Name: Kazuki Suzuki
 Handle: @kazuki.suzuki
+Email: 
+Phone: 
 Location: Anywhere
 Website: 
 Joined: Jul 1, 2024
 Birthday: Jun 1, 1987
+HashTags: 
 Bio:
 --- Start Bio Body ---
 Hello it's just me Kazuki. :P
@@ -74,6 +80,7 @@ Thread: 1
 Title: Hello, World!
 Type: Topic
 State: Pinned
+Keywords: 
 Category: Game Maker 2k
 Forum: General Discussion
 

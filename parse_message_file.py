@@ -1364,6 +1364,16 @@ def parse_lines(lines, validate_only=False, verbose=False):
                             current_service['Users'][user_id]['Handle'] = value
                             if verbose:
                                 print("Line {0}: Handle set to {1}".format(line_number, value))
+                    elif key == "Email":
+                        if user_id is not None:
+                            current_service['Users'][user_id]['Email'] = value
+                            if verbose:
+                                print("Line {0}: Email set to {1}".format(line_number, value))
+                    elif key == "Phone":
+                        if user_id is not None:
+                            current_service['Users'][user_id]['Phone'] = value
+                            if verbose:
+                                print("Line {0}: Phone set to {1}".format(line_number, value))
                     elif key == "Location":
                         if user_id is not None:
                             current_service['Users'][user_id]['Location'] = value
@@ -1384,6 +1394,11 @@ def parse_lines(lines, validate_only=False, verbose=False):
                             current_service['Users'][user_id]['Birthday'] = value
                             if verbose:
                                 print("Line {0}: Birthday set to {1}".format(line_number, value))
+                    elif key == "HashTags":
+                        if user_id is not None:
+                            current_service['Users'][user_id]['HashTags'] = value
+                            if verbose:
+                                print("Line {0}: HashTags set to {1}".format(line_number, value))
                     elif line == "--- Start Bio Body ---":
                         if user_id is not None:
                             current_bio = []
@@ -1426,6 +1441,10 @@ def parse_lines(lines, validate_only=False, verbose=False):
                         current_thread['State'] = value
                         if verbose:
                             print("Line {0}: State set to {1}".format(line_number, value))
+                    elif key == "Keywords":
+                        current_thread['Keywords'] = value
+                        if verbose:
+                            print("Line {0}: Keywords set to {1}".format(line_number, value))
                     elif key == "Author":
                         current_message['Author'] = value
                         if verbose:
@@ -1515,7 +1534,7 @@ def display_services(services):
         
         print("Category List:")
         for category in service['Categories']:
-            print("  Type: {0}, Level: {1}".format(category.get('Type', 'N/A'), category.get('Level', 'N/A')))
+            print("  Type: {0}, Level: {1}".format(category.get('Type', ''), category.get('Level', '')))
             print("  ID: {0}".format(category['ID']))
             print("  InSub: {0}".format(category['InSub']))
             print("  Headline: {0}".format(category['Headline']))
@@ -1527,10 +1546,13 @@ def display_services(services):
             print("  User ID: {0}".format(user_id))
             print("    Name: {0}".format(user_info['Name']))
             print("    Handle: {0}".format(user_info['Handle']))
-            print("    Location: {0}".format(user_info.get('Location', 'N/A')))
-            print("    Website: {0}".format(user_info.get('Website', 'N/A')))
-            print("    Joined: {0}".format(user_info.get('Joined', 'N/A')))
-            print("    Birthday: {0}".format(user_info.get('Birthday', 'N/A')))
+            print("    Email: {0}".format(user_info.get('Email', '')))
+            print("    Phone: {0}".format(user_info.get('Phone', '')))
+            print("    Location: {0}".format(user_info.get('Location', '')))
+            print("    Website: {0}".format(user_info.get('Website', '')))
+            print("    Joined: {0}".format(user_info.get('Joined', '')))
+            print("    Birthday: {0}".format(user_info.get('Birthday', '')))
+            print("    HashTags: {0}".format(user_info.get('HashTags', '')))
             print("    Bio:")
             print("      {0}".format(user_info.get('Bio', '').strip().replace("\n", "\n      ")))
             print("")
@@ -1548,6 +1570,8 @@ def display_services(services):
                 print("    Type: {0}".format(thread['Type']))
             if 'State' in thread:
                 print("    State: {0}".format(thread['State']))
+            if 'Keywords' in thread:
+                print("    Keywords: {0}".format(thread['Keywords']))
             
             for message in thread['Messages']:
                 print("    {0} ({1} on {2}): [{3}] Post ID: {4} Nested: {5}".format(
@@ -1561,12 +1585,12 @@ def display_services(services):
                 if 'Polls' in message and message['Polls']:
                     print("      Polls:")
                     for poll in message['Polls']:
-                        print("        Poll {0}:".format(poll.get('Num', 'N/A')))
-                        print("          Question: {0}".format(poll.get('Question', 'N/A')))
+                        print("        Poll {0}:".format(poll.get('Num', '')))
+                        print("          Question: {0}".format(poll.get('Question', '')))
                         print("          Answers: {0}".format(", ".join(poll.get('Answers', []))))
                         print("          Results: {0}".format(", ".join(str(r) for r in poll.get('Results', []))))
                         print("          Percentage: {0}".format(", ".join("{:.2f}".format(float(p)) for p in poll.get('Percentage', []))))
-                        print("          Votes: {0}".format(poll.get('Votes', 'N/A')))
+                        print("          Votes: {0}".format(poll.get('Votes', '')))
             print("")
 
 
@@ -1811,8 +1835,8 @@ def services_to_string(services, line_ending='lf'):
     for service in services:
         # Service wrapper
         output.append('--- Start Archive Service ---')
-        output.append('Entry: {0}'.format(service.get('Entry', 'N/A')))
-        output.append('Service: {0}'.format(service.get('Service', 'N/A')))
+        output.append('Entry: {0}'.format(service.get('Entry', '')))
+        output.append('Service: {0}'.format(service.get('Service', '')))
         output.append('TimeZone: {0}'.format(service.get('TimeZone', 'UTC')))
 
         # Info section
@@ -1831,14 +1855,15 @@ def services_to_string(services, line_ending='lf'):
             for uid, user in users.items():
                 output.append('--- Start User Info ---')
                 output.append('User: {0}'.format(uid))
-                output.append('Name: {0}'.format(user.get('Name', 'N/A')))
-                output.append('Handle: {0}'.format(user.get('Handle', 'N/A')))
-                output.append('Location: {0}'.format(user.get('Location', 'N/A')))
-                output.append('Website: {0}'.format(user.get('Website', 'N/A')))
-                if 'Joined' in user:
-                    output.append('Joined: {0}'.format(user['Joined']))
-                if 'Birthday' in user:
-                    output.append('Birthday: {0}'.format(user['Birthday']))
+                output.append('Name: {0}'.format(user.get('Name', '')))
+                output.append('Handle: {0}'.format(user.get('Handle', '')))
+                output.append('Email: {0}'.format(user.get('Email', '')))
+                output.append('Phone: {0}'.format(user.get('Phone', '')))
+                output.append('Location: {0}'.format(user.get('Location', '')))
+                output.append('Website: {0}'.format(user.get('Website', '')))
+                output.append('Joined: {0}'.format(user.get('Joined', '')))
+                output.append('Birthday: {0}'.format(user.get('Birthday', '')))
+                output.append('HashTags: {0}'.format(user.get('HashTags', '')))
                 # Bio body
                 output.append('Bio:')
                 output.append('--- Start Bio Body ---')
@@ -1862,10 +1887,10 @@ def services_to_string(services, line_ending='lf'):
         # Detailed categories
         for cat in service.get('Categories', []):
             output.append('--- Start Category List ---')
-            output.append('Kind: {0}, {1}'.format(cat.get('Type', 'N/A'), cat.get('Level', 'N/A')))
-            output.append('ID: {0}'.format(cat.get('ID', 'N/A')))
-            output.append('InSub: {0}'.format(cat.get('InSub', 'N/A')))
-            output.append('Headline: {0}'.format(cat.get('Headline', 'N/A')))
+            output.append('Kind: {0}, {1}'.format(cat.get('Type', ''), cat.get('Level', '')))
+            output.append('ID: {0}'.format(cat.get('ID', '')))
+            output.append('InSub: {0}'.format(cat.get('InSub', '')))
+            output.append('Headline: {0}'.format(cat.get('Headline', '')))
             output.append('Description:')
             output.append('--- Start Description Body ---')
             for line in cat.get('Description', '').splitlines():
@@ -1886,26 +1911,27 @@ def services_to_string(services, line_ending='lf'):
 
             for thread in threads:
                 output.append('--- Start Message Thread ---')
-                output.append('Thread: {0}'.format(thread.get('Thread', 'N/A')))
-                output.append('Title: {0}'.format(thread.get('Title', 'N/A')))
-                output.append('Type: {0}'.format(thread.get('Type', 'N/A')))
-                output.append('State: {0}'.format(thread.get('State', 'N/A')))
+                output.append('Thread: {0}'.format(thread.get('Thread', '')))
+                output.append('Title: {0}'.format(thread.get('Title', '')))
+                output.append('Type: {0}'.format(thread.get('Type', '')))
+                output.append('State: {0}'.format(thread.get('State', '')))
+                output.append('Keywords: {0}'.format(thread.get('Keywords', '')))
                 output.append('Category: {0}'.format(', '.join(thread.get('Category', []))))
                 output.append('Forum: {0}'.format(', '.join(thread.get('Forum', []))))
                 output.append('')
 
                 for msg in thread.get('Messages', []):
                     output.append('--- Start Message Post ---')
-                    output.append('Author: {0}'.format(msg.get('Author', 'N/A')))
-                    output.append('Time: {0}'.format(msg.get('Time', 'N/A')))
-                    output.append('Date: {0}'.format(msg.get('Date', 'N/A')))
-                    output.append('SubType: {0}'.format(msg.get('SubType', 'N/A')))
+                    output.append('Author: {0}'.format(msg.get('Author', '')))
+                    output.append('Time: {0}'.format(msg.get('Time', '')))
+                    output.append('Date: {0}'.format(msg.get('Date', '')))
+                    output.append('SubType: {0}'.format(msg.get('SubType', '')))
                     if 'SubTitle' in msg:
                         output.append('SubTitle: {0}'.format(msg.get('SubTitle', '')))
                     if 'Tags' in msg:
                         output.append('Tags: {0}'.format(msg.get('Tags', '')))
-                    output.append('Post: {0}'.format(msg.get('Post', 'N/A')))
-                    output.append('Nested: {0}'.format(msg.get('Nested', 'N/A')))
+                    output.append('Post: {0}'.format(msg.get('Post', '')))
+                    output.append('Nested: {0}'.format(msg.get('Nested', '')))
                     # Message body
                     output.append('Message:')
                     output.append('--- Start Message Body ---')
@@ -1919,12 +1945,12 @@ def services_to_string(services, line_ending='lf'):
                         output.append('--- Start Poll List ---')
                         for poll in msg['Polls']:
                             output.append('--- Start Poll Body ---')
-                            output.append('Num: {0}'.format(poll.get('Num', 'N/A')))
-                            output.append('Question: {0}'.format(poll.get('Question', 'N/A')))
+                            output.append('Num: {0}'.format(poll.get('Num', '')))
+                            output.append('Question: {0}'.format(poll.get('Question', '')))
                             output.append('Answers: {0}'.format(', '.join(poll.get('Answers', []))))
                             output.append('Results: {0}'.format(', '.join(str(r) for r in poll.get('Results', []))))
                             output.append('Percentage: {0}'.format(', '.join('{:.1f}'.format(float(p)) for p in poll.get('Percentage', []))))
-                            output.append('Votes: {0}'.format(poll.get('Votes', 'N/A')))
+                            output.append('Votes: {0}'.format(poll.get('Votes', '')))
                             output.append('--- End Poll Body ---')
                         output.append('--- End Poll List ---')
                     output.append('--- End Message Post ---')
@@ -1968,15 +1994,18 @@ def init_empty_service(entry, service_name, time_zone="UTC", info=''):
         'Info': info,
     }
 
-def add_user(service, user_id, name, handle, location='', website='', joined='', birthday='', bio=''):
+def add_user(service, user_id, name, handle, emailaddr, phonenum, location='', website='', joined='', birthday='', hashtags='', bio=''):
     """ Add a user to the service """
     service['Users'][user_id] = {
         'Name': name,
         'Handle': handle,
+        'Email': emailaddr,
+        'Phone': phonenum,
         'Location': location,
         'Website': website,
         'Joined': joined,
         'Birthday': birthday,
+        'HashTags': hashtags,
         'Bio': bio
     }
 
@@ -1999,7 +2028,7 @@ def add_category(service, kind, category_type, category_level, category_id, insu
         if not any(cat['ID'] == insub for cat in service['Categories']):
             raise ValueError("InSub value '{0}' does not match any existing ID in service.".format(insub))
 
-def add_message_thread(service, thread_id, title='', category='', forum='', thread_type='', state=''):
+def add_message_thread(service, thread_id, title='', category='', forum='', thread_type='', thread_state='', thread_keywords=''):
     """ Add a message thread to the service """
     thread = {
         'Thread': thread_id,
@@ -2007,7 +2036,8 @@ def add_message_thread(service, thread_id, title='', category='', forum='', thre
         'Category': category.split(',') if category else [],
         'Forum': forum.split(',') if forum else [],
         'Type': thread_type,
-        'State': state,
+        'State': thread_state,
+        'Keywords': thread_keywords,
         'Messages': []
     }
     service['MessageThreads'].append(thread)

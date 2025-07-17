@@ -86,10 +86,13 @@ This is a subforum under Site Feedback for detailed discussions.
 User: 1
 Name: John Doe
 Handle: @johndoe
+Email: 
+Phone: 
 Location: Earth
 Website: 
 Joined: Jan 1, 2020
 Birthday: Jan 1, 1990
+HashTags: 
 Bio:
 --- Start Bio Body ---
 Just an example user enjoying the discussions.
@@ -100,10 +103,13 @@ Just an example user enjoying the discussions.
 User: 2
 Name: Jane Smith
 Handle: @janesmith
+Email: 
+Phone: 
 Location: Mars
 Website: 
 Joined: Feb 1, 2020
 Birthday: Feb 1, 1992
+HashTags: 
 Bio:
 --- Start Bio Body ---
 I love giving feedback and helping improve the site.
@@ -118,10 +124,11 @@ Status: Active
 --- Start Message Thread ---
 Thread: 1
 Title: Welcome to the Community!
-Category: General Discussion
-Forum: Introductions
 Type: Topic
 State: Pinned
+Keywords: 
+Category: General Discussion
+Forum: Introductions
 
 --- Start Message Post ---
 Author: @johndoe
@@ -157,10 +164,11 @@ Welcome, @johndoe! Looking forward to your contributions.
 --- Start Message Thread ---
 Thread: 2
 Title: What do you think about the new site features?
-Category: Feedback
-Forum: Site Feedback
 Type: Topic
 State: Hot
+Keywords: 
+Category: Feedback
+Forum: Site Feedback
 
 --- Start Message Post ---
 Author: @janesmith

@@ -5,19 +5,25 @@
         "Bio": "I am ChatGPT, a large language model trained by OpenAI.",
         "Name": "ChatGPT",
         "Handle": "@chatgpt",
+        "Email": "",
+        "Phone": "",
         "Location": "Virtual",
         "Website": "https://chatgpt.com/",
         "Joined": "November, 2022",
-        "Birthday": "November 30, 2022"
+        "Birthday": "November 30, 2022",
+        "HashTags": ""
       },
       "2": {
         "Bio": "An enthusiastic user engaging with ChatGPT for various queries.",
         "Name": "User",
         "Handle": "@user123",
+        "Email": "",
+        "Phone": "",
         "Location": "Midwest, USA",
         "Website": "",
         "Joined": "August, 2024",
-        "Birthday": ""
+        "Birthday": "",
+        "HashTags": ""
       }
     },
     "MessageThreads": [
@@ -50,6 +56,7 @@
         "Thread": 1,
         "Type": "Query",
         "State": "",
+        "Keywords": "",
         "Category": [
           "General Interaction"
         ],
@@ -88,6 +95,9 @@
           }
         ],
         "Thread": 2,
+        "Type": "Query",
+        "State": "",
+        "Keywords": "",
         "Category": [
           "General Interaction"
         ],

@@ -137,9 +137,9 @@
         - Maybe
         Num: '1'
         Percentage:
-        - '76.92'
-        - '15.38'
-        - '7.69'
+        - '76.9'
+        - '15.4'
+        - '7.7'
         Question: Do you like the new site features?
         Results:
         - '10'

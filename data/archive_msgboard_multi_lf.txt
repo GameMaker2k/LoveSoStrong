@@ -12,10 +12,13 @@ This is an example forum for general discussions on various topics.
 User: 1
 Name: Alice Johnson
 Handle: @alice_j
+Email: 
+Phone: 
 Location: USA
 Website: 
 Joined: Jan 1, 2023
 Birthday: Jan 1, 1995
+HashTags: 
 Bio:
 --- Start Bio Body ---
 Tech enthusiast and avid reader.
@@ -26,10 +29,13 @@ Tech enthusiast and avid reader.
 User: 2
 Name: Bob Smith
 Handle: @bob_s
+Email: 
+Phone: 
 Location: Canada
 Website: 
 Joined: Feb 1, 2023
 Birthday: Feb 1, 1990
+HashTags: 
 Bio:
 --- Start Bio Body ---
 Loves discussing movies and books.
@@ -73,6 +79,7 @@ Thread: 1
 Title: Favorite Tech Gadgets of 2024
 Type: Topic
 State: Active
+Keywords: 
 Category: Tech
 Forum: Tech Talk
 
@@ -124,10 +131,13 @@ A place to discuss and review the latest movies.
 User: 1
 Name: Charlie Doe
 Handle: @charlie_d
+Email: 
+Phone: 
 Location: UK
 Website: 
 Joined: Mar 1, 2023
 Birthday: Mar 1, 1992
+HashTags: 
 Bio:
 --- Start Bio Body ---
 Movie buff and critic.
@@ -138,10 +148,13 @@ Movie buff and critic.
 User: 2
 Name: Dana White
 Handle: @dana_w
+Email: 
+Phone: 
 Location: Australia
 Website: 
 Joined: Apr 1, 2023
 Birthday: Apr 1, 1993
+HashTags: 
 Bio:
 --- Start Bio Body ---
 A lover of all things cinema.
@@ -174,6 +187,7 @@ Thread: 1
 Title: Best Movie of 2024
 Type: Poll
 State: Active
+Keywords: 
 Category: Movies
 Forum: Latest Releases
 
@@ -221,10 +235,13 @@ Discuss and review your favorite books and authors.
 User: 1
 Name: Emily Clark
 Handle: @emily_c
+Email: 
+Phone: 
 Location: USA
 Website: 
 Joined: May 1, 2023
 Birthday: May 1, 1985
+HashTags: 
 Bio:
 --- Start Bio Body ---
 Avid reader and aspiring writer.
@@ -235,10 +252,13 @@ Avid reader and aspiring writer.
 User: 2
 Name: Frank Miller
 Handle: @frank_m
+Email: 
+Phone: 
 Location: Canada
 Website: 
 Joined: Jun 1, 2023
 Birthday: Jun 1, 1980
+HashTags: 
 Bio:
 --- Start Bio Body ---
 Loves fantasy novels and historical fiction.
@@ -282,6 +302,7 @@ Thread: 1
 Title: Favorite Books of All Time
 Type: Discussion
 State: Active
+Keywords: 
 Category: Fiction
 Forum: Book Reviews
 
@@ -321,6 +342,7 @@ Thread: 2
 Title: New Releases in Fantasy
 Type: Discussion
 State: Active
+Keywords: 
 Category: Fiction
 Forum: Genre Talks
 

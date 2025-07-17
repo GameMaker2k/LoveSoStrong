@@ -5,19 +5,25 @@
         "Bio": "Just an example user enjoying the discussions.",
         "Name": "John Doe",
         "Handle": "@johndoe",
+        "Email": "",
+        "Phone": "",
         "Location": "Earth",
         "Website": "",
         "Joined": "Jan 1, 2020",
-        "Birthday": "Jan 1, 1990"
+        "Birthday": "Jan 1, 1990",
+        "HashTags": ""
       },
       "2": {
         "Bio": "I love giving feedback and helping improve the site.",
         "Name": "Jane Smith",
         "Handle": "@janesmith",
+        "Email": "",
+        "Phone": "",
         "Location": "Mars",
         "Website": "",
         "Joined": "Feb 1, 2020",
-        "Birthday": "Feb 1, 1992"
+        "Birthday": "Feb 1, 1992",
+        "HashTags": ""
       }
     },
     "MessageThreads": [
@@ -50,6 +56,7 @@
         "Thread": 1,
         "Type": "Topic",
         "State": "Pinned",
+        "Keywords": "",
         "Category": [
           "General Discussion"
         ],
@@ -133,6 +140,7 @@
         "Thread": 2,
         "Type": "Topic",
         "State": "Hot",
+        "Keywords": "",
         "Category": [
           "Feedback"
         ],
