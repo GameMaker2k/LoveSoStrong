@@ -108,13 +108,13 @@
         "Level": "Category"
       },
       {
-        "Kind": "Forums, Fourm",
+        "Kind": "Forums, Forum",
         "ID": 1,
         "InSub": 0,
         "Headline": "General Discussion",
         "Description": "Just talk about anything.",
         "Type": "Forums",
-        "Level": "Fourm"
+        "Level": "Forum"
       }
     ],
     "Interactions": [
@@ -127,8 +127,8 @@
         "Category"
       ],
       "Forums": [
-        "Fourm",
-        "SubFourm"
+        "Forum",
+        "SubForum"
       ]
     },
     "Info": "A simple message board for communicating about anything. ^_^",
