@@ -9,6 +9,8 @@
         "Phone": "",
         "Location": "",
         "Website": "",
+        "Avatar": "",
+        "Banner": "",
         "Joined": "September, 2021",
         "Birthday": "",
         "HashTags": ""
@@ -21,6 +23,8 @@
         "Phone": "",
         "Location": "",
         "Website": "",
+        "Avatar": "",
+        "Banner": "",
         "Joined": "April, 2022",
         "Birthday": "",
         "HashTags": ""
@@ -33,6 +37,8 @@
         "Phone": "",
         "Location": "Everywhere and Nowhere 😹😼",
         "Website": "",
+        "Avatar": "",
+        "Banner": "",
         "Joined": "July, 2024",
         "Birthday": "July 1, 1987",
         "HashTags": ""
@@ -45,6 +51,8 @@
         "Phone": "",
         "Location": "",
         "Website": "",
+        "Avatar": "",
+        "Banner": "",
         "Joined": "December, 2022",
         "Birthday": "",
         "HashTags": ""
@@ -57,6 +65,8 @@
         "Phone": "",
         "Location": "Anywhere and Nowhere 😸😼",
         "Website": "",
+        "Avatar": "",
+        "Banner": "",
         "Joined": "May, 2013",
         "Birthday": "July 1, 1987",
         "HashTags": ""
@@ -68,7 +78,9 @@
         "Email": "",
         "Phone": "",
         "Location": "🌏",
-        "Website": "https://pixelfed.social/KazukiSuzuki",
+        "Website": "",
+        "Avatar": "",
+        "Banner": "https://pixelfed.social/KazukiSuzuki",
         "Joined": "June, 2023",
         "Birthday": "June 6, 1988",
         "HashTags": ""

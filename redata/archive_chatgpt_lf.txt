@@ -16,6 +16,8 @@ Email:
 Phone: 
 Location: Virtual
 Website: https://chatgpt.com/
+Avatar: 
+Banner: 
 Joined: November, 2022
 Birthday: November 30, 2022
 HashTags: 
@@ -33,6 +35,8 @@ Email:
 Phone: 
 Location: Midwest, USA
 Website: 
+Avatar: 
+Banner: 
 Joined: August, 2024
 Birthday: 
 HashTags: 

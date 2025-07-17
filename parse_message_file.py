@@ -1384,6 +1384,16 @@ def parse_lines(lines, validate_only=False, verbose=False):
                             current_service['Users'][user_id]['Website'] = value
                             if verbose:
                                 print("Line {0}: Website set to {1}".format(line_number, value))
+                    elif key == "Avatar":
+                        if user_id is not None:
+                            current_service['Users'][user_id]['Avatar'] = value
+                            if verbose:
+                                print("Line {0}: Avatar set to {1}".format(line_number, value))
+                    elif key == "Banner":
+                        if user_id is not None:
+                            current_service['Users'][user_id]['Banner'] = value
+                            if verbose:
+                                print("Line {0}: Banner set to {1}".format(line_number, value))
                     elif key == "Joined":
                         if user_id is not None:
                             current_service['Users'][user_id]['Joined'] = value
@@ -1550,6 +1560,8 @@ def display_services(services):
             print("    Phone: {0}".format(user_info.get('Phone', '')))
             print("    Location: {0}".format(user_info.get('Location', '')))
             print("    Website: {0}".format(user_info.get('Website', '')))
+            print("    Avatar: {0}".format(user_info.get('Avatar', '')))
+            print("    Banner: {0}".format(user_info.get('Banner', '')))
             print("    Joined: {0}".format(user_info.get('Joined', '')))
             print("    Birthday: {0}".format(user_info.get('Birthday', '')))
             print("    HashTags: {0}".format(user_info.get('HashTags', '')))
@@ -1861,6 +1873,8 @@ def services_to_string(services, line_ending='lf'):
                 output.append('Phone: {0}'.format(user.get('Phone', '')))
                 output.append('Location: {0}'.format(user.get('Location', '')))
                 output.append('Website: {0}'.format(user.get('Website', '')))
+                output.append('Avatar: {0}'.format(user.get('Avatar', '')))
+                output.append('Banner: {0}'.format(user.get('Banner', '')))
                 output.append('Joined: {0}'.format(user.get('Joined', '')))
                 output.append('Birthday: {0}'.format(user.get('Birthday', '')))
                 output.append('HashTags: {0}'.format(user.get('HashTags', '')))
@@ -1994,7 +2008,7 @@ def init_empty_service(entry, service_name, time_zone="UTC", info=''):
         'Info': info,
     }
 
-def add_user(service, user_id, name, handle, emailaddr, phonenum, location='', website='', joined='', birthday='', hashtags='', bio=''):
+def add_user(service, user_id, name, handle, emailaddr, phonenum, location, website, avatar, banner, joined, birthday, hashtags, bio):
     """ Add a user to the service """
     service['Users'][user_id] = {
         'Name': name,
@@ -2003,6 +2017,8 @@ def add_user(service, user_id, name, handle, emailaddr, phonenum, location='', w
         'Phone': phonenum,
         'Location': location,
         'Website': website,
+        'Avatar': website,
+        'Banner': website,
         'Joined': joined,
         'Birthday': birthday,
         'HashTags': hashtags,
@@ -2028,7 +2044,7 @@ def add_category(service, kind, category_type, category_level, category_id, insu
         if not any(cat['ID'] == insub for cat in service['Categories']):
             raise ValueError("InSub value '{0}' does not match any existing ID in service.".format(insub))
 
-def add_message_thread(service, thread_id, title='', category='', forum='', thread_type='', thread_state='', thread_keywords=''):
+def add_message_thread(service, thread_id, title, category, forum, thread_type, thread_state, thread_keywords):
     """ Add a message thread to the service """
     thread = {
         'Thread': thread_id,

@@ -165,6 +165,8 @@
   TimeZone: UTC
   Users:
     1:
+      Avatar: ''
+      Banner: ''
       Bio: Just an example user enjoying the discussions.
       Birthday: Jan 1, 1990
       Email: ''
@@ -176,6 +178,8 @@
       Phone: ''
       Website: ''
     2:
+      Avatar: ''
+      Banner: ''
       Bio: I love giving feedback and helping improve the site.
       Birthday: Feb 1, 1992
       Email: ''

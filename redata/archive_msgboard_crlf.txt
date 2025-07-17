@@ -17,6 +17,8 @@ Email:
 Phone: 
 Location: Earth
 Website: 
+Avatar: 
+Banner: 
 Joined: Jan 1, 2020
 Birthday: Jan 1, 1990
 HashTags: 
@@ -34,6 +36,8 @@ Email:
 Phone: 
 Location: Mars
 Website: 
+Avatar: 
+Banner: 
 Joined: Feb 1, 2020
 Birthday: Feb 1, 1992
 HashTags: 

@@ -9,6 +9,8 @@
         "Phone": "",
         "Location": "USA",
         "Website": "",
+        "Avatar": "",
+        "Banner": "",
         "Joined": "Jan 1, 2023",
         "Birthday": "Jan 1, 1995",
         "HashTags": ""
@@ -21,6 +23,8 @@
         "Phone": "",
         "Location": "Canada",
         "Website": "",
+        "Avatar": "",
+        "Banner": "",
         "Joined": "Feb 1, 2023",
         "Birthday": "Feb 1, 1990",
         "HashTags": ""
@@ -124,6 +128,8 @@
         "Phone": "",
         "Location": "UK",
         "Website": "",
+        "Avatar": "",
+        "Banner": "",
         "Joined": "Mar 1, 2023",
         "Birthday": "Mar 1, 1992",
         "HashTags": ""
@@ -136,6 +142,8 @@
         "Phone": "",
         "Location": "Australia",
         "Website": "",
+        "Avatar": "",
+        "Banner": "",
         "Joined": "Apr 1, 2023",
         "Birthday": "Apr 1, 1993",
         "HashTags": ""
@@ -237,6 +245,8 @@
         "Phone": "",
         "Location": "USA",
         "Website": "",
+        "Avatar": "",
+        "Banner": "",
         "Joined": "May 1, 2023",
         "Birthday": "May 1, 1985",
         "HashTags": ""
@@ -249,6 +259,8 @@
         "Phone": "",
         "Location": "Canada",
         "Website": "",
+        "Avatar": "",
+        "Banner": "",
         "Joined": "Jun 1, 2023",
         "Birthday": "Jun 1, 1980",
         "HashTags": ""
