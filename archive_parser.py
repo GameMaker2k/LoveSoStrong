@@ -1,9 +1,12 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
+from __future__ import print_function, unicode_literals
 import argparse
 import json
 import re
 import os
+import sys
 
 try:
     import yaml
@@ -20,7 +23,7 @@ def parse_txt_archive(filepath):
         "threads": []
     }
 
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(filepath, 'r') as f:
         lines = f.readlines()
 
     current_section = None
@@ -99,7 +102,6 @@ def parse_txt_archive(filepath):
             current_section = "message"
             continue
 
-        # Section-specific parsing
         if current_section == "info":
             data["info"] += line + "\n"
         elif current_section == "user":
@@ -128,17 +130,17 @@ def parse_txt_archive(filepath):
     return data
 
 def save_json(data, out_path):
-    with open(out_path, 'w', encoding='utf-8') as f:
+    with open(out_path, 'w') as f:
         json.dump(data, f, indent=2)
-    print(f"[✔] Saved JSON to {out_path}")
+    print("[✔] Saved JSON to {}".format(out_path))
 
 def save_yaml(data, out_path):
     if not HAS_YAML:
         print("[!] PyYAML not installed. Skipping YAML export.")
         return
-    with open(out_path, 'w', encoding='utf-8') as f:
+    with open(out_path, 'w') as f:
         yaml.dump(data, f, allow_unicode=True)
-    print(f"[✔] Saved YAML to {out_path}")
+    print("[✔] Saved YAML to {}".format(out_path))
 
 def main():
     parser = argparse.ArgumentParser(description="Parse message board archive TXT to JSON/YAML.")
