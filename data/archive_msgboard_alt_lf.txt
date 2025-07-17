@@ -51,7 +51,7 @@ Hello it's just me Kazuki. :P
 
 --- Start Categorization List ---
 Categories: Category
-Forums: Fourm, SubFourm
+Forums: Forum, SubForum
 
 --- Start Category List ---
 Kind: Categories, Category
@@ -65,7 +65,7 @@ Just talk about anything.
 --- End Category List ---
 
 --- Start Category List ---
-Kind: Forums, Fourm
+Kind: Forums, Forum
 ID: 1
 InSub: 0
 Headline: General Discussion
