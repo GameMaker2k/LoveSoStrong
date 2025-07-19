@@ -95,6 +95,8 @@
     - 1
     - 2
   Service: ChatGPT Interaction Log
+  ServiceLocation: https://chatgpt.com/
+  ServiceType: Interactive Chat
   Status:
   - ''
   TimeZone: UTC

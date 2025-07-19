@@ -160,6 +160,8 @@
     - 3
     - 4
   Service: Example Message Board
+  ServiceLocation: https://gamemaker2k.org/example/
+  ServiceType: Message Board
   Status:
   - Active
   TimeZone: UTC

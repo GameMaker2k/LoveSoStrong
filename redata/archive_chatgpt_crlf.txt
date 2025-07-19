@@ -1,6 +1,8 @@
 --- Start Archive Service ---
 Entry: 1
 Service: ChatGPT Interaction Log
+ServiceType: Interactive Chat
+ServiceLocation: https://chatgpt.com/
 TimeZone: UTC
 Info:
 --- Start Info Body ---

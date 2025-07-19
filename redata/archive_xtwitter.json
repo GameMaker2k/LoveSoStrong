@@ -4989,6 +4989,8 @@
     "Info": "",
     "Entry": 1,
     "Service": "X (formerly Twitter)",
+    "ServiceType": "Microblog",
+    "ServiceLocation": "https://x.com/",
     "TimeZone": "UTC",
     "Status": [
       "Pinned"

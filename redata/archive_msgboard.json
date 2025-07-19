@@ -235,6 +235,8 @@
     "Info": "This is an example message board archive using all possible elements of the format.\nIt includes multiple services, users, categories, forums, message threads, posts, and polls.",
     "Entry": 1,
     "Service": "Example Message Board",
+    "ServiceType": "Message Board",
+    "ServiceLocation": "https://gamemaker2k.org/example/",
     "TimeZone": "UTC",
     "Status": [
       "Active"

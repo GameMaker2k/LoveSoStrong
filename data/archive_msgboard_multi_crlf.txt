@@ -1,6 +1,8 @@
 --- Start Archive Service ---
 Entry: 1
 Service: Example Discussion Forum
+ServiceType: Message Board
+ServiceLocation: https://gamemaker2k.org/example/
 TimeZone: UTC
 Info: 
 --- Start Info Body ---
@@ -124,6 +126,8 @@ I really like the new smartwatches. They're getting so advanced!
 --- Start Archive Service ---
 Entry: 2
 Service: Movie Review Forum
+ServiceType: Message Board
+ServiceLocation: https://gamemaker2k.org/movie/
 TimeZone: UTC
 Info: 
 --- Start Info Body ---
@@ -232,6 +236,8 @@ Votes: 50
 --- Start Archive Service ---
 Entry: 3
 Service: Literature Discussion Board
+ServiceType: Message Board
+ServiceLocation: https://gamemaker2k.org/literature/
 TimeZone: UTC
 Info: 
 --- Start Info Body ---

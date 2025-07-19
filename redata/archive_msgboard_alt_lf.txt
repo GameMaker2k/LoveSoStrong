@@ -1,6 +1,8 @@
 --- Start Archive Service ---
 Entry: 1
-Service: Message Board
+Service: Game Maker 2k
+ServiceType: Message Board
+ServiceLocation: https://gamemaker2k.org/board/
 TimeZone: UTC
 Info:
 --- Start Info Body ---

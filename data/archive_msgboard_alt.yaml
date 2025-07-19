@@ -79,7 +79,9 @@
     - 2
     - 3
     - 4
-  Service: Message Board
+  Service: Game Maker 2k
+  ServiceLocation: https://gamemaker2k.org/board/
+  ServiceType: Message Board
   Status:
   - Pinned
   - Hot

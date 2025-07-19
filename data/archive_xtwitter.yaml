@@ -4293,6 +4293,8 @@
     - 1
     - 2
   Service: X (formerly Twitter)
+  ServiceLocation: https://x.com/
+  ServiceType: Microblog
   Status:
   - Pinned
   TimeZone: UTC

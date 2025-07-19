@@ -151,6 +151,8 @@
     "Info": "ChatGPT is a chatbot and virtual assistant developed by OpenAI and launched on November 30, 2022.",
     "Entry": 1,
     "Service": "ChatGPT Interaction Log",
+    "ServiceType": "Interactive Chat",
+    "ServiceLocation": "https://chatgpt.com/",
     "TimeZone": "UTC",
     "Status": [
       ""

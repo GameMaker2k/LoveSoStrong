@@ -23,10 +23,12 @@ def open_text_file(filepath):
 
 # API: Service constructor and add helpers
 
-def init_empty_service(entry, service_name, time_zone="UTC", info=''):
+def init_empty_service(entry, service_name, service_type, service_location, time_zone="UTC", info=''):
     return {
         'Entry': entry,
         'Service': service_name,
+        'ServiceType': service_type,
+        'ServiceLocation': service_location,
         'TimeZone': time_zone,
         'Users': {},
         'MessageThreads': [],
@@ -57,7 +59,7 @@ def add_message_post(thread, message_dict):
 # Parser using the structure
 
 def parse_txt_archive(filepath):
-    service = init_empty_service("default-entry", "MessageBoard", "UTC", "")
+    service = init_empty_service("default-entry", "MessageBoard", "MessageBoard", "", "UTC", "")
 
     with open_text_file(filepath) as f:
         lines = f.readlines()
@@ -254,6 +256,8 @@ def services_to_string(services, line_ending='lf'):
         output.append('--- Start Archive Service ---')
         output.append('Entry: {0}'.format(service.get('Entry', '')))
         output.append('Service: {0}'.format(service.get('Service', '')))
+        output.append('ServiceType: {0}'.format(service.get('ServiceType', '')))
+        output.append('ServiceLocation: {0}'.format(service.get('ServiceLocation', '')))
         output.append('TimeZone: {0}'.format(service.get('TimeZone', 'UTC')))
 
         if 'Info' in service:

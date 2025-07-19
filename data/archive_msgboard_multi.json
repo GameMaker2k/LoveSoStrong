@@ -113,6 +113,8 @@
     "Info": "This is an example forum for general discussions on various topics.",
     "Entry": 1,
     "Service": "Example Discussion Forum",
+    "ServiceType": "Message Board",
+    "ServiceLocation": "https://gamemaker2k.org/example/",
     "TimeZone": "UTC",
     "Status": [
       "Active"
@@ -230,6 +232,8 @@
     "Info": "A place to discuss and review the latest movies.",
     "Entry": 2,
     "Service": "Movie Review Forum",
+    "ServiceType": "Message Board",
+    "ServiceLocation": "https://gamemaker2k.org/movie/",
     "TimeZone": "UTC",
     "Status": [
       "Active"
@@ -390,6 +394,8 @@
     "Info": "Discuss and review your favorite books and authors.",
     "Entry": 3,
     "Service": "Literature Discussion Board",
+    "ServiceType": "Message Board",
+    "ServiceLocation": "https://gamemaker2k.org/literature/",
     "TimeZone": "UTC",
     "Status": [
       "Active"

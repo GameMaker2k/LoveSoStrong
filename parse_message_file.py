@@ -1240,6 +1240,10 @@ def parse_lines(lines, validate_only=False, verbose=False):
                     current_service['Entry'] = validate_non_negative_integer(value, "Entry", line_number)
                 elif key == "Service":
                     current_service['Service'] = value
+                elif key == "ServiceType":
+                    current_service['ServiceType'] = value
+                elif key == "ServiceLocation":
+                    current_service['ServiceLocation'] = value
                 elif key == "TimeZone":
                     current_service['TimeZone'] = value
                 elif key == "Categories":
@@ -1531,6 +1535,8 @@ def display_services(services):
     for service in services:
         print("Service Entry: {0}".format(service['Entry']))
         print("Service: {0}".format(service['Service']))
+        print("Service Type: {0}".format(service['ServiceType']))
+        print("Service Location: {0}".format(service['ServiceLocation']))
         print("TimeZone: {0}".format(service['TimeZone']))
         
         if 'Info' in service and service['Info']:
@@ -1547,7 +1553,7 @@ def display_services(services):
         for category in service['Categories']:
             print("  Type: {0}, Level: {1}".format(category.get('Type', ''), category.get('Level', '')))
             print("  ID: {0}".format(category['ID']))
-            print("  InSub: {0}".format(category['InSub']))
+            print("  In SubID: {0}".format(category['InSub']))
             print("  Headline: {0}".format(category['Headline']))
             print("  Description: {0}".format(category['Description'].strip().replace("\n", "\n    ")))
             print("")
@@ -1850,6 +1856,8 @@ def services_to_string(services, line_ending='lf'):
         output.append('--- Start Archive Service ---')
         output.append('Entry: {0}'.format(service.get('Entry', '')))
         output.append('Service: {0}'.format(service.get('Service', '')))
+        output.append('ServiceType: {0}'.format(service.get('ServiceType', '')))
+        output.append('ServiceLocation: {0}'.format(service.get('ServiceLocation', '')))
         output.append('TimeZone: {0}'.format(service.get('TimeZone', 'UTC')))
 
         # Info section
@@ -1995,11 +2003,13 @@ def save_services_to_file(services, filename, line_ending='lf'):
     save_compressed_file(data, filename)
 
 
-def init_empty_service(entry, service_name, time_zone="UTC", info=''):
+def init_empty_service(entry, service_name, service_type, service_location, time_zone="UTC", info=''):
     """ Initialize an empty service structure """
     return {
         'Entry': entry,
         'Service': service_name,
+        'ServiceType': service_type,
+        'ServiceLocation': service_location,
         'TimeZone': time_zone,
         'Users': {},
         'MessageThreads': [],
@@ -2129,10 +2139,12 @@ def remove_message_post(service, thread_id, post_id):
     else:
         raise ValueError("Thread ID {0} not found in service.".format(thread_id))
 
-def add_service(services, entry, service_name, time_zone="UTC", info=None):
+def add_service(services, entry, service_name, service_type, service_location, time_zone="UTC", info=None):
     new_service = {
         'Entry': entry,
         'Service': service_name,
+        'ServiceType': service_type,
+        'ServiceLocation': service_location,
         'TimeZone': time_zone,
         'Info': info if info else '',
         'Interactions': [],

@@ -61,6 +61,8 @@
     - 1
     - 2
   Service: Example Discussion Forum
+  ServiceLocation: https://gamemaker2k.org/example/
+  ServiceType: Message Board
   Status:
   - Active
   TimeZone: UTC
@@ -150,6 +152,8 @@
     post_ids:
     - 1
   Service: Movie Review Forum
+  ServiceLocation: https://gamemaker2k.org/movie/
+  ServiceType: Message Board
   Status:
   - Active
   TimeZone: UTC
@@ -275,6 +279,8 @@
     - 1
     - 2
   Service: Literature Discussion Board
+  ServiceLocation: https://gamemaker2k.org/literature/
+  ServiceType: Message Board
   Status:
   - Active
   TimeZone: UTC
