@@ -28,6 +28,7 @@ with open(verinfofilename, "r", **open_kwargs) as verinfofile:
 # We ensure the pattern works correctly in both Python 2 and 3 by escaping the strings properly
 version_pattern = "__version_info__ = \(\s*(\\d+)\s*,\s*(\\d+)\s*,\s*(\\d+)\s*,\s*['\"]([\w\s]+)['\"]\s*,\s*(\\d+)\s*\)"
 setuppy_verinfo = re.findall(version_pattern, verinfodata)[0]
+print(re.findall(version_pattern, verinfodata))
 
 # If version info is found, process it; handle the case where no match is found
 if setuppy_verinfo:
@@ -153,9 +154,11 @@ if(pygenbuildinfo):
     '''verinfodata = verinfodata.replace('__build_python_is_set__ = False;', '__build_python_is_set__ = True;');'''
     verinfodata = re.sub("__build_python_is_set__ \= .*\;",
                          '__build_python_is_set__ = True;', verinfodata)
+    '''
     verinfofile = open(verinfofilename, "w")
     verinfofile.write(verinfodata)
     verinfofile.close()
+    '''
 
 if(len(sys.argv) > 1 and (sys.argv[1] == "buildcfg" or sys.argv[1] == "makecfg")):
     outcfgvar = """[project]
