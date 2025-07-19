@@ -28,7 +28,6 @@ with open(verinfofilename, "r", **open_kwargs) as verinfofile:
 # We ensure the pattern works correctly in both Python 2 and 3 by escaping the strings properly
 version_pattern = "__version_info__ = \(\s*(\\d+)\s*,\s*(\\d+)\s*,\s*(\\d+)\s*,\s*['\"]([\w\s]+)['\"]\s*,\s*(\\d+)\s*\)"
 setuppy_verinfo = re.findall(version_pattern, verinfodata)[0]
-print(re.findall(version_pattern, verinfodata))
 
 # If version info is found, process it; handle the case where no match is found
 if setuppy_verinfo:
@@ -77,8 +76,8 @@ pymodule['keywords'] = 'love loveisokifnotextreme extremeloveisnotok lovesostron
 '''
 pymodule['platforms'] = 'OS Independent'
 pymodule['zipsafe'] = True
-pymodule['pymodules'] = ['parse_message_file', 'archive_parser.py']
-pymodule['scripts'] = ['parse_message_file.py']
+pymodule['pymodules'] = ['parse_message_file', 'archive_parser']
+pymodule['scripts'] = ['display_message_file.py']
 pymodule['classifiers'] = [
  'Development Status :: 5 - Production/Stable',
  'Intended Audience :: Developers',
