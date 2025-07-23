@@ -68,7 +68,7 @@ pymodule['license'] = 'Revised BSD License'
 pymodule['keywords'] = 'pytextarchive textarchive archive text backup'
 pymodule['url'] = 'https://github.com/GameMaker2k/PyTextArchive'
 pymodule['downloadurl'] = 'https://github.com/GameMaker2k/PyTextArchive/archive/master.tar.gz'
-pymodule['packages'] = find_packages();
+pymodule['packages'] = find_packages()
 pymodule['packagedata'] = {'data': ['*.txt', '*.json', '*.yaml', '*.html']}
 pymodule['longdescription'] = "" 
 '''
@@ -76,7 +76,7 @@ pymodule['keywords'] = 'love loveisokifnotextreme extremeloveisnotok lovesostron
 '''
 pymodule['platforms'] = 'OS Independent'
 pymodule['zipsafe'] = True
-pymodule['pymodules'] = ['parse_message_file', 'archive_parser']
+pymodule['pymodules'] = []
 pymodule['scripts'] = ['display_message_file.py']
 pymodule['classifiers'] = [
  'Development Status :: 5 - Production/Stable',

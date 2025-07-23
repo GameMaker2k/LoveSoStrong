@@ -4,7 +4,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import argparse
 import sys
-from parse_message_file import (
+from pytextarchive.parse_message_file import (
     parse_file, display_services, to_json, from_json, load_from_json_file, save_to_json_file,
     services_to_string, save_services_to_file, services_to_html, save_services_to_html_file,
     to_yaml, from_yaml, load_from_yaml_file, save_to_yaml_file
