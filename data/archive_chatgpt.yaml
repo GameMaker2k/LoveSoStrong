@@ -34,7 +34,10 @@
     Keywords: ''
     Messages:
     - Author: '@user123'
+      AuthorID: 2
       Date: August 7, 2024
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: Hello, ChatGPT! How do I get started using your features?
@@ -45,7 +48,10 @@
       Tags: ''
       Time: 8:00 AM
     - Author: '@chatgpt'
+      AuthorID: 1
       Date: August 7, 2024
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: Hello! To get started, simply ask me any question or describe a task
@@ -71,7 +77,10 @@
     Keywords: ''
     Messages:
     - Author: '@user123'
+      AuthorID: 2
       Date: August 7, 2024
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: Can you tell me about the history of the Titanic?
@@ -82,7 +91,10 @@
       Tags: ''
       Time: 9:00 AM
     - Author: '@chatgpt'
+      AuthorID: 1
       Date: August 7, 2024
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: Certainly! The RMS Titanic was a British passenger liner that sank

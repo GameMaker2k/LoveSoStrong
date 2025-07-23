@@ -98,10 +98,13 @@ Forum: General Discussion
 
 --- Start Message Post ---
 Author: @kazuki.suzuki
+Author ID: 2
 Time: 8:00 AM
 Date: Jul 1, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Post
 SubTitle: Hello, World!
 Tags: 
@@ -115,10 +118,13 @@ Hello, World! ^_^
 
 --- Start Message Post ---
 Author: @cooldude2k
+Author ID: 1
 Time: 10:00 AM
 Date: Jul 1, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Reply
 SubTitle: Re: Hello, World!
 Tags: 
@@ -132,10 +138,13 @@ Why did you say "Hello, World!" O_o
 
 --- Start Message Post ---
 Author: @kazuki.suzuki
+Author ID: 2
 Time: 12:00 PM
 Date: Jul 1, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Reply
 SubTitle: Re: Hello, World!
 Tags: 
@@ -150,10 +159,13 @@ I thought it would be cool. ^_^
 
 --- Start Message Post ---
 Author: @cooldude2k
+Author ID: 1
 Time: 2:00 PM
 Date: Jul 1, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Reply
 SubTitle: Re: Hello, World!
 Tags: 

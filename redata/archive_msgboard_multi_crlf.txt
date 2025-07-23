@@ -98,10 +98,13 @@ Forum: Tech Talk
 
 --- Start Message Post ---
 Author: @alice_j
+Author ID: 1
 Time: 10:00 AM
 Date: Jan 15, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Post
 SubTitle: Favorite Tech Gadgets of 2024
 Tags: 
@@ -115,10 +118,13 @@ What are your favorite tech gadgets of 2024?
 
 --- Start Message Post ---
 Author: @bob_s
+Author ID: 2
 Time: 11:00 AM
 Date: Jan 15, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Reply
 SubTitle: Re: Favorite Tech Gadgets of 2024
 Tags: 
@@ -225,10 +231,13 @@ Forum: Latest Releases
 
 --- Start Message Post ---
 Author: @charlie_d
+Author ID: 1
 Time: 2:00 PM
 Date: Jun 15, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Poll
 SubTitle: 
 Tags: 
@@ -357,10 +366,13 @@ Forum: Book Reviews
 
 --- Start Message Post ---
 Author: @emily_c
+Author ID: 1
 Time: 10:00 AM
 Date: Jul 10, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Post
 SubTitle: Favorite Books of All Time
 Tags: 
@@ -374,10 +386,13 @@ What are your all-time favorite books?
 
 --- Start Message Post ---
 Author: @frank_m
+Author ID: 2
 Time: 11:00 AM
 Date: Jul 10, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Reply
 SubTitle: Re: Favorite Books of All Time
 Tags: 
@@ -402,10 +417,13 @@ Forum: Genre Talks
 
 --- Start Message Post ---
 Author: @frank_m
+Author ID: 2
 Time: 2:00 PM
 Date: Jul 15, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Post
 SubTitle: Re: Favorite Books of All Time
 Tags: 
@@ -419,10 +437,13 @@ What new fantasy books are you excited about this year?
 
 --- Start Message Post ---
 Author: @emily_c
+Author ID: 1
 Time: 3:00 PM
 Date: Jul 15, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Reply
 SubTitle: Re: Favorite Books of All Time
 Tags: 

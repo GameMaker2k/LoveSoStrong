@@ -143,10 +143,13 @@ Forum: Introductions
 
 --- Start Message Post ---
 Author: @johndoe
+Author ID: 1
 Time: 9:00 AM
 Date: Jan 2, 2020
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Post
 SubTitle: Welcome to the Community!
 Tags: 
@@ -160,10 +163,13 @@ Hello everyone! I'm excited to be part of this community.
 
 --- Start Message Post ---
 Author: @janesmith
+Author ID: 2
 Time: 10:00 AM
 Date: Jan 2, 2020
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Reply
 SubTitle: Re: Welcome to the Community!
 Tags: 
@@ -188,10 +194,13 @@ Forum: Site Feedback
 
 --- Start Message Post ---
 Author: @janesmith
+Author ID: 2
 Time: 2:00 PM
 Date: Feb 5, 2020
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Post
 SubTitle: What do you think about the new site features?
 Tags: 
@@ -205,10 +214,13 @@ I wanted to gather some opinions on the new site features. What do you all think
 
 --- Start Message Post ---
 Author: @johndoe
+Author ID: 1
 Time: 3:00 PM
 Date: Feb 5, 2020
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Reply
 SubTitle: Re: What do you think about the new site features?
 Tags: 
@@ -222,10 +234,13 @@ I think the new features are great! They really improve the user experience.
 
 --- Start Message Post ---
 Author: @janesmith
+Author ID: 2
 Time: 3:30 PM
 Date: Feb 5, 2020
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Reply
 SubTitle: Re: What do you think about the new site features?
 Tags: 
@@ -239,10 +254,13 @@ Glad to hear that! Let's see what others think.
 
 --- Start Message Post ---
 Author: @janesmith
+Author ID: 2
 Time: 4:00 PM
 Date: Feb 5, 2020
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Poll
 SubTitle: 
 Tags: 

@@ -98,10 +98,13 @@ Forum: Chat Sessions
 
 --- Start Message Post ---
 Author: @user123
+Author ID: 2
 Time: 8:00 AM
 Date: August 7, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Post
 SubTitle: Getting Started with ChatGPT
 Tags: 
@@ -115,10 +118,13 @@ Hello, ChatGPT! How do I get started using your features?
 
 --- Start Message Post ---
 Author: @chatgpt
+Author ID: 1
 Time: 8:02 AM
 Date: August 7, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Reply
 SubTitle: Re: Getting Started with ChatGPT
 Tags: 
@@ -143,10 +149,13 @@ Forum: Chat Sessions
 
 --- Start Message Post ---
 Author: @user123
+Author ID: 2
 Time: 9:00 AM
 Date: August 7, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Post
 SubTitle: Asking About History
 Tags: 
@@ -160,10 +169,13 @@ Can you tell me about the history of the Titanic?
 
 --- Start Message Post ---
 Author: @chatgpt
+Author ID: 1
 Time: 9:02 AM
 Date: August 7, 2024
-EditTime: 
-EditDate: 
+Edit Time: 
+Edit Date: 
+Edit Author: 
+Edit Author ID: 0
 SubType: Reply
 SubTitle: Re: Asking About History
 Tags: 

@@ -68,7 +68,10 @@
     Keywords: ''
     Messages:
     - Author: '@johndoe'
+      AuthorID: 1
       Date: Jan 2, 2020
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: Hello everyone! I'm excited to be part of this community.
@@ -79,7 +82,10 @@
       Tags: ''
       Time: 9:00 AM
     - Author: '@janesmith'
+      AuthorID: 2
       Date: Jan 2, 2020
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: Welcome, @johndoe! Looking forward to your contributions.
@@ -103,7 +109,10 @@
     Keywords: ''
     Messages:
     - Author: '@janesmith'
+      AuthorID: 2
       Date: Feb 5, 2020
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: I wanted to gather some opinions on the new site features. What do
@@ -115,7 +124,10 @@
       Tags: ''
       Time: 2:00 PM
     - Author: '@johndoe'
+      AuthorID: 1
       Date: Feb 5, 2020
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: I think the new features are great! They really improve the user experience.
@@ -126,7 +138,10 @@
       Tags: ''
       Time: 3:00 PM
     - Author: '@janesmith'
+      AuthorID: 2
       Date: Feb 5, 2020
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: Glad to hear that! Let's see what others think.
@@ -137,7 +152,10 @@
       Tags: ''
       Time: 3:30 PM
     - Author: '@janesmith'
+      AuthorID: 2
       Date: Feb 5, 2020
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: I've set up a poll to gather opinions. Please vote!

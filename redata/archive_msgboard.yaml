@@ -69,8 +69,6 @@
     Messages:
     - Author: '@johndoe'
       Date: Jan 2, 2020
-      EditDate: ''
-      EditTime: ''
       Message: Hello everyone! I'm excited to be part of this community.
       Nested: 0
       Post: 1
@@ -80,8 +78,6 @@
       Time: 9:00 AM
     - Author: '@janesmith'
       Date: Jan 2, 2020
-      EditDate: ''
-      EditTime: ''
       Message: Welcome, @johndoe! Looking forward to your contributions.
       Nested: 1
       Post: 2
@@ -104,8 +100,6 @@
     Messages:
     - Author: '@janesmith'
       Date: Feb 5, 2020
-      EditDate: ''
-      EditTime: ''
       Message: I wanted to gather some opinions on the new site features. What do
         you all think?
       Nested: 0
@@ -116,8 +110,6 @@
       Time: 2:00 PM
     - Author: '@johndoe'
       Date: Feb 5, 2020
-      EditDate: ''
-      EditTime: ''
       Message: I think the new features are great! They really improve the user experience.
       Nested: 1
       Post: 2
@@ -127,8 +119,6 @@
       Time: 3:00 PM
     - Author: '@janesmith'
       Date: Feb 5, 2020
-      EditDate: ''
-      EditTime: ''
       Message: Glad to hear that! Let's see what others think.
       Nested: 2
       Post: 3
@@ -138,8 +128,6 @@
       Time: 3:30 PM
     - Author: '@janesmith'
       Date: Feb 5, 2020
-      EditDate: ''
-      EditTime: ''
       Message: I've set up a poll to gather opinions. Please vote!
       Nested: 2
       Polls:

@@ -33,7 +33,10 @@
     Keywords: ''
     Messages:
     - Author: '@kazuki.suzuki'
+      AuthorID: 2
       Date: Jul 1, 2024
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: Hello, World! ^_^
@@ -44,7 +47,10 @@
       Tags: ''
       Time: 8:00 AM
     - Author: '@cooldude2k'
+      AuthorID: 1
       Date: Jul 1, 2024
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: Why did you say "Hello, World!" O_o
@@ -55,7 +61,10 @@
       Tags: ''
       Time: 10:00 AM
     - Author: '@kazuki.suzuki'
+      AuthorID: 2
       Date: Jul 1, 2024
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: 'I don''t know.
@@ -68,7 +77,10 @@
       Tags: ''
       Time: 12:00 PM
     - Author: '@cooldude2k'
+      AuthorID: 1
       Date: Jul 1, 2024
+      EditAuthor: ''
+      EditAuthorID: 0
       EditDate: ''
       EditTime: ''
       Message: What ever dude! <_<

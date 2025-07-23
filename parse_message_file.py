@@ -1529,6 +1529,10 @@ def parse_lines(lines, validate_only=False, verbose=False):
                         current_message['Author'] = value
                         if verbose:
                             print("Line {0}: Author set to {1}".format(line_number, value))
+                    elif key == "AuthorID":
+                        current_message['AuthorID'] = validate_non_negative_integer(value, "AuthorID", line_number)
+                        if verbose:
+                            print("Line {0}: Author ID set to {1}".format(line_number, value))
                     elif key == "Time":
                         current_message['Time'] = value
                         if verbose:
@@ -1540,11 +1544,19 @@ def parse_lines(lines, validate_only=False, verbose=False):
                     elif key == "EditTime":
                         current_message['EditTime'] = value
                         if verbose:
-                            print("Line {0}: EditTime set to {1}".format(line_number, value))
+                            print("Line {0}: Edit Time set to {1}".format(line_number, value))
                     elif key == "EditDate":
                         current_message['EditDate'] = value
                         if verbose:
-                            print("Line {0}: EditDate set to {1}".format(line_number, value))
+                            print("Line {0}: Edit Date set to {1}".format(line_number, value))
+                    elif key == "EditAuthor":
+                        current_message['EditAuthor'] = value
+                        if verbose:
+                            print("Line {0}: Edit Author set to {1}".format(line_number, value))
+                    elif key == "EditAuthorID":
+                        current_message['EditAuthorID'] = validate_non_negative_integer(value, "EditAuthorID", line_number)
+                        if verbose:
+                            print("Line {0}: Edit Author ID set to {1}".format(line_number, value))
                     elif key == "SubType":
                         current_message['SubType'] = value
                         if verbose:
@@ -1992,8 +2004,8 @@ def services_to_string(services, line_ending='lf'):
         for cat in service.get('Categories', []):
             output.append('--- Start Category List ---')
             output.append('Kind: {0}, {1}'.format(cat.get('Type', ''), cat.get('Level', '')))
-            output.append('ID: {0}'.format(cat.get('ID', '')))
-            output.append('InSub: {0}'.format(cat.get('InSub', '')))
+            output.append('ID: {0}'.format(cat.get('ID', '0')))
+            output.append('InSub: {0}'.format(cat.get('InSub', '0')))
             output.append('Headline: {0}'.format(cat.get('Headline', '')))
             output.append('Description:')
             output.append('--- Start Description Body ---')
@@ -2015,7 +2027,7 @@ def services_to_string(services, line_ending='lf'):
 
             for thread in threads:
                 output.append('--- Start Message Thread ---')
-                output.append('Thread: {0}'.format(thread.get('Thread', '')))
+                output.append('Thread: {0}'.format(thread.get('Thread', '0')))
                 output.append('Title: {0}'.format(thread.get('Title', '')))
                 output.append('Type: {0}'.format(thread.get('Type', '')))
                 output.append('State: {0}'.format(thread.get('State', '')))
@@ -2027,15 +2039,18 @@ def services_to_string(services, line_ending='lf'):
                 for msg in thread.get('Messages', []):
                     output.append('--- Start Message Post ---')
                     output.append('Author: {0}'.format(msg.get('Author', '')))
+                    output.append('Author ID: {0}'.format(msg.get('AuthorID', '0')))
                     output.append('Time: {0}'.format(msg.get('Time', '')))
                     output.append('Date: {0}'.format(msg.get('Date', '')))
-                    output.append('EditTime: {0}'.format(msg.get('EditTime', '')))
-                    output.append('EditDate: {0}'.format(msg.get('EditDate', '')))
+                    output.append('Edit Time: {0}'.format(msg.get('EditTime', '')))
+                    output.append('Edit Date: {0}'.format(msg.get('EditDate', '')))
+                    output.append('Edit Author: {0}'.format(msg.get('EditAuthor', '')))
+                    output.append('Edit Author ID: {0}'.format(msg.get('EditAuthorID', '0')))
                     output.append('SubType: {0}'.format(msg.get('SubType', '')))
                     output.append('SubTitle: {0}'.format(msg.get('SubTitle', '')))
                     output.append('Tags: {0}'.format(msg.get('Tags', '')))
-                    output.append('Post: {0}'.format(msg.get('Post', '')))
-                    output.append('Nested: {0}'.format(msg.get('Nested', '')))
+                    output.append('Post: {0}'.format(msg.get('Post', '0')))
+                    output.append('Nested: {0}'.format(msg.get('Nested', '0')))
                     # Message body
                     output.append('Message:')
                     output.append('--- Start Message Body ---')
@@ -2049,12 +2064,12 @@ def services_to_string(services, line_ending='lf'):
                         output.append('--- Start Poll List ---')
                         for poll in msg['Polls']:
                             output.append('--- Start Poll Body ---')
-                            output.append('Num: {0}'.format(poll.get('Num', '')))
+                            output.append('Num: {0}'.format(poll.get('Num', '0')))
                             output.append('Question: {0}'.format(poll.get('Question', '')))
                             output.append('Answers: {0}'.format(', '.join(poll.get('Answers', []))))
                             output.append('Results: {0}'.format(', '.join(str(r) for r in poll.get('Results', []))))
                             output.append('Percentage: {0}'.format(', '.join('{:.1f}'.format(float(p)) for p in poll.get('Percentage', []))))
-                            output.append('Votes: {0}'.format(poll.get('Votes', '')))
+                            output.append('Votes: {0}'.format(poll.get('Votes', '0')))
                             output.append('--- End Poll Body ---')
                         output.append('--- End Poll List ---')
                     output.append('--- End Message Post ---')
@@ -2151,15 +2166,18 @@ def add_message_thread(service, thread_id, title, category, forum, thread_type, 
     }
     service['MessageThreads'].append(thread)
 
-def add_message_post(service, thread_id, author, time, date, edittime, editdate, subtype, tags, post_id, nested, message):
+def add_message_post(service, thread_id, author, authorid, time, date, edittime, editdate, editauthor, editauthorid, subtype, tags, post_id, nested, message):
     thread = next((t for t in service['MessageThreads'] if t['Thread'] == thread_id), None)
     if thread is not None:
         new_post = {
             'Author': author,
+            'AuthorID': authorid,
             'Time': time,
             'Date': date,
             'EditTime': edittime,
             'EditDate': editdate,
+            'EditAuthor': editauthor,
+            'EditAuthorID': editauthorid,
             'SubType': subtype,
             'SubTitle': subtitle,
             'Tags': tags,
