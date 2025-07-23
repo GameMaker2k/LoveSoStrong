@@ -296,6 +296,52 @@ if('zlib' in compressionsupport):
     outextlist.append('zlib')
     outextlistwd.append('.zlib')
 
+def get_file_encoding(infile, closefp=True):
+    if(hasattr(infile, "read") or hasattr(infile, "write")):
+        fp = infile
+    else:
+        try:
+            fp = open(infile, "rb")
+        except FileNotFoundError:
+            return False
+    file_encoding = "UTF-8"
+    fp.seek(0, 0)
+    prefp = fp.read(2)
+    if(prefp == binascii.unhexlify("fffe")):
+        file_encoding = "UTF-16LE"
+    elif(prefp == binascii.unhexlify("feff")):
+        file_encoding = "UTF-16BE"
+    fp.seek(0, 0)
+    prefp = fp.read(3)
+    if(prefp == binascii.unhexlify("efbbbf")):
+        file_encoding = "UTF-8"
+    elif(prefp == binascii.unhexlify("0efeff")):
+        file_encoding = "SCSU"
+    fp.seek(0, 0)
+    prefp = fp.read(4)
+    if(prefp == binascii.unhexlify("fffe0000")):
+        file_encoding = "UTF-32LE"
+    elif(prefp == binascii.unhexlify("0000feff")):
+        file_encoding = "UTF-32BE"
+    elif(prefp == binascii.unhexlify("dd736673")):
+        file_encoding = "UTF-EBCDIC"
+    elif(prefp == binascii.unhexlify("2b2f7638")):
+        file_encoding = "UTF-7"
+    elif(prefp == binascii.unhexlify("2b2f7639")):
+        file_encoding = "UTF-7"
+    elif(prefp == binascii.unhexlify("2b2f762b")):
+        file_encoding = "UTF-7"
+    elif(prefp == binascii.unhexlify("2b2f762f")):
+        file_encoding = "UTF-7"
+    fp.seek(0, 0)
+    if(closefp):
+        fp.close()
+    return file_encoding
+
+def get_file_encoding_from_string(instring, closefp=True):
+    instringsfile = StringIO(instring)
+    return get_file_encoding(instringsfile, closefp)
+
 class ZlibFile:
     def __init__(self, file_path=None, fileobj=None, mode='rb', level=9, wbits=15, encoding=None, errors=None, newline=None):
         if file_path is None and fileobj is None:
