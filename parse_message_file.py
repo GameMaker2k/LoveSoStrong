@@ -3,6 +3,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import platform
+import binascii
 import logging
 import marshal
 import pickle
