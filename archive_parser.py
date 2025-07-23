@@ -112,6 +112,13 @@ def parse_txt_archive(filepath):
         elif line.startswith("--- End Bio Body ---"):
             current_section = "user"
             continue
+        elif line.startswith("--- Start Signature Body ---"):
+            current_section = "user_signature"
+            user["Signature"] = ""
+            continue
+        elif line.startswith("--- End Signature Body ---"):
+            current_section = "user"
+            continue
         elif line.startswith("--- Start Category List ---"):
             category = {}
             current_section = "category"
@@ -162,6 +169,8 @@ def parse_txt_archive(filepath):
                 user[k.strip()] = v.strip()
         elif current_section == "user_bio":
             user["Bio"] += line + "\n"
+        elif current_section == "user_signature":
+            user["Signature"] += line + "\n"
         elif current_section == "category":
             if ":" in line:
                 k, v = line.split(":", 1)
@@ -230,11 +239,14 @@ def write_service_to_txt(service, out_path):
         for uid, user in service.get("Users", {}).items():
             f.write("--- Start User Info ---\n")
             for k, v in user.items():
-                if k != "Bio":
+                if k != "Bio" and k != "Signature":
                     f.write("{0}: {1}\n".format(k, v))
             f.write("--- Start Bio Body ---\n")
             f.write(user.get("Bio", "").strip() + "\n")
             f.write("--- End Bio Body ---\n")
+            f.write("--- Start Signature Body ---\n")
+            f.write(user.get("Signature", "").strip() + "\n")
+            f.write("--- End Signature Body ---\n")
             f.write("--- End User Info ---\n\n")
 
         for cat in service.get("Categories", []):
@@ -305,6 +317,10 @@ def services_to_string(services, line_ending='lf'):
                 output.append('--- Start Bio Body ---')
                 output.extend(user.get('Bio', '').splitlines())
                 output.append('--- End Bio Body ---')
+                output.append('Signature:')
+                output.append('--- Start Signature Body ---')
+                output.extend(user.get('Signature', '').splitlines())
+                output.append('--- End Signature Body ---')
                 output.append('--- End User Info ---')
                 output.append('')
             output.append('--- End User List ---')
