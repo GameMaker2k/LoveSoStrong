@@ -35,6 +35,8 @@
     Messages:
     - Author: '@user123'
       Date: August 7, 2024
+      EditDate: ''
+      EditTime: ''
       Message: Hello, ChatGPT! How do I get started using your features?
       Nested: 0
       Post: 1
@@ -44,6 +46,8 @@
       Time: 8:00 AM
     - Author: '@chatgpt'
       Date: August 7, 2024
+      EditDate: ''
+      EditTime: ''
       Message: Hello! To get started, simply ask me any question or describe a task
         you'd like help with. I'm here to assist with information, answer questions,
         and provide guidance on various topics.
@@ -68,6 +72,8 @@
     Messages:
     - Author: '@user123'
       Date: August 7, 2024
+      EditDate: ''
+      EditTime: ''
       Message: Can you tell me about the history of the Titanic?
       Nested: 0
       Post: 1
@@ -77,6 +83,8 @@
       Time: 9:00 AM
     - Author: '@chatgpt'
       Date: August 7, 2024
+      EditDate: ''
+      EditTime: ''
       Message: Certainly! The RMS Titanic was a British passenger liner that sank
         in the North Atlantic Ocean on April 15, 1912, after hitting an iceberg during
         its maiden voyage from Southampton to New York City. It was one of the deadliest
@@ -113,6 +121,7 @@
       Location: Virtual
       Name: ChatGPT
       Phone: ''
+      Signature: ''
       Website: https://chatgpt.com/
     2:
       Avatar: ''
@@ -126,5 +135,6 @@
       Location: Midwest, USA
       Name: User
       Phone: ''
+      Signature: ''
       Website: ''
 

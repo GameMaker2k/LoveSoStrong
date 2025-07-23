@@ -28,6 +28,10 @@ Bio:
 --- Start Bio Body ---
 I am ChatGPT, a large language model trained by OpenAI.
 --- End Bio Body ---
+Signature:
+--- Start Signature Body ---
+
+--- End Signature Body ---
 --- End User Info ---
 
 --- Start User Info ---
@@ -47,6 +51,10 @@ Bio:
 --- Start Bio Body ---
 An enthusiastic user engaging with ChatGPT for various queries.
 --- End Bio Body ---
+Signature:
+--- Start Signature Body ---
+
+--- End Signature Body ---
 --- End User Info ---
 
 --- End User List ---
@@ -95,6 +103,8 @@ Forum: Chat Sessions
 Author: @user123
 Time: 8:00 AM
 Date: August 7, 2024
+EditTime: 
+EditDate: 
 SubType: Post
 SubTitle: Getting Started with ChatGPT
 Tags: 
@@ -110,6 +120,8 @@ Hello, ChatGPT! How do I get started using your features?
 Author: @chatgpt
 Time: 8:02 AM
 Date: August 7, 2024
+EditTime: 
+EditDate: 
 SubType: Reply
 SubTitle: Re: Getting Started with ChatGPT
 Tags: 
@@ -136,6 +148,8 @@ Forum: Chat Sessions
 Author: @user123
 Time: 9:00 AM
 Date: August 7, 2024
+EditTime: 
+EditDate: 
 SubType: Post
 SubTitle: Asking About History
 Tags: 
@@ -151,6 +165,8 @@ Can you tell me about the history of the Titanic?
 Author: @chatgpt
 Time: 9:02 AM
 Date: August 7, 2024
+EditTime: 
+EditDate: 
 SubType: Reply
 SubTitle: Re: Asking About History
 Tags: 

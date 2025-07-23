@@ -356,11 +356,11 @@ def services_to_string(services, line_ending='lf'):
                     output.append('Author: {0}'.format(msg.get('Author', '')))
                     output.append('Time: {0}'.format(msg.get('Time', '')))
                     output.append('Date: {0}'.format(msg.get('Date', '')))
+                    output.append('EditTime: {0}'.format(msg.get('EditTime', '')))
+                    output.append('EditDate: {0}'.format(msg.get('EditDate', '')))
                     output.append('SubType: {0}'.format(msg.get('SubType', '')))
-                    if 'SubTitle' in msg:
-                        output.append('SubTitle: {0}'.format(msg.get('SubTitle', '')))
-                    if 'Tags' in msg:
-                        output.append('Tags: {0}'.format(msg.get('Tags', '')))
+                    output.append('SubTitle: {0}'.format(msg.get('SubTitle', '')))
+                    output.append('Tags: {0}'.format(msg.get('Tags', '')))
                     output.append('Post: {0}'.format(msg.get('Post', '')))
                     output.append('Nested: {0}'.format(msg.get('Nested', '')))
                     output.append('Message:')

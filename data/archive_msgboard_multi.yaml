@@ -37,6 +37,8 @@
     Messages:
     - Author: '@alice_j'
       Date: Jan 15, 2024
+      EditDate: ''
+      EditTime: ''
       Message: What are your favorite tech gadgets of 2024?
       Nested: 0
       Post: 1
@@ -46,6 +48,8 @@
       Time: 10:00 AM
     - Author: '@bob_s'
       Date: Jan 15, 2024
+      EditDate: ''
+      EditTime: ''
       Message: I really like the new smartwatches. They're getting so advanced!
       Nested: 1
       Post: 2
@@ -79,6 +83,7 @@
       Location: USA
       Name: Alice Johnson
       Phone: ''
+      Signature: ''
       Website: ''
     2:
       Avatar: ''
@@ -92,6 +97,7 @@
       Location: Canada
       Name: Bob Smith
       Phone: ''
+      Signature: ''
       Website: ''
 - Categories:
   - Description: Discuss the latest movies here.
@@ -123,6 +129,8 @@
     Messages:
     - Author: '@charlie_d'
       Date: Jun 15, 2024
+      EditDate: ''
+      EditTime: ''
       Message: Vote for the best movie of 2024!
       Nested: 0
       Polls:
@@ -170,6 +178,7 @@
       Location: UK
       Name: Charlie Doe
       Phone: ''
+      Signature: ''
       Website: ''
     2:
       Avatar: ''
@@ -183,6 +192,7 @@
       Location: Australia
       Name: Dana White
       Phone: ''
+      Signature: ''
       Website: ''
 - Categories:
   - Description: Discuss fictional works, including novels, short stories, and more.
@@ -223,6 +233,8 @@
     Messages:
     - Author: '@emily_c'
       Date: Jul 10, 2024
+      EditDate: ''
+      EditTime: ''
       Message: What are your all-time favorite books?
       Nested: 0
       Post: 1
@@ -232,6 +244,8 @@
       Time: 10:00 AM
     - Author: '@frank_m'
       Date: Jul 10, 2024
+      EditDate: ''
+      EditTime: ''
       Message: I absolutely love "The Lord of the Rings" trilogy. It's a masterpiece!
       Nested: 1
       Post: 2
@@ -254,6 +268,8 @@
     Messages:
     - Author: '@frank_m'
       Date: Jul 15, 2024
+      EditDate: ''
+      EditTime: ''
       Message: What new fantasy books are you excited about this year?
       Nested: 0
       Post: 1
@@ -263,6 +279,8 @@
       Time: 2:00 PM
     - Author: '@emily_c'
       Date: Jul 15, 2024
+      EditDate: ''
+      EditTime: ''
       Message: I'm looking forward to the new book by Brandon Sanderson. It's supposed
         to be amazing!
       Nested: 1
@@ -297,6 +315,7 @@
       Location: USA
       Name: Emily Clark
       Phone: ''
+      Signature: ''
       Website: ''
     2:
       Avatar: ''
@@ -310,5 +329,6 @@
       Location: Canada
       Name: Frank Miller
       Phone: ''
+      Signature: ''
       Website: ''
 

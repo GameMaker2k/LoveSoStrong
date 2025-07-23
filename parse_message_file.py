@@ -984,6 +984,7 @@ def parse_lines(lines, validate_only=False, verbose=False):
         'user_info': False,
         'message_post': False,
         'bio_body': False,
+        'signature_body': False,
         'message_body': False,
         'comment_section': False,
         'include_service': False,
@@ -1356,7 +1357,7 @@ def parse_lines(lines, validate_only=False, verbose=False):
                 elif in_section['user_list'] and in_section['user_info']:
                     if key == "User":
                         user_id = validate_non_negative_integer(value, "User", line_number)
-                        current_service['Users'][user_id] = {'Bio': ""}
+                        current_service['Users'][user_id] = {'Bio': "", 'Signature': ""}
                         if verbose:
                             print("Line {0}: User ID set to {1}".format(line_number, user_id))
                     elif key == "Name":
@@ -1431,6 +1432,23 @@ def parse_lines(lines, validate_only=False, verbose=False):
                         current_bio.append(line)
                         if verbose:
                             print("Line {0}: Adding to bio body: {1}".format(line_number, line))
+                    elif line == "--- Start Signature Body ---":
+                        if user_id is not None:
+                            current_signature = []
+                            in_section['signature_body'] = True
+                            if verbose:
+                                print("Line {0}: Starting signature body".format(line_number))
+                    elif line == "--- End Signature Body ---":
+                        if user_id is not None and current_signature is not None:
+                            current_service['Users'][user_id]['Signature'] = "\n".join(current_signature)
+                            current_signature = None
+                            in_section['signature_body'] = False
+                            if verbose:
+                                print("Line {0}: Ending signature body".format(line_number))
+                    elif in_section['signature_body'] and current_signature is not None:
+                        current_signature.append(line)
+                        if verbose:
+                            print("Line {0}: Adding to signature body: {1}".format(line_number, line))
                 elif in_section['message_list'] and in_section['message_thread']:
                     if key == "Thread":
                         current_thread['Thread'] = validate_non_negative_integer(value, "Thread", line_number)
@@ -1472,6 +1490,14 @@ def parse_lines(lines, validate_only=False, verbose=False):
                         current_message['Date'] = value
                         if verbose:
                             print("Line {0}: Date set to {1}".format(line_number, value))
+                    elif key == "EditTime":
+                        current_message['EditTime'] = value
+                        if verbose:
+                            print("Line {0}: EditTime set to {1}".format(line_number, value))
+                    elif key == "EditDate":
+                        current_message['EditDate'] = value
+                        if verbose:
+                            print("Line {0}: EditDate set to {1}".format(line_number, value))
                     elif key == "SubType":
                         current_message['SubType'] = value
                         if verbose:
@@ -1574,6 +1600,8 @@ def display_services(services):
             print("    HashTags: {0}".format(user_info.get('HashTags', '')))
             print("    Bio:")
             print("      {0}".format(user_info.get('Bio', '').strip().replace("\n", "\n      ")))
+            print("    Signature:")
+            print("      {0}".format(user_info.get('Signature', '').strip().replace("\n", "\n      ")))
             print("")
         
         print("Message Threads:")
@@ -1893,6 +1921,12 @@ def services_to_string(services, line_ending='lf'):
                 for line in user.get('Bio', '').splitlines():
                     output.append(line)
                 output.append('--- End Bio Body ---')
+                # Signature body
+                output.append('Signature:')
+                output.append('--- Start Signature Body ---')
+                for line in user.get('Signature', '').splitlines():
+                    output.append(line)
+                output.append('--- End Signature Body ---')
                 output.append('--- End User Info ---')
                 output.append('')
             output.append('--- End User List ---')
@@ -1948,11 +1982,11 @@ def services_to_string(services, line_ending='lf'):
                     output.append('Author: {0}'.format(msg.get('Author', '')))
                     output.append('Time: {0}'.format(msg.get('Time', '')))
                     output.append('Date: {0}'.format(msg.get('Date', '')))
+                    output.append('EditTime: {0}'.format(msg.get('EditTime', '')))
+                    output.append('EditDate: {0}'.format(msg.get('EditDate', '')))
                     output.append('SubType: {0}'.format(msg.get('SubType', '')))
-                    if 'SubTitle' in msg:
-                        output.append('SubTitle: {0}'.format(msg.get('SubTitle', '')))
-                    if 'Tags' in msg:
-                        output.append('Tags: {0}'.format(msg.get('Tags', '')))
+                    output.append('SubTitle: {0}'.format(msg.get('SubTitle', '')))
+                    output.append('Tags: {0}'.format(msg.get('Tags', '')))
                     output.append('Post: {0}'.format(msg.get('Post', '')))
                     output.append('Nested: {0}'.format(msg.get('Nested', '')))
                     # Message body
@@ -2019,7 +2053,7 @@ def init_empty_service(entry, service_name, service_type, service_location, time
         'Info': info,
     }
 
-def add_user(service, user_id, name, handle, emailaddr, phonenum, location, website, avatar, banner, joined, birthday, hashtags, bio):
+def add_user(service, user_id, name, handle, emailaddr, phonenum, location, website, avatar, banner, joined, birthday, hashtags, bio, signature):
     """ Add a user to the service """
     service['Users'][user_id] = {
         'Name': name,
@@ -2033,7 +2067,8 @@ def add_user(service, user_id, name, handle, emailaddr, phonenum, location, webs
         'Joined': joined,
         'Birthday': birthday,
         'HashTags': hashtags,
-        'Bio': bio
+        'Bio': bio,
+        'Signature': signature
     }
 
 def add_category(service, kind, category_type, category_level, category_id, insub, headline, description):
@@ -2069,13 +2104,15 @@ def add_message_thread(service, thread_id, title, category, forum, thread_type, 
     }
     service['MessageThreads'].append(thread)
 
-def add_message_post(service, thread_id, author, time, date, subtype, tags, post_id, nested, message):
+def add_message_post(service, thread_id, author, time, date, edittime, editdate, subtype, tags, post_id, nested, message):
     thread = next((t for t in service['MessageThreads'] if t['Thread'] == thread_id), None)
     if thread is not None:
         new_post = {
             'Author': author,
             'Time': time,
             'Date': date,
+            'EditTime': edittime,
+            'EditDate': editdate,
             'SubType': subtype,
             'SubTitle': subtitle,
             'Tags': tags,

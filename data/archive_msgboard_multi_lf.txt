@@ -27,6 +27,10 @@ Bio:
 --- Start Bio Body ---
 Tech enthusiast and avid reader.
 --- End Bio Body ---
+Signature:
+--- Start Signature Body ---
+
+--- End Signature Body ---
 --- End User Info ---
 
 --- Start User Info ---
@@ -46,6 +50,10 @@ Bio:
 --- Start Bio Body ---
 Loves discussing movies and books.
 --- End Bio Body ---
+Signature:
+--- Start Signature Body ---
+
+--- End Signature Body ---
 --- End User Info ---
 --- End User List ---
 
@@ -93,6 +101,8 @@ Forum: Tech Talk
 Author: @alice_j
 Time: 10:00 AM
 Date: Jan 15, 2024
+EditTime: 
+EditDate: 
 SubType: Post
 SubTitle: Favorite Tech Gadgets of 2024
 Tags: 
@@ -108,6 +118,8 @@ What are your favorite tech gadgets of 2024?
 Author: @bob_s
 Time: 11:00 AM
 Date: Jan 15, 2024
+EditTime: 
+EditDate: 
 SubType: Reply
 SubTitle: Re: Favorite Tech Gadgets of 2024
 Tags: 
@@ -152,6 +164,10 @@ Bio:
 --- Start Bio Body ---
 Movie buff and critic.
 --- End Bio Body ---
+Signature:
+--- Start Signature Body ---
+
+--- End Signature Body ---
 --- End User Info ---
 
 --- Start User Info ---
@@ -171,6 +187,10 @@ Bio:
 --- Start Bio Body ---
 A lover of all things cinema.
 --- End Bio Body ---
+Signature:
+--- Start Signature Body ---
+
+--- End Signature Body ---
 --- End User Info ---
 --- End User List ---
 
@@ -207,6 +227,8 @@ Forum: Latest Releases
 Author: @charlie_d
 Time: 2:00 PM
 Date: Jun 15, 2024
+EditTime: 
+EditDate: 
 SubType: Poll
 Tags: 
 Post: 1
@@ -262,6 +284,10 @@ Bio:
 --- Start Bio Body ---
 Avid reader and aspiring writer.
 --- End Bio Body ---
+Signature:
+--- Start Signature Body ---
+
+--- End Signature Body ---
 --- End User Info ---
 
 --- Start User Info ---
@@ -281,6 +307,10 @@ Bio:
 --- Start Bio Body ---
 Loves fantasy novels and historical fiction.
 --- End Bio Body ---
+Signature:
+--- Start Signature Body ---
+
+--- End Signature Body ---
 --- End User Info ---
 --- End User List ---
 
@@ -328,6 +358,8 @@ Forum: Book Reviews
 Author: @emily_c
 Time: 10:00 AM
 Date: Jul 10, 2024
+EditTime: 
+EditDate: 
 SubType: Post
 SubTitle: Favorite Books of All Time
 Tags: 
@@ -343,6 +375,8 @@ What are your all-time favorite books?
 Author: @frank_m
 Time: 11:00 AM
 Date: Jul 10, 2024
+EditTime: 
+EditDate: 
 SubType: Reply
 SubTitle: Re: Favorite Books of All Time
 Tags: 
@@ -368,6 +402,8 @@ Forum: Genre Talks
 Author: @frank_m
 Time: 2:00 PM
 Date: Jul 15, 2024
+EditTime: 
+EditDate: 
 SubType: Post
 SubTitle: Re: Favorite Books of All Time
 Tags: 
@@ -383,6 +419,8 @@ What new fantasy books are you excited about this year?
 Author: @emily_c
 Time: 3:00 PM
 Date: Jul 15, 2024
+EditTime: 
+EditDate: 
 SubType: Reply
 SubTitle: Re: Favorite Books of All Time
 Tags: 

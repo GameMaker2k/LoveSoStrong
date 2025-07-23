@@ -34,6 +34,8 @@
     Messages:
     - Author: '@kazuki.suzuki'
       Date: Jul 1, 2024
+      EditDate: ''
+      EditTime: ''
       Message: Hello, World! ^_^
       Nested: 0
       Post: 1
@@ -43,6 +45,8 @@
       Time: 8:00 AM
     - Author: '@cooldude2k'
       Date: Jul 1, 2024
+      EditDate: ''
+      EditTime: ''
       Message: Why did you say "Hello, World!" O_o
       Nested: 1
       Post: 2
@@ -52,6 +56,8 @@
       Time: 10:00 AM
     - Author: '@kazuki.suzuki'
       Date: Jul 1, 2024
+      EditDate: ''
+      EditTime: ''
       Message: 'I don''t know.
 
         I thought it would be cool. ^_^'
@@ -63,6 +69,8 @@
       Time: 12:00 PM
     - Author: '@cooldude2k'
       Date: Jul 1, 2024
+      EditDate: ''
+      EditTime: ''
       Message: What ever dude! <_<
       Nested: 3
       Post: 4
@@ -100,6 +108,7 @@
       Location: Somewhere
       Name: Cool Dude 2k
       Phone: ''
+      Signature: ''
       Website: ''
     2:
       Avatar: ''
@@ -113,5 +122,6 @@
       Location: Anywhere
       Name: Kazuki Suzuki
       Phone: ''
+      Signature: ''
       Website: ''
 

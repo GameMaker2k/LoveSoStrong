@@ -28,6 +28,9 @@ Bio:
 --- Start Bio Body ---
 Just an example user enjoying the discussions.
 --- End Bio Body ---
+Signature:
+--- Start Signature Body ---
+--- End Signature Body ---
 --- End User Info ---
 
 --- Start User Info ---
@@ -47,6 +50,9 @@ Bio:
 --- Start Bio Body ---
 I love giving feedback and helping improve the site.
 --- End Bio Body ---
+Signature:
+--- Start Signature Body ---
+--- End Signature Body ---
 --- End User Info ---
 
 --- End User List ---
@@ -139,6 +145,8 @@ Forum: Introductions
 Author: @johndoe
 Time: 9:00 AM
 Date: Jan 2, 2020
+EditTime: 
+EditDate: 
 SubType: Post
 SubTitle: Welcome to the Community!
 Tags: 
@@ -154,6 +162,8 @@ Hello everyone! I'm excited to be part of this community.
 Author: @janesmith
 Time: 10:00 AM
 Date: Jan 2, 2020
+EditTime: 
+EditDate: 
 SubType: Reply
 SubTitle: Re: Welcome to the Community!
 Tags: 
@@ -180,6 +190,8 @@ Forum: Site Feedback
 Author: @janesmith
 Time: 2:00 PM
 Date: Feb 5, 2020
+EditTime: 
+EditDate: 
 SubType: Post
 SubTitle: What do you think about the new site features?
 Tags: 
@@ -195,6 +207,8 @@ I wanted to gather some opinions on the new site features. What do you all think
 Author: @johndoe
 Time: 3:00 PM
 Date: Feb 5, 2020
+EditTime: 
+EditDate: 
 SubType: Reply
 SubTitle: Re: What do you think about the new site features?
 Tags: 
@@ -210,6 +224,8 @@ I think the new features are great! They really improve the user experience.
 Author: @janesmith
 Time: 3:30 PM
 Date: Feb 5, 2020
+EditTime: 
+EditDate: 
 SubType: Reply
 SubTitle: Re: What do you think about the new site features?
 Tags: 
@@ -225,7 +241,10 @@ Glad to hear that! Let's see what others think.
 Author: @janesmith
 Time: 4:00 PM
 Date: Feb 5, 2020
+EditTime: 
+EditDate: 
 SubType: Poll
+SubTitle: 
 Tags: 
 Post: 4
 Nested: 2

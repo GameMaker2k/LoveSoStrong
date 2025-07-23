@@ -3,6 +3,7 @@
     "Users": {
       "1": {
         "Bio": "Tech enthusiast and avid reader.",
+        "Signature": "",
         "Name": "Alice Johnson",
         "Handle": "@alice_j",
         "Email": "",
@@ -17,6 +18,7 @@
       },
       "2": {
         "Bio": "Loves discussing movies and books.",
+        "Signature": "",
         "Name": "Bob Smith",
         "Handle": "@bob_s",
         "Email": "",
@@ -38,6 +40,8 @@
             "Author": "@alice_j",
             "Time": "10:00 AM",
             "Date": "Jan 15, 2024",
+            "EditTime": "",
+            "EditDate": "",
             "SubType": "Post",
             "SubTitle": "Favorite Tech Gadgets of 2024",
             "Tags": "",
@@ -49,6 +53,8 @@
             "Author": "@bob_s",
             "Time": "11:00 AM",
             "Date": "Jan 15, 2024",
+            "EditTime": "",
+            "EditDate": "",
             "SubType": "Reply",
             "SubTitle": "Re: Favorite Tech Gadgets of 2024",
             "Tags": "",
@@ -124,6 +130,7 @@
     "Users": {
       "1": {
         "Bio": "Movie buff and critic.",
+        "Signature": "",
         "Name": "Charlie Doe",
         "Handle": "@charlie_d",
         "Email": "",
@@ -138,6 +145,7 @@
       },
       "2": {
         "Bio": "A lover of all things cinema.",
+        "Signature": "",
         "Name": "Dana White",
         "Handle": "@dana_w",
         "Email": "",
@@ -159,7 +167,10 @@
             "Author": "@charlie_d",
             "Time": "2:00 PM",
             "Date": "Jun 15, 2024",
+            "EditTime": "",
+            "EditDate": "",
             "SubType": "Poll",
+            "SubTitle": "",
             "Tags": "",
             "Post": 1,
             "Nested": 0,
@@ -243,6 +254,7 @@
     "Users": {
       "1": {
         "Bio": "Avid reader and aspiring writer.",
+        "Signature": "",
         "Name": "Emily Clark",
         "Handle": "@emily_c",
         "Email": "",
@@ -257,6 +269,7 @@
       },
       "2": {
         "Bio": "Loves fantasy novels and historical fiction.",
+        "Signature": "",
         "Name": "Frank Miller",
         "Handle": "@frank_m",
         "Email": "",
@@ -278,6 +291,8 @@
             "Author": "@emily_c",
             "Time": "10:00 AM",
             "Date": "Jul 10, 2024",
+            "EditTime": "",
+            "EditDate": "",
             "SubType": "Post",
             "SubTitle": "Favorite Books of All Time",
             "Tags": "",
@@ -289,6 +304,8 @@
             "Author": "@frank_m",
             "Time": "11:00 AM",
             "Date": "Jul 10, 2024",
+            "EditTime": "",
+            "EditDate": "",
             "SubType": "Reply",
             "SubTitle": "Re: Favorite Books of All Time",
             "Tags": "",
@@ -319,6 +336,8 @@
             "Author": "@frank_m",
             "Time": "2:00 PM",
             "Date": "Jul 15, 2024",
+            "EditTime": "",
+            "EditDate": "",
             "SubType": "Post",
             "SubTitle": "Re: Favorite Books of All Time",
             "Tags": "",
@@ -330,6 +349,8 @@
             "Author": "@emily_c",
             "Time": "3:00 PM",
             "Date": "Jul 15, 2024",
+            "EditTime": "",
+            "EditDate": "",
             "SubType": "Reply",
             "SubTitle": "Re: Favorite Books of All Time",
             "Tags": "",
