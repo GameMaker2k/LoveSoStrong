@@ -2106,83 +2106,77 @@ def save_services_to_file(services, filename, line_ending='lf'):
     save_compressed_file(data, filename)
 
 
-def to_xml(services):
-    """ Convert the services data structure to an XML string """
-    root = ET.Element("Services")
+def build_xml_element(parent, key, value):
+    singular = key[:-1] if key.endswith('s') else 'Item'
 
+    if isinstance(value, list):
+        container = ET.SubElement(parent, unicode_type(key))
+        for item in value:
+            item_elem = ET.SubElement(container, unicode_type(singular))
+            if isinstance(item, dict):
+                for subk, subv in item.items():
+                    build_xml_element(item_elem, subk, subv)
+            else:
+                item_elem.text = unicode_type(item)
+
+    elif isinstance(value, dict):
+        # Detect dicts that look like ID-keyed records
+        if all(isinstance(k, (int, str)) and isinstance(v, dict) for k, v in value.items()):
+            container = ET.SubElement(parent, unicode_type(key))
+            for k, v in value.items():
+                item_elem = ET.SubElement(container, unicode_type(singular))
+                ET.SubElement(item_elem, "ID").text = unicode_type(k)
+                for subk, subv in v.items():
+                    build_xml_element(item_elem, subk, subv)
+        else:
+            elem = ET.SubElement(parent, unicode_type(key))
+            for subk, subv in value.items():
+                build_xml_element(elem, subk, subv)
+    else:
+        elem = ET.SubElement(parent, unicode_type(key))
+        if value is not None:
+            elem.text = unicode_type(value)
+
+
+def to_xml(services):
+    root = ET.Element("Services")
     for service in services:
         service_elem = ET.SubElement(root, "Service")
         for key, value in service.items():
-            if isinstance(value, list):
-                list_elem = ET.SubElement(service_elem, unicode_type(key))
-                singular = key[:-1] if key.endswith('s') else key
-                for item in value:
-                    if isinstance(item, dict):
-                        item_elem = ET.SubElement(list_elem, singular)
-                        for subkey, subvalue in item.items():
-                            sub_elem = ET.SubElement(item_elem, unicode_type(subkey))
-                            sub_elem.text = unicode_type(subvalue)
-                    else:
-                        item_elem = ET.SubElement(list_elem, singular)
-                        item_elem.text = unicode_type(item)
+            build_xml_element(service_elem, key, value)
 
-            elif isinstance(value, dict):
-                dict_elem = ET.SubElement(service_elem, unicode_type(key))
-                if all(isinstance(k, int) or unicode_type(k).isdigit() for k in value):
-                    # Dictionary with numeric keys (e.g. Users)
-                    for k, v in value.items():
-                        item_elem = ET.SubElement(dict_elem, "User")
-                        id_elem = ET.SubElement(item_elem, "ID")
-                        id_elem.text = unicode_type(k)
-                        for subk, subv in v.items():
-                            sub_elem = ET.SubElement(item_elem, unicode_type(subk))
-                            sub_elem.text = unicode_type(subv)
-                else:
-                    for subkey, subvalue in value.items():
-                        sub_elem = ET.SubElement(dict_elem, unicode_type(subkey))
-                        if isinstance(subvalue, list):
-                            for sub_item in subvalue:
-                                sub_item_elem = ET.SubElement(sub_elem, subkey[:-1])
-                                sub_item_elem.text = unicode_type(sub_item)
-                        else:
-                            sub_elem.text = unicode_type(subvalue)
+    xml_bytes = ET.tostring(root, encoding='utf-8')
+    xml_str = xml_bytes.decode('utf-8', errors='replace')
 
-            else:
-                elem = ET.SubElement(service_elem, unicode_type(key))
-                elem.text = unicode_type(value)
-
-    xml_str = ET.tostring(root, encoding='utf-8')
-    if PY2:
-        xml_str = xml_str.decode('utf-8')
-    xml_str = minidom.parseString(xml_str).toprettyxml(indent="  ")
-    return xml_str
+    try:
+        return minidom.parseString(xml_str).toprettyxml(indent="  ")
+    except Exception as e:
+        print("❌ XML formatting failed. Here's raw XML before pretty-printing:")
+        print(xml_str[:500])
+        raise e
 
 def from_xml(xml_str):
-    """ Convert an XML string back to the services data structure """
     services = []
     root = ET.fromstring(xml_str)
 
     for service_elem in root.findall('Service'):
         service = {}
         for child in service_elem:
-            if list(child):  # nested
-                if all(grand.tag == 'User' and grand.find('ID') is not None for grand in child):
-                    # Special case: numeric-keyed dict (e.g., Users)
-                    data_dict = {}
-                    for user_elem in child.findall('User'):
-                        user_data = {}
-                        user_id = None
-                        for field in user_elem:
-                            if field.tag == 'ID':
-                                user_id = int(field.text)
-                            else:
-                                user_data[field.tag] = field.text
-                        if user_id is not None:
-                            data_dict[user_id] = user_data
-                    service[child.tag] = data_dict
+            if list(child):
+                values = []
+                for sub in child:
+                    entry = {}
+                    for field in sub:
+                        entry[field.tag] = field.text
+                    if "ID" in entry:
+                        values.append((entry.pop("ID"), entry))
+                    else:
+                        values.append(entry)
+                # Store as dict if we had IDs
+                if all(isinstance(v, tuple) for v in values):
+                    service[child.tag] = {int(k): v for k, v in values}
                 else:
-                    # Normal list
-                    service[child.tag] = [parse_xml_element(item) for item in child]
+                    service[child.tag] = values
             else:
                 service[child.tag] = child.text
         services.append(service)
@@ -2210,48 +2204,52 @@ def save_to_xml_file(services, xml_filename):
     xml_str = to_xml(services)
     save_compressed_file(xml_str, xml_filename)
 
+def build_sgml_lines(key, value, indent=2):
+    lines = []
+    pad = ' ' * indent
+    singular = key[:-1] if key.endswith('s') else key
+
+    if isinstance(value, list):
+        lines.append('{0}<{1}>'.format(pad, key))
+        for item in value:
+            lines.append('{0}  <{1}>'.format(pad, singular))
+            if isinstance(item, dict):
+                for k, v in item.items():
+                    lines.extend(build_sgml_lines(k, v, indent + 4))
+            else:
+                lines.append('{0}    <Value>{1}</Value>'.format(pad, unicode_type(item)))
+            lines.append('{0}  </{1}>'.format(pad, singular))
+        lines.append('{0}</{1}>'.format(pad, key))
+
+    elif isinstance(value, dict):
+        # ID-keyed record map
+        if all(isinstance(k, (int, str)) and isinstance(v, dict) for k, v in value.items()):
+            lines.append('{0}<{1}>'.format(pad, key))
+            for k, v in value.items():
+                lines.append('{0}  <{1}>'.format(pad, singular))
+                lines.append('{0}    <ID>{1}</ID>'.format(pad, unicode_type(k)))
+                for subk, subv in v.items():
+                    lines.extend(build_sgml_lines(subk, subv, indent + 4))
+                lines.append('{0}  </{1}>'.format(pad, singular))
+            lines.append('{0}</{1}>'.format(pad, key))
+        else:
+            lines.append('{0}<{1}>'.format(pad, key))
+            for k, v in value.items():
+                lines.extend(build_sgml_lines(k, v, indent + 2))
+            lines.append('{0}</{1}>'.format(pad, key))
+
+    else:
+        lines.append('{0}<{1}>{2}</{1}>'.format(pad, key, unicode_type(value)))
+
+    return lines
+
+
 def to_sgml(services):
-    """Convert the services data structure to an SGML string."""
     lines = ['<Services>']
     for svc in services:
         lines.append('  <Service>')
         for key, val in svc.items():
-            if isinstance(val, list):
-                lines.append('    <{0}>'.format(key))
-                singular = key[:-1] if key.endswith('s') else key
-                for item in val:
-                    if isinstance(item, dict):
-                        lines.append('      <{0}>'.format(singular))
-                        for k, v in item.items():
-                            lines.append('        <{0}>{1}</{0}>'.format(k, unicode_type(v)))
-                        lines.append('      </{0}>'.format(singular))
-                    else:
-                        lines.append('      <{0}>{1}</{0}>'.format(singular, unicode_type(item)))
-                lines.append('    </{0}>'.format(key))
-
-            elif isinstance(val, dict):
-                lines.append('    <{0}>'.format(key))
-                if all(isinstance(k, int) or unicode_type(k).isdigit() for k in val):
-                    for k, v in val.items():
-                        lines.append('      <User>')
-                        lines.append('        <ID>{0}</ID>'.format(k))
-                        for subk, subv in v.items():
-                            lines.append('        <{0}>{1}</{0}>'.format(subk, unicode_type(subv)))
-                        lines.append('      </User>')
-                else:
-                    for k, v in val.items():
-                        if isinstance(v, list):
-                            singular = k[:-1] if k.endswith('s') else k
-                            lines.append('      <{0}>'.format(k))
-                            for sub in v:
-                                lines.append('        <{0}>{1}</{0}>'.format(singular, unicode_type(sub)))
-                            lines.append('      </{0}>'.format(k))
-                        else:
-                            lines.append('      <{0}>{1}</{0}>'.format(k, unicode_type(v)))
-                lines.append('    </{0}>'.format(key))
-
-            else:
-                lines.append('    <{0}>{1}</{0}>'.format(key, unicode_type(val)))
+            lines.extend(build_sgml_lines(key, val, indent=4))
         lines.append('  </Service>')
     lines.append('</Services>')
     return "\n".join(lines)
@@ -2325,7 +2323,6 @@ def parse_sgml_element(node):
 
 
 def from_sgml(sgml_str):
-    """Convert an SGML string back to the services data structure."""
     parser = ServicesSGMLParser()
     parser.feed(sgml_str)
     parser.close()
@@ -2340,23 +2337,16 @@ def from_sgml(sgml_str):
             continue
         service = {}
         for child in svc_node.children:
-            if child.children and all(grand.tag == 'User' and any(c.tag == 'ID' for c in grand.children) for grand in child.children):
-                # Handle numeric-keyed dict like Users
-                data_dict = {}
-                for user_node in child.children:
-                    user_data = {}
-                    user_id = None
-                    for field in user_node.children:
-                        if field.tag == 'ID':
-                            user_id = int(field.text.strip())
-                        else:
-                            user_data[field.tag] = field.text.strip()
-                    if user_id is not None:
-                        data_dict[user_id] = user_data
-                service[child.tag] = data_dict
-            elif child.children:
-                parsed = parse_sgml_element(child)
-                service.setdefault(child.tag, []).append(parsed)
+            if child.children:
+                parsed_list = []
+                for item in child.children:
+                    parsed = parse_sgml_element(item)
+                    parsed_list.append(parsed)
+                # Check for ID and convert to dict
+                if all("ID" in x for x in parsed_list):
+                    service[child.tag] = {int(x.pop("ID")): x for x in parsed_list}
+                else:
+                    service[child.tag] = parsed_list
             else:
                 service[child.tag] = child.text.strip()
         services.append(service)
