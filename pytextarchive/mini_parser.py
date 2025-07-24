@@ -134,6 +134,15 @@ def parse_archive(content):
     
     return data
 
+def parse_file(filename, validate_only=False, verbose=False):
+    with open_compressed_file(filename) as file:
+        lines = file.readlines()
+    return parse_archive(lines)
+
+def parse_string(data, validate_only=False, verbose=False):
+    lines = StringIO(data).readlines()
+    return parse_archive(lines)
+
 def generate_archive(data):
     """Generate the archive format from the structured data"""
     output = []
@@ -171,6 +180,16 @@ def generate_archive(data):
             process_section(section_data, section_name)
     
     return '\n'.join(output)
+
+def services_to_string(services):
+    return generate_archive(services)
+
+def save_services_to_file(services, filename, line_ending='lf'):
+    """
+    Save services to a file, inferring compression by extension (Python 2/3 compatible).
+    """
+    data = generate_archive(services)
+    save_compressed_file(data, filename)
 
 class CompressionError(Exception):
     """Custom exception for compression-related errors"""
