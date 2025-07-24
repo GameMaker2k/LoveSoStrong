@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
+import xml.etree.ElementTree as ET
+from xml.dom import minidom
 import platform
 import binascii
 import logging
@@ -14,6 +16,11 @@ import ast
 import os
 import io
 import re
+
+try:
+    from html.parser import HTMLParser
+except ImportError:
+    from HTMLParser import HTMLParser
 
 try:
     import yaml
@@ -2098,6 +2105,277 @@ def save_services_to_file(services, filename, line_ending='lf'):
     data = services_to_string(services, line_ending)
     save_compressed_file(data, filename)
 
+
+def to_xml(services):
+    """ Convert the services data structure to an XML string """
+    root = ET.Element("Services")
+
+    for service in services:
+        service_elem = ET.SubElement(root, "Service")
+        for key, value in service.items():
+            if isinstance(value, list):
+                list_elem = ET.SubElement(service_elem, unicode_type(key))
+                singular = key[:-1] if key.endswith('s') else key
+                for item in value:
+                    if isinstance(item, dict):
+                        item_elem = ET.SubElement(list_elem, singular)
+                        for subkey, subvalue in item.items():
+                            sub_elem = ET.SubElement(item_elem, unicode_type(subkey))
+                            sub_elem.text = unicode_type(subvalue)
+                    else:
+                        item_elem = ET.SubElement(list_elem, singular)
+                        item_elem.text = unicode_type(item)
+
+            elif isinstance(value, dict):
+                dict_elem = ET.SubElement(service_elem, unicode_type(key))
+                if all(isinstance(k, int) or unicode_type(k).isdigit() for k in value):
+                    # Dictionary with numeric keys (e.g. Users)
+                    for k, v in value.items():
+                        item_elem = ET.SubElement(dict_elem, "User")
+                        id_elem = ET.SubElement(item_elem, "ID")
+                        id_elem.text = unicode_type(k)
+                        for subk, subv in v.items():
+                            sub_elem = ET.SubElement(item_elem, unicode_type(subk))
+                            sub_elem.text = unicode_type(subv)
+                else:
+                    for subkey, subvalue in value.items():
+                        sub_elem = ET.SubElement(dict_elem, unicode_type(subkey))
+                        if isinstance(subvalue, list):
+                            for sub_item in subvalue:
+                                sub_item_elem = ET.SubElement(sub_elem, subkey[:-1])
+                                sub_item_elem.text = unicode_type(sub_item)
+                        else:
+                            sub_elem.text = unicode_type(subvalue)
+
+            else:
+                elem = ET.SubElement(service_elem, unicode_type(key))
+                elem.text = unicode_type(value)
+
+    xml_str = ET.tostring(root, encoding='utf-8')
+    if PY2:
+        xml_str = xml_str.decode('utf-8')
+    xml_str = minidom.parseString(xml_str).toprettyxml(indent="  ")
+    return xml_str
+
+def from_xml(xml_str):
+    """ Convert an XML string back to the services data structure """
+    services = []
+    root = ET.fromstring(xml_str)
+
+    for service_elem in root.findall('Service'):
+        service = {}
+        for child in service_elem:
+            if list(child):  # nested
+                if all(grand.tag == 'User' and grand.find('ID') is not None for grand in child):
+                    # Special case: numeric-keyed dict (e.g., Users)
+                    data_dict = {}
+                    for user_elem in child.findall('User'):
+                        user_data = {}
+                        user_id = None
+                        for field in user_elem:
+                            if field.tag == 'ID':
+                                user_id = int(field.text)
+                            else:
+                                user_data[field.tag] = field.text
+                        if user_id is not None:
+                            data_dict[user_id] = user_data
+                    service[child.tag] = data_dict
+                else:
+                    # Normal list
+                    service[child.tag] = [parse_xml_element(item) for item in child]
+            else:
+                service[child.tag] = child.text
+        services.append(service)
+
+    return services
+
+def parse_xml_element(element):
+    """ Helper function to parse XML elements into a dictionary """
+    result = {}
+    for child in element:
+        if list(child):
+            result[child.tag] = parse_xml_element(child)
+        else:
+            result[child.tag] = child.text
+    return result
+
+def load_from_xml_file(xml_filename):
+    """ Load the services data structure from an XML file """
+    with open_compressed_file(xml_filename) as file:
+        xml_str = file.read()
+    return from_xml(xml_str)
+
+def save_to_xml_file(services, xml_filename):
+    """ Save the services data structure to an XML file """
+    xml_str = to_xml(services)
+    save_compressed_file(xml_str, xml_filename)
+
+def to_sgml(services):
+    """Convert the services data structure to an SGML string."""
+    lines = ['<Services>']
+    for svc in services:
+        lines.append('  <Service>')
+        for key, val in svc.items():
+            if isinstance(val, list):
+                lines.append('    <{0}>'.format(key))
+                singular = key[:-1] if key.endswith('s') else key
+                for item in val:
+                    if isinstance(item, dict):
+                        lines.append('      <{0}>'.format(singular))
+                        for k, v in item.items():
+                            lines.append('        <{0}>{1}</{0}>'.format(k, unicode_type(v)))
+                        lines.append('      </{0}>'.format(singular))
+                    else:
+                        lines.append('      <{0}>{1}</{0}>'.format(singular, unicode_type(item)))
+                lines.append('    </{0}>'.format(key))
+
+            elif isinstance(val, dict):
+                lines.append('    <{0}>'.format(key))
+                if all(isinstance(k, int) or unicode_type(k).isdigit() for k in val):
+                    for k, v in val.items():
+                        lines.append('      <User>')
+                        lines.append('        <ID>{0}</ID>'.format(k))
+                        for subk, subv in v.items():
+                            lines.append('        <{0}>{1}</{0}>'.format(subk, unicode_type(subv)))
+                        lines.append('      </User>')
+                else:
+                    for k, v in val.items():
+                        if isinstance(v, list):
+                            singular = k[:-1] if k.endswith('s') else k
+                            lines.append('      <{0}>'.format(k))
+                            for sub in v:
+                                lines.append('        <{0}>{1}</{0}>'.format(singular, unicode_type(sub)))
+                            lines.append('      </{0}>'.format(k))
+                        else:
+                            lines.append('      <{0}>{1}</{0}>'.format(k, unicode_type(v)))
+                lines.append('    </{0}>'.format(key))
+
+            else:
+                lines.append('    <{0}>{1}</{0}>'.format(key, unicode_type(val)))
+        lines.append('  </Service>')
+    lines.append('</Services>')
+    return "\n".join(lines)
+
+
+class SGMLNode(object):
+    """In-memory SGML node for parsing back to dicts."""
+    def __init__(self, tag):
+        self.tag = tag
+        self.children = []
+        self.text = ''
+
+
+class ServicesSGMLParser(HTMLParser):
+    """Parse SGML into SGMLNode tree."""
+    def __init__(self):
+        if PY2:
+            HTMLParser.__init__(self)
+        else:
+            super(ServicesSGMLParser, self).__init__()
+        self.root = None
+        self.stack = []
+
+    def handle_decl(self, decl):
+        pass
+
+    def handle_pi(self, data):
+        if not data.startswith('xml'):
+            super(ServicesSGMLParser, self).handle_pi(data)
+
+    def handle_starttag(self, tag, attrs):
+        node = SGMLNode(tag)
+        if not self.stack:
+            self.root = node
+        else:
+            self.stack[-1].children.append(node)
+        self.stack.append(node)
+
+    def handle_endtag(self, tag):
+        if self.stack:
+            self.stack.pop()
+
+    def handle_data(self, data):
+        if self.stack:
+            self.stack[-1].text += data
+
+
+def parse_sgml_element(node):
+    """Recursively parse SGMLNode into a Python dict."""
+    result = {}
+    for child in node.children:
+        if child.children:
+            # nested structure
+            value = parse_sgml_element(child)
+            # if tag already present, convert to list
+            if child.tag in result:
+                if not isinstance(result[child.tag], list):
+                    result[child.tag] = [result[child.tag]]
+                result[child.tag].append(value)
+            else:
+                result[child.tag] = value
+        else:
+            text = child.text.strip()
+            if child.tag in result:
+                if not isinstance(result[child.tag], list):
+                    result[child.tag] = [result[child.tag]]
+                result[child.tag].append(text)
+            else:
+                result[child.tag] = text
+    return result
+
+
+def from_sgml(sgml_str):
+    """Convert an SGML string back to the services data structure."""
+    parser = ServicesSGMLParser()
+    parser.feed(sgml_str)
+    parser.close()
+
+    services = []
+    root = parser.root
+    if not root or root.tag != 'Services':
+        return services
+
+    for svc_node in root.children:
+        if svc_node.tag != 'Service':
+            continue
+        service = {}
+        for child in svc_node.children:
+            if child.children and all(grand.tag == 'User' and any(c.tag == 'ID' for c in grand.children) for grand in child.children):
+                # Handle numeric-keyed dict like Users
+                data_dict = {}
+                for user_node in child.children:
+                    user_data = {}
+                    user_id = None
+                    for field in user_node.children:
+                        if field.tag == 'ID':
+                            user_id = int(field.text.strip())
+                        else:
+                            user_data[field.tag] = field.text.strip()
+                    if user_id is not None:
+                        data_dict[user_id] = user_data
+                service[child.tag] = data_dict
+            elif child.children:
+                parsed = parse_sgml_element(child)
+                service.setdefault(child.tag, []).append(parsed)
+            else:
+                service[child.tag] = child.text.strip()
+        services.append(service)
+    return services
+
+def load_from_sgml_file(sgml_filename):
+    """Load the services data structure from a (possibly compressed) SGML file."""
+    with open_compressed_file(sgml_filename) as f:
+        sgml_str = f.read()
+    # if bytes, decode
+    if isinstance(sgml_str, bytes):
+        sgml_str = sgml_str.decode('utf-8')
+    return from_sgml(sgml_str)
+
+
+def save_to_sgml_file(services, sgml_filename):
+    """Save the services data structure to a (possibly compressed) SGML file."""
+    sgml_str = to_sgml(services)
+    save_compressed_file(sgml_str, sgml_filename)
 
 def init_empty_service(entry, service_name, service_type, service_location, time_zone="UTC", info=''):
     """ Initialize an empty service structure """
