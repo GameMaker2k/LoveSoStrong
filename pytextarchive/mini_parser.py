@@ -6,6 +6,40 @@ import re
 import sys
 import json
 from collections import OrderedDict
+import io
+import gzip
+import bz2
+import lzma
+import marshal
+import pickle
+import ast
+from typing import Any, Union, TextIO, BinaryIO
+from pathlib import Path
+
+# Optional dependencies
+try:
+    import yaml
+    HAS_YAML = True
+except ImportError:
+    HAS_YAML = False
+
+try:
+    import zstandard as zstd
+    HAS_ZSTD = True
+except ImportError:
+    HAS_ZSTD = False
+
+try:
+    import pyzstd
+    HAS_PYZSTD = True
+except ImportError:
+    HAS_PYZSTD = False
+
+try:
+    import lzo
+    HAS_LZO = True
+except ImportError:
+    HAS_LZO = False
 
 def parse_archive(content):
     """Properly parse the archive format maintaining all hierarchical data"""
@@ -138,26 +172,217 @@ def generate_archive(data):
     
     return '\n'.join(output)
 
-# JSON support functions
-def to_json(data, indent=None):
-    """Convert the parsed data to JSON string"""
-    def convert(obj):
-        if isinstance(obj, OrderedDict):
-            return {k: convert(v) for k, v in obj.items()}
-        elif isinstance(obj, list):
-            return [convert(item) for item in obj]
-        return obj
-    return json.dumps(convert(data), indent=indent, ensure_ascii=False)
+class CompressionError(Exception):
+    """Custom exception for compression-related errors"""
+    pass
 
-def from_json(json_str):
-    """Convert JSON string back to archive structure"""
-    def convert(obj):
-        if isinstance(obj, dict):
-            return OrderedDict((k, convert(v)) for k, v in obj.items())
-        elif isinstance(obj, list):
-            return [convert(item) for item in obj]
-        return obj
-    return convert(json.loads(json_str))
+def open_compressed_file(filename: Union[str, Path], mode: str = 'rt', encoding: str = 'utf-8') -> Union[TextIO, BinaryIO]:
+    """
+    Open a file with automatic decompression based on extension.
+    
+    Args:
+        filename: Path to the file
+        mode: File mode ('r', 'w', 'rt', 'wb', etc.)
+        encoding: Text encoding for text modes
+        
+    Returns:
+        File-like object
+        
+    Raises:
+        CompressionError: If compression method is not available
+        ValueError: For invalid mode/extension combinations
+    """
+    filename = str(filename)
+    
+    if 'r' in mode:
+        if filename.endswith('.gz'):
+            return gzip.open(filename, mode, encoding=encoding)
+        elif filename.endswith('.bz2'):
+            return bz2.open(filename, mode, encoding=encoding)
+        elif filename.endswith(('.xz', '.lzma')):
+            return lzma.open(filename, mode, encoding=encoding)
+        elif filename.endswith('.zst'):
+            if HAS_ZSTD:
+                fh = open(filename, 'rb')
+                dctx = zstd.ZstdDecompressor()
+                return dctx.stream_reader(fh)
+            elif HAS_PYZSTD:
+                return pyzstd.ZstdFile(filename, mode)
+            else:
+                raise CompressionError("zstandard decompression not available")
+        elif filename.endswith('.lzo') and HAS_LZO:
+            with open(filename, 'rb') as f:
+                decompressed = lzo.decompress(f.read())
+                return io.StringIO(decompressed.decode(encoding))
+        else:
+            return open(filename, mode, encoding=encoding)
+    
+    elif 'w' in mode:
+        if filename.endswith('.gz'):
+            return gzip.open(filename, mode, encoding=encoding)
+        elif filename.endswith('.bz2'):
+            return bz2.open(filename, mode, encoding=encoding)
+        elif filename.endswith(('.xz', '.lzma')):
+            return lzma.open(filename, mode, encoding=encoding)
+        elif filename.endswith('.zst'):
+            if HAS_ZSTD:
+                fh = open(filename, 'wb')
+                cctx = zstd.ZstdCompressor()
+                return cctx.stream_writer(fh)
+            elif HAS_PYZSTD:
+                return pyzstd.ZstdFile(filename, mode)
+            else:
+                raise CompressionError("zstandard compression not available")
+        elif filename.endswith('.lzo') and HAS_LZO:
+            # LZO doesn't have native streaming compression in Python
+            # We'll handle this in save_compressed_file instead
+            raise CompressionError("LZO compression must use save_compressed_file")
+        else:
+            return open(filename, mode, encoding=encoding)
+    
+    else:
+        raise ValueError(f"Unsupported mode: {mode}")
+
+def save_compressed_file(data: Union[str, bytes], filename: Union[str, Path], mode: str = 'wt', encoding: str = 'utf-8') -> None:
+    """
+    Save data to a file with automatic compression based on extension.
+    
+    Args:
+        data: Data to save (str or bytes)
+        filename: Path to save to
+        mode: File mode ('w', 'wb', 'wt', etc.)
+        encoding: Text encoding for text modes
+        
+    Raises:
+        CompressionError: If compression method is not available
+        ValueError: For invalid data/mode combinations
+    """
+    filename = str(filename)
+    
+    if isinstance(data, str) and 'b' in mode:
+        raise ValueError("Cannot write text data in binary mode")
+    if isinstance(data, bytes) and 't' in mode:
+        raise ValueError("Cannot write binary data in text mode")
+    
+    if filename.endswith('.lzo') and HAS_LZO:
+        # Special handling for LZO since it doesn't have streaming compression
+        if isinstance(data, str):
+            data = data.encode(encoding)
+        compressed = lzo.compress(data)
+        with open(filename, 'wb') as f:
+            f.write(compressed)
+        return
+    
+    with open_compressed_file(filename, mode, encoding) as f:
+        if isinstance(data, bytes) and 't' not in mode:
+            f.write(data)
+        else:
+            if isinstance(data, bytes):
+                data = data.decode(encoding)
+            f.write(data)
+
+# Serialization functions with improved type hints and error handling
+
+def to_json(data: Any, indent: int = 2, ensure_ascii: bool = False) -> str:
+    """Convert data to a JSON string."""
+    return json.dumps(data, indent=indent, ensure_ascii=ensure_ascii)
+
+def from_json(json_str: str) -> Any:
+    """Convert a JSON string back to Python data."""
+    return json.loads(json_str)
+
+def load_from_json_file(filename: Union[str, Path]) -> Any:
+    """Load data from a JSON file."""
+    with open_compressed_file(filename, 'rt', encoding='utf-8') as file:
+        return json.load(file)
+
+def save_to_json_file(data: Any, filename: Union[str, Path], indent: int = 2, ensure_ascii: bool = False) -> None:
+    """Save data to a JSON file."""
+    json_data = to_json(data, indent, ensure_ascii)
+    save_compressed_file(json_data, filename)
+
+def to_yaml(data: Any) -> Union[str, bool]:
+    """Convert data to a YAML string if PyYAML is available."""
+    if not HAS_YAML:
+        return False
+    return yaml.safe_dump(data, default_flow_style=False, allow_unicode=True)
+
+def from_yaml(yaml_str: str) -> Union[Any, bool]:
+    """Convert a YAML string to Python data if PyYAML is available."""
+    if not HAS_YAML:
+        return False
+    return yaml.safe_load(yaml_str)
+
+def load_from_yaml_file(filename: Union[str, Path]) -> Union[Any, bool]:
+    """Load data from a YAML file if PyYAML is available."""
+    if not HAS_YAML:
+        return False
+    with open_compressed_file(filename, 'rt', encoding='utf-8') as file:
+        return yaml.safe_load(file)
+
+def save_to_yaml_file(data: Any, filename: Union[str, Path]) -> bool:
+    """Save data to a YAML file if PyYAML is available."""
+    if not HAS_YAML:
+        return False
+    yaml_data = to_yaml(data)
+    if yaml_data is False:
+        return False
+    save_compressed_file(yaml_data, filename)
+    return True
+
+def to_marshal(data: Any) -> bytes:
+    """Convert data to a marshaled byte string."""
+    return marshal.dumps(data)
+
+def from_marshal(marshal_bytes: bytes) -> Any:
+    """Convert a marshaled byte string back to Python data."""
+    return marshal.loads(marshal_bytes)
+
+def load_from_marshal_file(filename: Union[str, Path]) -> Any:
+    """Load data from a marshal file."""
+    with open_compressed_file(filename, 'rb') as file:
+        return marshal.load(file)
+
+def save_to_marshal_file(data: Any, filename: Union[str, Path]) -> None:
+    """Save data to a marshal file."""
+    marshal_data = to_marshal(data)
+    save_compressed_file(marshal_data, filename, 'wb')
+
+def to_pickle(data: Any, protocol: int = pickle.HIGHEST_PROTOCOL) -> bytes:
+    """Convert data to a pickled byte string."""
+    return pickle.dumps(data, protocol=protocol)
+
+def from_pickle(pickle_bytes: bytes) -> Any:
+    """Convert a pickled byte string back to Python data."""
+    return pickle.loads(pickle_bytes)
+
+def load_from_pickle_file(filename: Union[str, Path]) -> Any:
+    """Load data from a pickle file."""
+    with open_compressed_file(filename, 'rb') as file:
+        return pickle.load(file)
+
+def save_to_pickle_file(data: Any, filename: Union[str, Path], protocol: int = pickle.HIGHEST_PROTOCOL) -> None:
+    """Save data to a pickle file."""
+    pickle_data = to_pickle(data, protocol)
+    save_compressed_file(pickle_data, filename, 'wb')
+
+def to_array(data: Any) -> str:
+    """Convert data to a string representation using Python literal syntax."""
+    return repr(data)
+
+def from_array(data_str: str) -> Any:
+    """Convert a string (Python literal) back to data using safe evaluation."""
+    return ast.literal_eval(data_str)
+
+def load_from_array_file(filename: Union[str, Path]) -> Any:
+    """Load data from a file containing Python literal syntax."""
+    with open_compressed_file(filename, 'rt', encoding='utf-8') as file:
+        return ast.literal_eval(file.read())
+
+def save_to_array_file(data: Any, filename: Union[str, Path]) -> None:
+    """Save data to a file using Python literal syntax."""
+    data_str = to_array(data)
+    save_compressed_file(data_str, filename)
 
 def main():
     # Example usage
