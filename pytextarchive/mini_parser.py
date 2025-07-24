@@ -136,11 +136,11 @@ def parse_archive(content):
 
 def parse_file(filename, validate_only=False, verbose=False):
     with open_compressed_file(filename) as file:
-        lines = file.readlines()
+        lines = file.read()
     return parse_archive(lines)
 
 def parse_string(data, validate_only=False, verbose=False):
-    lines = StringIO(data).readlines()
+    lines = StringIO(data).read()
     return parse_archive(lines)
 
 def generate_archive(data):
