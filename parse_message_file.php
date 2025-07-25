@@ -132,6 +132,36 @@ function save_compressed_file(string $data, string $filename)
     }
 }
 
+/**
+ * Utility to validate that a given value is a non-negative integer.
+ *
+ * @param string $value The string value to validate.
+ * @param string $key The key associated with the value, for error reporting.
+ * @param int $line_number The line number for error reporting.
+ * @return int The validated non-negative integer.
+ * @throws \ValueError If the value is not a valid integer or is negative.
+ */
+function validate_non_negative_integer(string $value, string $key, int $line_number): int
+{
+    // filter_var is a strict way to validate if a string is an integer.
+    // It returns false if the string contains non-numeric characters (except a leading sign).
+    $int_value = filter_var($value, FILTER_VALIDATE_INT);
+
+    if ($int_value === false) {
+        throw new \ValueError(
+            sprintf("Invalid integer '%s' for key '%s' on line %d", $value, $key, $line_number)
+        );
+    }
+
+    // Now that we have a valid integer, check if it's negative.
+    if ($int_value < 0) {
+        throw new \ValueError(
+            sprintf("Negative value '%s' for key '%s' on line %d", $value, $key, $line_number)
+        );
+    }
+
+    return $int_value;
+}
 
 /**
  * Parses a line in the format 'key: value' and returns the key and value.
