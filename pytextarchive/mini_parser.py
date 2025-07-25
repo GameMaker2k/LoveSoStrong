@@ -13,6 +13,7 @@ import lzma
 import marshal
 import pickle
 import ast
+import binascii
 from pathlib import Path
 
 # StringIO and BytesIO
