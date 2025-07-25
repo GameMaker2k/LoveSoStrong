@@ -2,6 +2,7 @@
   {
     "Users": {
       "1": {
+        "ExtraFields": "",
         "Bio": "Just an example user enjoying the discussions.",
         "Signature": "",
         "Name": "John Doe",
@@ -17,6 +18,7 @@
         "HashTags": ""
       },
       "2": {
+        "ExtraFields": "",
         "Bio": "I love giving feedback and helping improve the site.",
         "Signature": "",
         "Name": "Jane Smith",
@@ -49,6 +51,7 @@
             "SubTitle": "Welcome to the Community!",
             "Tags": "",
             "Post": 1,
+            "PinnedID": 1,
             "Nested": 0,
             "Message": "Hello everyone! I'm excited to be part of this community."
           },
@@ -65,6 +68,7 @@
             "SubTitle": "Re: Welcome to the Community!",
             "Tags": "",
             "Post": 2,
+            "PinnedID": 2,
             "Nested": 1,
             "Message": "Welcome, @johndoe! Looking forward to your contributions."
           }
@@ -100,6 +104,7 @@
             "SubTitle": "What do you think about the new site features?",
             "Tags": "",
             "Post": 1,
+            "PinnedID": 3,
             "Nested": 0,
             "Message": "I wanted to gather some opinions on the new site features. What do you all think?"
           },
@@ -116,6 +121,7 @@
             "SubTitle": "Re: What do you think about the new site features?",
             "Tags": "",
             "Post": 2,
+            "PinnedID": 4,
             "Nested": 1,
             "Message": "I think the new features are great! They really improve the user experience."
           },
@@ -132,6 +138,7 @@
             "SubTitle": "Re: What do you think about the new site features?",
             "Tags": "",
             "Post": 3,
+            "PinnedID": 5,
             "Nested": 2,
             "Message": "Glad to hear that! Let's see what others think."
           },
@@ -147,6 +154,7 @@
             "SubType": "Poll",
             "Tags": "",
             "Post": 4,
+            "PinnedID": 6,
             "Nested": 2,
             "Message": "I've set up a poll to gather opinions. Please vote!",
             "Polls": [
@@ -270,6 +278,7 @@
     "ServiceType": "Message Board",
     "ServiceLocation": "https://gamemaker2k.org/example/",
     "TimeZone": "UTC",
+    "PinnedMessage": 0,
     "Status": [
       "Active"
     ]

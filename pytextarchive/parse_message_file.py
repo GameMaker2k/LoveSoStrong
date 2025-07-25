@@ -151,8 +151,8 @@ except NameError:
 __program_name__ = "PyTextArchive";
 __project__ = __program_name__;
 __project_url__ = "https://github.com/GameMaker2k/PyTextArchive";
-__version_info__ = (0, 2, 0, "RC 1", 1);
-__version_date_info__ = (2025, 7, 23, "RC 1", 1);
+__version_info__ = (0, 4, 0, "RC 1", 1);
+__version_date_info__ = (2025, 7, 25, "RC 1", 1);
 __version_date__ = str(__version_date_info__[0]) + "." + str(__version_date_info__[1]).zfill(2) + "." + str(__version_date_info__[2]).zfill(2);
 __revision__ = __version_info__[3];
 __revision_id__ = "$Id$";
@@ -1037,6 +1037,7 @@ def parse_lines(lines, validate_only=False, verbose=False):
         'message_thread': False,
         'user_info': False,
         'message_post': False,
+        'extrafields_body': False,
         'bio_body': False,
         'signature_body': False,
         'message_body': False,
@@ -1411,7 +1412,7 @@ def parse_lines(lines, validate_only=False, verbose=False):
                 elif in_section['user_list'] and in_section['user_info']:
                     if key == "User":
                         user_id = validate_non_negative_integer(value, "User", line_number)
-                        current_service['Users'][user_id] = {'Bio': "", 'Signature': ""}
+                        current_service['Users'][user_id] = {'ExtraFields': "", 'Bio': "", 'Signature': ""}
                         if verbose:
                             print("Line {0}: User ID set to {1}".format(line_number, user_id))
                     elif key == "Name":
@@ -1469,6 +1470,27 @@ def parse_lines(lines, validate_only=False, verbose=False):
                             current_service['Users'][user_id]['HashTags'] = value
                             if verbose:
                                 print("Line {0}: HashTags set to {1}".format(line_number, value))
+                    elif key == "PinnedMessage":
+                        current_service['PinnedMessage'] = validate_non_negative_integer(value, "PinnedMessage", line_number)
+                        if verbose:
+                            print("Line {0}: Pinned Message set to {1}".format(line_number, value))
+                    elif line == "--- Start ExtraFields Body ---":
+                        if user_id is not None:
+                            current_extrafields = []
+                            in_section['extrafields_body'] = True
+                            if verbose:
+                                print("Line {0}: Starting extrafields body".format(line_number))
+                    elif line == "--- End ExtraFields Body ---":
+                        if user_id is not None and current_extrafields is not None:
+                            current_service['Users'][user_id]['ExtraFields'] = "\n".join(current_extrafields)
+                            current_extrafields = None
+                            in_section['extrafields_body'] = False
+                            if verbose:
+                                print("Line {0}: Ending extrafields body".format(line_number))
+                    elif in_section['extrafields_body'] and current_extrafields is not None:
+                        current_extrafields.append(line)
+                        if verbose:
+                            print("Line {0}: Adding to extrafields body: {1}".format(line_number, line))
                     elif line == "--- Start Bio Body ---":
                         if user_id is not None:
                             current_bio = []
@@ -1585,6 +1607,10 @@ def parse_lines(lines, validate_only=False, verbose=False):
                             current_thread['post_ids'].append(post_value)
                         if verbose:
                             print("Line {0}: Post ID set to {1}".format(line_number, post_value))
+                    elif key == "PinnedID":
+                        current_message['PinnedID'] = validate_non_negative_integer(value, "PinnedID", line_number)
+                        if verbose:
+                            print("Line {0}: Pinned ID set to {1}".format(line_number, value))
                     elif key == "Nested":
                         nested_value = validate_non_negative_integer(value, "Nested", line_number)
                         if nested_value != 0 and nested_value not in current_thread.get('post_ids', []):
@@ -1632,7 +1658,7 @@ def display_services(services):
         print("TimeZone: {0}".format(service['TimeZone']))
         
         if 'Info' in service and service['Info']:
-            print("Info: {0}".format(service['Info'].strip().replace("\n", "\n      ")))
+            print("Info: {0}".format(service['Info'].strip()))
         
         print("Interactions: {0}".format(', '.join(service['Interactions'])))
         print("Status: {0}".format(', '.join(service.get('Status', []))))
@@ -1647,7 +1673,7 @@ def display_services(services):
             print("  ID: {0}".format(category['ID']))
             print("  In SubID: {0}".format(category['InSub']))
             print("  Headline: {0}".format(category['Headline']))
-            print("  Description: {0}".format(category['Description'].strip().replace("\n", "\n    ")))
+            print("  Description: {0}".format(category['Description'].strip()))
             print("")
         
         print("User List:")
@@ -1664,10 +1690,12 @@ def display_services(services):
             print("    Joined: {0}".format(user_info.get('Joined', '')))
             print("    Birthday: {0}".format(user_info.get('Birthday', '')))
             print("    HashTags: {0}".format(user_info.get('HashTags', '')))
+            print("    ExtraFields:")
+            print("      {0}".format(user_info.get('ExtraFields', '').strip()))
             print("    Bio:")
-            print("      {0}".format(user_info.get('Bio', '').strip().replace("\n", "\n      ")))
+            print("      {0}".format(user_info.get('Bio', '').strip()))
             print("    Signature:")
-            print("      {0}".format(user_info.get('Signature', '').strip().replace("\n", "\n      ")))
+            print("      {0}".format(user_info.get('Signature', '').strip()))
             print("")
         
         print("Message Threads:")
@@ -1693,7 +1721,7 @@ def display_services(services):
                     message['Post'], message['Nested']))
                 
                 # Indent each line of the message body but keep it at the same level
-                print("      {0}".format(message['Message'].strip().replace("\n", "\n      ")))
+                print("      {0}".format(message['Message'].strip()))
                 
                 if 'Polls' in message and message['Polls']:
                     print("      Polls:")
@@ -1706,6 +1734,9 @@ def display_services(services):
                         print("          Votes: {0}".format(poll.get('Votes', '')))
             print("")
 
+def display_services_from_file(filename):
+    services = parse_file(filename, False, False);
+    return display_services(services)
 
 def services_to_html(services):
     """
@@ -1819,6 +1850,9 @@ def services_to_html(services):
 
     return '\n'.join(lines)
 
+def services_to_html_from_file(filename):
+    services = parse_file(filename, False, False);
+    return services_to_html(services)
 
 def save_services_to_html_file(services, filename):
     """
@@ -1833,6 +1867,9 @@ def save_services_to_html_file(services, filename):
     # Use io.open for Py2/3 compatibility
     save_compressed_file(html_content, filename)
 
+def save_services_to_html_file_from_file(filename, outfilename):
+    services = parse_file(filename, False, False);
+    return save_services_to_html_file(services, outfilename)
 
 def to_json(services):
     """ Convert the services data structure to JSON """
@@ -1981,6 +2018,13 @@ def services_to_string(services, line_ending='lf'):
                 output.append('Joined: {0}'.format(user.get('Joined', '')))
                 output.append('Birthday: {0}'.format(user.get('Birthday', '')))
                 output.append('HashTags: {0}'.format(user.get('HashTags', '')))
+                output.append('PinnedMessage: {0}'.format(user.get('PinnedMessage', '0')))
+                # ExtraFields body
+                output.append('ExtraFields:')
+                output.append('--- Start ExtraFields Body ---')
+                for line in user.get('ExtraFields', '').splitlines():
+                    output.append(line)
+                output.append('--- End ExtraFields Body ---')
                 # Bio body
                 output.append('Bio:')
                 output.append('--- Start Bio Body ---')
@@ -2057,6 +2101,7 @@ def services_to_string(services, line_ending='lf'):
                     output.append('SubTitle: {0}'.format(msg.get('SubTitle', '')))
                     output.append('Tags: {0}'.format(msg.get('Tags', '')))
                     output.append('Post: {0}'.format(msg.get('Post', '0')))
+                    output.append('PinnedID: {0}'.format(msg.get('PinnedID', '0')))
                     output.append('Nested: {0}'.format(msg.get('Nested', '0')))
                     # Message body
                     output.append('Message:')
@@ -2095,8 +2140,13 @@ def services_to_string(services, line_ending='lf'):
     data = '\n'.join(output)
     if line_ending.lower() == 'crlf':
         data = data.replace('\n', '\r\n')
+    elif line_ending.lower() == 'cr':
+        data = data.replace('\n', '\r')
     return data
 
+def services_to_string_from_file(filename, line_ending='lf'):
+    services = parse_file(filename, False, False);
+    return services_to_string(services, line_ending)
 
 def save_services_to_file(services, filename, line_ending='lf'):
     """
@@ -2105,6 +2155,9 @@ def save_services_to_file(services, filename, line_ending='lf'):
     data = services_to_string(services, line_ending)
     save_compressed_file(data, filename)
 
+def save_services_to_file_from_file(filename, outfilename, line_ending='lf'):
+    services = parse_file(filename, False, False);
+    return save_services_to_file(services, outfilename, line_ending)
 
 def build_xml_element(parent, key, value):
     singular = key[:-1] if key.endswith('s') else 'Item'
@@ -2383,7 +2436,7 @@ def init_empty_service(entry, service_name, service_type, service_location, time
         'Info': info,
     }
 
-def add_user(service, user_id, name, handle, emailaddr, phonenum, location, website, avatar, banner, joined, birthday, hashtags, bio, signature):
+def add_user(service, user_id, name, handle, emailaddr, phonenum, location, website, avatar, banner, joined, birthday, hashtags, pinnedmessage, extrafields, bio, signature):
     """ Add a user to the service """
     service['Users'][user_id] = {
         'Name': name,
@@ -2397,6 +2450,8 @@ def add_user(service, user_id, name, handle, emailaddr, phonenum, location, webs
         'Joined': joined,
         'Birthday': birthday,
         'HashTags': hashtags,
+        'PinnedMessage': pinnedmessage,
+        'ExtraFields': extrafields,
         'Bio': bio,
         'Signature': signature
     }
@@ -2434,7 +2489,7 @@ def add_message_thread(service, thread_id, title, category, forum, thread_type, 
     }
     service['MessageThreads'].append(thread)
 
-def add_message_post(service, thread_id, author, authorid, time, date, edittime, editdate, editauthor, editauthorid, subtype, tags, post_id, nested, message):
+def add_message_post(service, thread_id, author, authorid, time, date, edittime, editdate, editauthor, editauthorid, subtype, tags, post_id, pinned_id, nested, message):
     thread = next((t for t in service['MessageThreads'] if t['Thread'] == thread_id), None)
     if thread is not None:
         new_post = {
@@ -2450,6 +2505,7 @@ def add_message_post(service, thread_id, author, authorid, time, date, edittime,
             'SubTitle': subtitle,
             'Tags': tags,
             'Post': post_id,
+            'PinnedID': pinned_id,
             'Nested': nested,
             'Message': message
         }

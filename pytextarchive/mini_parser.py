@@ -47,8 +47,8 @@ except NameError:
 __program_name__ = "PyTextArchive";
 __project__ = __program_name__;
 __project_url__ = "https://github.com/GameMaker2k/PyTextArchive";
-__version_info__ = (0, 2, 0, "RC 1", 1);
-__version_date_info__ = (2025, 7, 23, "RC 1", 1);
+__version_info__ = (0, 4, 0, "RC 1", 1);
+__version_date_info__ = (2025, 7, 25, "RC 1", 1);
 __version_date__ = str(__version_date_info__[0]) + "." + str(__version_date_info__[1]).zfill(2) + "." + str(__version_date_info__[2]).zfill(2);
 __revision__ = __version_info__[3];
 __revision_id__ = "$Id$";
@@ -1009,12 +1009,20 @@ def generate_archive(data):
 def services_to_string(services):
     return generate_archive(services)
 
-def save_services_to_file(services, filename, line_ending='lf'):
+def services_to_string_from_file(filename):
+    services = parse_file(filename, False, False);
+    return services_to_string(services)
+
+def save_services_to_file(services, filename):
     """
     Save services to a file, inferring compression by extension (Python 2/3 compatible).
     """
     data = generate_archive(services)
     save_compressed_file(data, filename)
+
+def save_services_to_file_from_file(filename, outfilename):
+    services = parse_file(filename, False, False);
+    return save_services_to_file(services, outfilename)
 
 class CompressionError(Exception):
     """Custom exception for compression-related errors"""
@@ -1026,8 +1034,8 @@ def display_services(services):
         services = [services]
     
     for service in services:
-        print("\n--- Service Entry {0} ---".format(service.get('Entry', 'N/A')))
-        print("Service: {0}".format(service.get('Service', 'N/A')))
+        print("\n--- Service Entry {0} ---".format(service.get('Entry', '')))
+        print("Service: {0}".format(service.get('Service', '')))
         print("TimeZone: {0}".format(service.get('TimeZone', 'UTC')))
         
         # Display Info Body if present
@@ -1041,12 +1049,12 @@ def display_services(services):
         if 'UserList' in service and service['UserList']:
             print("\nUsers:")
             for user_info in service['UserList']:
-                print("  User {0}:".format(user_info.get('User', 'N/A')))
-                print("    Name: {0}".format(user_info.get('Name', 'N/A')))
-                print("    Handle: {0}".format(user_info.get('Handle', 'N/A')))
-                print("    Location: {0}".format(user_info.get('Location', 'N/A')))
-                print("    Joined: {0}".format(user_info.get('Joined', 'N/A')))
-                print("    Birthday: {0}".format(user_info.get('Birthday', 'N/A')))
+                print("  User {0}:".format(user_info.get('User', '')))
+                print("    Name: {0}".format(user_info.get('Name', '')))
+                print("    Handle: {0}".format(user_info.get('Handle', '')))
+                print("    Location: {0}".format(user_info.get('Location', '')))
+                print("    Joined: {0}".format(user_info.get('Joined', '')))
+                print("    Birthday: {0}".format(user_info.get('Birthday', '')))
                 
                 # Display Bio if present
                 if 'Bio' in user_info and user_info['Bio']:
@@ -1068,10 +1076,10 @@ def display_services(services):
             # Display Category List details
             for category in service['CategorizationList'].get('CategoryList', []):
                 print("\n  Category:")
-                print("    Kind: {0}".format(category.get('Kind', 'N/A')))
-                print("    ID: {0}".format(category.get('ID', 'N/A')))
-                print("    InSub: {0}".format(category.get('InSub', 'N/A')))
-                print("    Headline: {0}".format(category.get('Headline', 'N/A')))
+                print("    Kind: {0}".format(category.get('Kind', '')))
+                print("    ID: {0}".format(category.get('ID', '0')))
+                print("    InSub: {0}".format(category.get('InSub', '0')))
+                print("    Headline: {0}".format(category.get('Headline', '')))
                 
                 # Display Description if present
                 if 'Description' in category and category['Description']:
@@ -1091,10 +1099,10 @@ def display_services(services):
                 print("  Status: {0}".format(', '.join(status)))
             
             for thread in service['MessageList'].get('MessageThread', []):
-                print("\n  Thread {0}:".format(thread.get('Thread', 'N/A')))
-                print("    Title: {0}".format(thread.get('Title', 'N/A')))
-                print("    Type: {0}".format(thread.get('Type', 'N/A')))
-                print("    State: {0}".format(thread.get('State', 'N/A')))
+                print("\n  Thread {0}:".format(thread.get('Thread', '0')))
+                print("    Title: {0}".format(thread.get('Title', '')))
+                print("    Type: {0}".format(thread.get('Type', '')))
+                print("    State: {0}".format(thread.get('State', '')))
                 if 'Category' in thread:
                     print("    Category: {0}".format(thread['Category']))
                 if 'Forum' in thread:
@@ -1105,11 +1113,11 @@ def display_services(services):
                 # Display Messages in thread
                 for msg in thread.get('MessagePost', []):
                     print("\n    {0} at {1} on {2}:".format(
-                        msg.get('Author', 'N/A'),
-                        msg.get('Time', 'N/A'),
-                        msg.get('Date', 'N/A')))
+                        msg.get('Author', ''),
+                        msg.get('Time', ''),
+                        msg.get('Date', '')))
                     print("      Type: {0}".format(msg.get('SubType', 'Post' if msg.get('Post') == 1 else 'Reply')))
-                    print("      Post ID: {0}".format(msg.get('Post', 'N/A')))
+                    print("      Post ID: {0}".format(msg.get('Post', 0)))
                     print("      Nested Level: {0}".format(msg.get('Nested', 0)))
                     
                     # Display Message Body
@@ -1122,13 +1130,17 @@ def display_services(services):
                     if 'Polls' in msg and msg['Polls']:
                         for poll in msg['Polls'].get('PollBody', []):
                             print("\n      Poll:")
-                            print("        Question: {0}".format(poll.get('Question', 'N/A')))
+                            print("        Question: {0}".format(poll.get('Question', '')))
                             print("        Answers: {0}".format(', '.join(poll.get('Answers', []))))
                             print("        Results: {0}".format(', '.join(str(r) for r in poll.get('Results', []))))
                             print("        Percentage: {0}".format(', '.join(str(p) for p in poll.get('Percentage', []))))
-                            print("        Votes: {0}".format(poll.get('Votes', 'N/A')))
+                            print("        Votes: {0}".format(poll.get('Votes', '')))
         
         print("\n" + "="*50 + "\n")
+
+def display_services_from_file(filename):
+    services = parse_file(filename, False, False);
+    return display_services(services)
 
 def services_to_html(services):
     """
@@ -1266,6 +1278,10 @@ def services_to_html(services):
 
     return '\n'.join(lines)
 
+def services_to_html_from_file(filename):
+    services = parse_file(filename, False, False);
+    return services_to_html(services)
+
 def save_services_to_html_file(services, filename):
     """
     Generate styled HTML from services and save to the given filename.
@@ -1278,6 +1294,10 @@ def save_services_to_html_file(services, filename):
     html_content = services_to_html(services)
     # Use io.open for Py2/3 compatibility
     save_compressed_file(html_content, filename)
+
+def save_services_to_html_file_from_file(filename, outfilename):
+    services = parse_file(filename, False, False);
+    return save_services_to_html_file(services, outfilename)
 
 # Serialization functions with improved type hints and error handling
 

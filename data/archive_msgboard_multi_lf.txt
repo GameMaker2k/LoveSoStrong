@@ -23,6 +23,11 @@ Banner:
 Joined: Jan 1, 2023
 Birthday: Jan 1, 1995
 HashTags: 
+PinnedMessage: 0
+ExtraFields:
+--- Start ExtraFields Body ---
+
+--- End ExtraFields Body ---
 Bio:
 --- Start Bio Body ---
 Tech enthusiast and avid reader.
@@ -46,6 +51,11 @@ Banner:
 Joined: Feb 1, 2023
 Birthday: Feb 1, 1990
 HashTags: 
+PinnedMessage: 0
+ExtraFields:
+--- Start ExtraFields Body ---
+
+--- End ExtraFields Body ---
 Bio:
 --- Start Bio Body ---
 Loves discussing movies and books.
@@ -110,6 +120,7 @@ SubType: Post
 SubTitle: Favorite Tech Gadgets of 2024
 Tags: 
 Post: 1
+PinnedID: 1
 Nested: 0
 Message:
 --- Start Message Body ---
@@ -130,6 +141,7 @@ SubType: Reply
 SubTitle: Re: Favorite Tech Gadgets of 2024
 Tags: 
 Post: 2
+PinnedID: 2
 Nested: 1
 Message:
 --- Start Message Body ---
@@ -166,6 +178,11 @@ Banner:
 Joined: Mar 1, 2023
 Birthday: Mar 1, 1992
 HashTags: 
+PinnedMessage: 0
+ExtraFields:
+--- Start ExtraFields Body ---
+
+--- End ExtraFields Body ---
 Bio:
 --- Start Bio Body ---
 Movie buff and critic.
@@ -189,6 +206,11 @@ Banner:
 Joined: Apr 1, 2023
 Birthday: Apr 1, 1993
 HashTags: 
+PinnedMessage: 0
+ExtraFields:
+--- Start ExtraFields Body ---
+
+--- End ExtraFields Body ---
 Bio:
 --- Start Bio Body ---
 A lover of all things cinema.
@@ -241,6 +263,7 @@ EditAuthorID: 0
 SubType: Poll
 Tags: 
 Post: 1
+PinnedID: 1
 Nested: 0
 Message:
 --- Start Message Body ---
@@ -289,6 +312,11 @@ Banner:
 Joined: May 1, 2023
 Birthday: May 1, 1985
 HashTags: 
+PinnedMessage: 0
+ExtraFields:
+--- Start ExtraFields Body ---
+
+--- End ExtraFields Body ---
 Bio:
 --- Start Bio Body ---
 Avid reader and aspiring writer.
@@ -312,6 +340,11 @@ Banner:
 Joined: Jun 1, 2023
 Birthday: Jun 1, 1980
 HashTags: 
+PinnedMessage: 0
+ExtraFields:
+--- Start ExtraFields Body ---
+
+--- End ExtraFields Body ---
 Bio:
 --- Start Bio Body ---
 Loves fantasy novels and historical fiction.
@@ -376,6 +409,7 @@ SubType: Post
 SubTitle: Favorite Books of All Time
 Tags: 
 Post: 1
+PinnedID: 1
 Nested: 0
 Message:
 --- Start Message Body ---
@@ -396,6 +430,7 @@ SubType: Reply
 SubTitle: Re: Favorite Books of All Time
 Tags: 
 Post: 2
+PinnedID: 2
 Nested: 1
 Message:
 --- Start Message Body ---
@@ -426,6 +461,7 @@ SubType: Post
 SubTitle: Re: Favorite Books of All Time
 Tags: 
 Post: 1
+PinnedID: 3
 Nested: 0
 Message:
 --- Start Message Body ---
@@ -446,6 +482,7 @@ SubType: Reply
 SubTitle: Re: Favorite Books of All Time
 Tags: 
 Post: 2
+PinnedID: 4
 Nested: 1
 Message:
 --- Start Message Body ---

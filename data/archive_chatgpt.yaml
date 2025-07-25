@@ -42,6 +42,7 @@
       EditTime: ''
       Message: Hello, ChatGPT! How do I get started using your features?
       Nested: 0
+      PinnedID: 1
       Post: 1
       SubTitle: Getting Started with ChatGPT
       SubType: Post
@@ -58,6 +59,7 @@
         you'd like help with. I'm here to assist with information, answer questions,
         and provide guidance on various topics.
       Nested: 1
+      PinnedID: 2
       Post: 2
       SubTitle: 'Re: Getting Started with ChatGPT'
       SubType: Reply
@@ -85,6 +87,7 @@
       EditTime: ''
       Message: Can you tell me about the history of the Titanic?
       Nested: 0
+      PinnedID: 3
       Post: 1
       SubTitle: Asking About History
       SubType: Post
@@ -102,6 +105,7 @@
         its maiden voyage from Southampton to New York City. It was one of the deadliest
         commercial peacetime maritime disasters in modern history.
       Nested: 1
+      PinnedID: 4
       Post: 2
       SubTitle: 'Re: Asking About History'
       SubType: Reply
@@ -114,6 +118,7 @@
     post_ids:
     - 1
     - 2
+  PinnedMessage: 0
   Service: ChatGPT Interaction Log
   ServiceLocation: https://chatgpt.com/
   ServiceType: Interactive Chat
@@ -127,6 +132,7 @@
       Bio: I am ChatGPT, a large language model trained by OpenAI.
       Birthday: November 30, 2022
       Email: ''
+      ExtraFields: ''
       Handle: '@chatgpt'
       HashTags: ''
       Joined: November, 2022
@@ -141,6 +147,7 @@
       Bio: An enthusiastic user engaging with ChatGPT for various queries.
       Birthday: ''
       Email: ''
+      ExtraFields: ''
       Handle: '@user123'
       HashTags: ''
       Joined: August, 2024

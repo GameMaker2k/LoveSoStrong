@@ -2,6 +2,7 @@
   {
     "Users": {
       "1": {
+        "ExtraFields": "",
         "Bio": "I'm just a very cool dude! ^_^",
         "Signature": "",
         "Name": "Cool Dude 2k",
@@ -17,6 +18,7 @@
         "HashTags": ""
       },
       "2": {
+        "ExtraFields": "",
         "Bio": "Hello it's just me Kazuki. :P",
         "Signature": "",
         "Name": "Kazuki Suzuki",
@@ -44,6 +46,7 @@
             "SubTitle": "Hello, World!",
             "Tags": "",
             "Post": 1,
+            "PinnedID": 1,
             "Nested": 0,
             "Message": "Hello, World! ^_^"
           },
@@ -55,6 +58,7 @@
             "SubTitle": "Re: Hello, World!",
             "Tags": "",
             "Post": 2,
+            "PinnedID": 2,
             "Nested": 1,
             "Message": "Why did you say \"Hello, World!\" O_o"
           },
@@ -66,6 +70,7 @@
             "SubTitle": "Re: Hello, World!",
             "Tags": "",
             "Post": 3,
+            "PinnedID": 3,
             "Nested": 2,
             "Message": "I don't know.\nI thought it would be cool. ^_^"
           },
@@ -77,6 +82,7 @@
             "SubTitle": "Re: Hello, World!",
             "Tags": "",
             "Post": 4,
+            "PinnedID": 4,
             "Nested": 3,
             "Message": "What ever dude! <_<"
           }
@@ -139,6 +145,7 @@
     "ServiceType": "Message Board",
     "ServiceLocation": "https://gamemaker2k.org/board/",
     "TimeZone": "UTC",
+    "PinnedMessage": 0,
     "Status": [
       "Pinned",
       "Hot",

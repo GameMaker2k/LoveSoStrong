@@ -76,6 +76,7 @@
       EditTime: ''
       Message: Hello everyone! I'm excited to be part of this community.
       Nested: 0
+      PinnedID: 1
       Post: 1
       SubTitle: Welcome to the Community!
       SubType: Post
@@ -90,6 +91,7 @@
       EditTime: ''
       Message: Welcome, @johndoe! Looking forward to your contributions.
       Nested: 1
+      PinnedID: 2
       Post: 2
       SubTitle: 'Re: Welcome to the Community!'
       SubType: Reply
@@ -118,6 +120,7 @@
       Message: I wanted to gather some opinions on the new site features. What do
         you all think?
       Nested: 0
+      PinnedID: 3
       Post: 1
       SubTitle: What do you think about the new site features?
       SubType: Post
@@ -132,6 +135,7 @@
       EditTime: ''
       Message: I think the new features are great! They really improve the user experience.
       Nested: 1
+      PinnedID: 4
       Post: 2
       SubTitle: 'Re: What do you think about the new site features?'
       SubType: Reply
@@ -146,6 +150,7 @@
       EditTime: ''
       Message: Glad to hear that! Let's see what others think.
       Nested: 2
+      PinnedID: 5
       Post: 3
       SubTitle: 'Re: What do you think about the new site features?'
       SubType: Reply
@@ -160,6 +165,7 @@
       EditTime: ''
       Message: I've set up a poll to gather opinions. Please vote!
       Nested: 2
+      PinnedID: 6
       Polls:
       - Answers:
         - 'Yes'
@@ -189,6 +195,7 @@
     - 2
     - 3
     - 4
+  PinnedMessage: 0
   Service: Example Message Board
   ServiceLocation: https://gamemaker2k.org/example/
   ServiceType: Message Board
@@ -202,6 +209,7 @@
       Bio: Just an example user enjoying the discussions.
       Birthday: Jan 1, 1990
       Email: ''
+      ExtraFields: ''
       Handle: '@johndoe'
       HashTags: ''
       Joined: Jan 1, 2020
@@ -216,6 +224,7 @@
       Bio: I love giving feedback and helping improve the site.
       Birthday: Feb 1, 1992
       Email: ''
+      ExtraFields: ''
       Handle: '@janesmith'
       HashTags: ''
       Joined: Feb 1, 2020

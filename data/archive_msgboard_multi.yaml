@@ -44,6 +44,7 @@
       EditTime: ''
       Message: What are your favorite tech gadgets of 2024?
       Nested: 0
+      PinnedID: 1
       Post: 1
       SubTitle: Favorite Tech Gadgets of 2024
       SubType: Post
@@ -58,6 +59,7 @@
       EditTime: ''
       Message: I really like the new smartwatches. They're getting so advanced!
       Nested: 1
+      PinnedID: 2
       Post: 2
       SubTitle: 'Re: Favorite Tech Gadgets of 2024'
       SubType: Reply
@@ -70,6 +72,7 @@
     post_ids:
     - 1
     - 2
+  PinnedMessage: 0
   Service: Example Discussion Forum
   ServiceLocation: https://gamemaker2k.org/example/
   ServiceType: Message Board
@@ -83,6 +86,7 @@
       Bio: Tech enthusiast and avid reader.
       Birthday: Jan 1, 1995
       Email: ''
+      ExtraFields: ''
       Handle: '@alice_j'
       HashTags: ''
       Joined: Jan 1, 2023
@@ -97,6 +101,7 @@
       Bio: Loves discussing movies and books.
       Birthday: Feb 1, 1990
       Email: ''
+      ExtraFields: ''
       Handle: '@bob_s'
       HashTags: ''
       Joined: Feb 1, 2023
@@ -142,6 +147,7 @@
       EditTime: ''
       Message: Vote for the best movie of 2024!
       Nested: 0
+      PinnedID: 1
       Polls:
       - Answers:
         - Movie A
@@ -168,6 +174,7 @@
     Type: Poll
     post_ids:
     - 1
+  PinnedMessage: 0
   Service: Movie Review Forum
   ServiceLocation: https://gamemaker2k.org/movie/
   ServiceType: Message Board
@@ -181,6 +188,7 @@
       Bio: Movie buff and critic.
       Birthday: Mar 1, 1992
       Email: ''
+      ExtraFields: ''
       Handle: '@charlie_d'
       HashTags: ''
       Joined: Mar 1, 2023
@@ -195,6 +203,7 @@
       Bio: A lover of all things cinema.
       Birthday: Apr 1, 1993
       Email: ''
+      ExtraFields: ''
       Handle: '@dana_w'
       HashTags: ''
       Joined: Apr 1, 2023
@@ -249,6 +258,7 @@
       EditTime: ''
       Message: What are your all-time favorite books?
       Nested: 0
+      PinnedID: 1
       Post: 1
       SubTitle: Favorite Books of All Time
       SubType: Post
@@ -263,6 +273,7 @@
       EditTime: ''
       Message: I absolutely love "The Lord of the Rings" trilogy. It's a masterpiece!
       Nested: 1
+      PinnedID: 2
       Post: 2
       SubTitle: 'Re: Favorite Books of All Time'
       SubType: Reply
@@ -290,6 +301,7 @@
       EditTime: ''
       Message: What new fantasy books are you excited about this year?
       Nested: 0
+      PinnedID: 3
       Post: 1
       SubTitle: 'Re: Favorite Books of All Time'
       SubType: Post
@@ -305,6 +317,7 @@
       Message: I'm looking forward to the new book by Brandon Sanderson. It's supposed
         to be amazing!
       Nested: 1
+      PinnedID: 4
       Post: 2
       SubTitle: 'Re: Favorite Books of All Time'
       SubType: Reply
@@ -317,6 +330,7 @@
     post_ids:
     - 1
     - 2
+  PinnedMessage: 0
   Service: Literature Discussion Board
   ServiceLocation: https://gamemaker2k.org/literature/
   ServiceType: Message Board
@@ -330,6 +344,7 @@
       Bio: Avid reader and aspiring writer.
       Birthday: May 1, 1985
       Email: ''
+      ExtraFields: ''
       Handle: '@emily_c'
       HashTags: ''
       Joined: May 1, 2023
@@ -344,6 +359,7 @@
       Bio: Loves fantasy novels and historical fiction.
       Birthday: Jun 1, 1980
       Email: ''
+      ExtraFields: ''
       Handle: '@frank_m'
       HashTags: ''
       Joined: Jun 1, 2023

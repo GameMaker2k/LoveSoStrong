@@ -24,8 +24,8 @@ def open_text_file(filepath):
 __program_name__ = "PyTextArchive";
 __project__ = __program_name__;
 __project_url__ = "https://github.com/GameMaker2k/PyTextArchive";
-__version_info__ = (0, 2, 0, "RC 1", 1);
-__version_date_info__ = (2025, 7, 23, "RC 1", 1);
+__version_info__ = (0, 4, 0, "RC 1", 1);
+__version_date_info__ = (2025, 7, 25, "RC 1", 1);
 __version_date__ = str(__version_date_info__[0]) + "." + str(__version_date_info__[1]).zfill(2) + "." + str(__version_date_info__[2]).zfill(2);
 __revision__ = __version_info__[3];
 __revision_id__ = "$Id$";
@@ -105,6 +105,13 @@ def parse_txt_archive(filepath):
             user = {}
             current_section = None
             continue
+        elif line.startswith("--- Start ExtraFields Body ---"):
+            current_section = "user_extrafields"
+            user["ExtraFields"] = ""
+            continue
+        elif line.startswith("--- End ExtraFields Body ---"):
+            current_section = "user"
+            continue
         elif line.startswith("--- Start Bio Body ---"):
             current_section = "user_bio"
             user["Bio"] = ""
@@ -167,6 +174,8 @@ def parse_txt_archive(filepath):
             if ":" in line:
                 k, v = line.split(":", 1)
                 user[k.strip()] = v.strip()
+        elif current_section == "user_extrafields":
+            user["ExtraFields"] += line + "\n"
         elif current_section == "user_bio":
             user["Bio"] += line + "\n"
         elif current_section == "user_signature":
@@ -239,8 +248,11 @@ def write_service_to_txt(service, out_path):
         for uid, user in service.get("Users", {}).items():
             f.write("--- Start User Info ---\n")
             for k, v in user.items():
-                if k != "Bio" and k != "Signature":
+                if k != "Bio" and k != "Signature" and k != "ExtraFields":
                     f.write("{0}: {1}\n".format(k, v))
+            f.write("--- Start ExtraFields Body ---\n")
+            f.write(user.get("ExtraFields", "").strip() + "\n")
+            f.write("--- End ExtraFields Body ---\n")
             f.write("--- Start Bio Body ---\n")
             f.write(user.get("Bio", "").strip() + "\n")
             f.write("--- End Bio Body ---\n")
@@ -313,6 +325,11 @@ def services_to_string(services, line_ending='lf'):
                 output.append('Joined: {0}'.format(user.get('Joined', '')))
                 output.append('Birthday: {0}'.format(user.get('Birthday', '')))
                 output.append('HashTags: {0}'.format(user.get('HashTags', '')))
+                output.append('PinnedMessage: {0}'.format(user.get('PinnedMessage', '')))
+                output.append('ExtraFields:')
+                output.append('--- Start ExtraFields Body ---')
+                output.extend(user.get('ExtraFields', '').splitlines())
+                output.append('--- End ExtraFields Body ---')
                 output.append('Bio:')
                 output.append('--- Start Bio Body ---')
                 output.extend(user.get('Bio', '').splitlines())
@@ -381,6 +398,7 @@ def services_to_string(services, line_ending='lf'):
                     output.append('SubTitle: {0}'.format(msg.get('SubTitle', '')))
                     output.append('Tags: {0}'.format(msg.get('Tags', '')))
                     output.append('Post: {0}'.format(msg.get('Post', '0')))
+                    output.append('PinnedID: {0}'.format(msg.get('PinnedID', '0')))
                     output.append('Nested: {0}'.format(msg.get('Nested', '0')))
                     output.append('Message:')
                     output.append('--- Start Message Body ---')
@@ -412,6 +430,8 @@ def services_to_string(services, line_ending='lf'):
     text = '\n'.join(output)
     if line_ending.lower() == 'crlf':
         text = text.replace('\n', '\r\n')
+    if line_ending.lower() == 'cr':
+        text = text.replace('\n', '\r')
     return text
 
 def write_services_to_txt_file(services, out_path, line_ending='lf'):

@@ -97,6 +97,11 @@ Banner:
 Joined: Jan 1, 2020
 Birthday: Jan 1, 1990
 HashTags: 
+PinnedMessage: 0
+ExtraFields:
+--- Start ExtraFields Body ---
+
+--- End ExtraFields Body ---
 Bio:
 --- Start Bio Body ---
 Just an example user enjoying the discussions.
@@ -120,6 +125,11 @@ Banner:
 Joined: Feb 1, 2020
 Birthday: Feb 1, 1992
 HashTags: 
+PinnedMessage: 0
+ExtraFields:
+--- Start ExtraFields Body ---
+
+--- End ExtraFields Body ---
 Bio:
 --- Start Bio Body ---
 I love giving feedback and helping improve the site.
@@ -157,6 +167,7 @@ SubType: Post
 SubTitle: Welcome to the Community!
 Tags: 
 Post: 1
+PinnedID: 1
 Nested: 0
 Message:
 --- Start Message Body ---
@@ -177,6 +188,7 @@ SubType: Reply
 SubTitle: Re: Welcome to the Community!
 Tags: 
 Post: 2
+PinnedID: 2
 Nested: 1
 Message:
 --- Start Message Body ---
@@ -207,6 +219,7 @@ SubType: Post
 SubTitle: What do you think about the new site features?
 Tags: 
 Post: 1
+PinnedID: 3
 Nested: 0
 Message:
 --- Start Message Body ---
@@ -227,6 +240,7 @@ SubType: Reply
 SubTitle: Re: What do you think about the new site features?
 Tags: 
 Post: 2
+PinnedID: 4
 Nested: 1
 Message:
 --- Start Message Body ---
@@ -247,6 +261,7 @@ SubType: Reply
 SubTitle: Re: What do you think about the new site features?
 Tags: 
 Post: 3
+PinnedID: 5
 Nested: 2
 Message:
 --- Start Message Body ---
@@ -266,6 +281,7 @@ EditAuthorID: 0
 SubType: Poll
 Tags: 
 Post: 4
+PinnedID: 6
 Nested: 2
 Message:
 --- Start Message Body ---

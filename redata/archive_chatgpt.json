@@ -2,6 +2,7 @@
   {
     "Users": {
       "1": {
+        "ExtraFields": "",
         "Bio": "I am ChatGPT, a large language model trained by OpenAI.",
         "Signature": "",
         "Name": "ChatGPT",
@@ -17,6 +18,7 @@
         "HashTags": ""
       },
       "2": {
+        "ExtraFields": "",
         "Bio": "An enthusiastic user engaging with ChatGPT for various queries.",
         "Signature": "",
         "Name": "User",
@@ -44,6 +46,7 @@
             "SubTitle": "Getting Started with ChatGPT",
             "Tags": "",
             "Post": 1,
+            "PinnedID": 1,
             "Nested": 0,
             "Message": "Hello, ChatGPT! How do I get started using your features?"
           },
@@ -55,6 +58,7 @@
             "SubTitle": "Re: Getting Started with ChatGPT",
             "Tags": "",
             "Post": 2,
+            "PinnedID": 2,
             "Nested": 1,
             "Message": "Hello! To get started, simply ask me any question or describe a task you'd like help with. I'm here to assist with information, answer questions, and provide guidance on various topics."
           }
@@ -85,6 +89,7 @@
             "SubTitle": "Asking About History",
             "Tags": "",
             "Post": 1,
+            "PinnedID": 3,
             "Nested": 0,
             "Message": "Can you tell me about the history of the Titanic?"
           },
@@ -96,6 +101,7 @@
             "SubTitle": "Re: Asking About History",
             "Tags": "",
             "Post": 2,
+            "PinnedID": 4,
             "Nested": 1,
             "Message": "Certainly! The RMS Titanic was a British passenger liner that sank in the North Atlantic Ocean on April 15, 1912, after hitting an iceberg during its maiden voyage from Southampton to New York City. It was one of the deadliest commercial peacetime maritime disasters in modern history."
           }
@@ -156,6 +162,7 @@
     "ServiceType": "Interactive Chat",
     "ServiceLocation": "https://chatgpt.com/",
     "TimeZone": "UTC",
+    "PinnedMessage": 0,
     "Status": [
       ""
     ]

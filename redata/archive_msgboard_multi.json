@@ -2,6 +2,7 @@
   {
     "Users": {
       "1": {
+        "ExtraFields": "",
         "Bio": "Tech enthusiast and avid reader.",
         "Signature": "",
         "Name": "Alice Johnson",
@@ -17,6 +18,7 @@
         "HashTags": ""
       },
       "2": {
+        "ExtraFields": "",
         "Bio": "Loves discussing movies and books.",
         "Signature": "",
         "Name": "Bob Smith",
@@ -44,6 +46,7 @@
             "SubTitle": "Favorite Tech Gadgets of 2024",
             "Tags": "",
             "Post": 1,
+            "PinnedID": 1,
             "Nested": 0,
             "Message": "What are your favorite tech gadgets of 2024?"
           },
@@ -55,6 +58,7 @@
             "SubTitle": "Re: Favorite Tech Gadgets of 2024",
             "Tags": "",
             "Post": 2,
+            "PinnedID": 2,
             "Nested": 1,
             "Message": "I really like the new smartwatches. They're getting so advanced!"
           }
@@ -118,6 +122,7 @@
     "ServiceType": "Message Board",
     "ServiceLocation": "https://gamemaker2k.org/example/",
     "TimeZone": "UTC",
+    "PinnedMessage": 0,
     "Status": [
       "Active"
     ]
@@ -125,6 +130,7 @@
   {
     "Users": {
       "1": {
+        "ExtraFields": "",
         "Bio": "Movie buff and critic.",
         "Signature": "",
         "Name": "Charlie Doe",
@@ -140,6 +146,7 @@
         "HashTags": ""
       },
       "2": {
+        "ExtraFields": "",
         "Bio": "A lover of all things cinema.",
         "Signature": "",
         "Name": "Dana White",
@@ -167,6 +174,7 @@
             "SubTitle": "",
             "Tags": "",
             "Post": 1,
+            "PinnedID": 1,
             "Nested": 0,
             "Message": "Vote for the best movie of 2024!",
             "Polls": [
@@ -240,6 +248,7 @@
     "ServiceType": "Message Board",
     "ServiceLocation": "https://gamemaker2k.org/movie/",
     "TimeZone": "UTC",
+    "PinnedMessage": 0,
     "Status": [
       "Active"
     ]
@@ -247,6 +256,7 @@
   {
     "Users": {
       "1": {
+        "ExtraFields": "",
         "Bio": "Avid reader and aspiring writer.",
         "Signature": "",
         "Name": "Emily Clark",
@@ -262,6 +272,7 @@
         "HashTags": ""
       },
       "2": {
+        "ExtraFields": "",
         "Bio": "Loves fantasy novels and historical fiction.",
         "Signature": "",
         "Name": "Frank Miller",
@@ -289,6 +300,7 @@
             "SubTitle": "Favorite Books of All Time",
             "Tags": "",
             "Post": 1,
+            "PinnedID": 1,
             "Nested": 0,
             "Message": "What are your all-time favorite books?"
           },
@@ -300,6 +312,7 @@
             "SubTitle": "Re: Favorite Books of All Time",
             "Tags": "",
             "Post": 2,
+            "PinnedID": 2,
             "Nested": 1,
             "Message": "I absolutely love \"The Lord of the Rings\" trilogy. It's a masterpiece!"
           }
@@ -330,6 +343,7 @@
             "SubTitle": "Re: Favorite Books of All Time",
             "Tags": "",
             "Post": 1,
+            "PinnedID": 3,
             "Nested": 0,
             "Message": "What new fantasy books are you excited about this year?"
           },
@@ -341,6 +355,7 @@
             "SubTitle": "Re: Favorite Books of All Time",
             "Tags": "",
             "Post": 2,
+            "PinnedID": 4,
             "Nested": 1,
             "Message": "I'm looking forward to the new book by Brandon Sanderson. It's supposed to be amazing!"
           }
@@ -404,6 +419,7 @@
     "ServiceType": "Message Board",
     "ServiceLocation": "https://gamemaker2k.org/literature/",
     "TimeZone": "UTC",
+    "PinnedMessage": 0,
     "Status": [
       "Active"
     ]
