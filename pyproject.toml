@@ -1,6 +1,6 @@
 [project]
     name = "PyTextArchive"
-    version = "0.4.0"
+    version = "0.4.2"
     readme = "README.md"
     license = { text = "BSD-3-Clause" }
     keywords = []

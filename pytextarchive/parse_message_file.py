@@ -151,7 +151,7 @@ except NameError:
 __program_name__ = "PyTextArchive";
 __project__ = __program_name__;
 __project_url__ = "https://github.com/GameMaker2k/PyTextArchive";
-__version_info__ = (0, 4, 0, "RC 1", 1);
+__version_info__ = (0, 4, 2, "RC 1", 1);
 __version_date_info__ = (2025, 7, 25, "RC 1", 1);
 __version_date__ = str(__version_date_info__[0]) + "." + str(__version_date_info__[1]).zfill(2) + "." + str(__version_date_info__[2]).zfill(2);
 __revision__ = __version_info__[3];
@@ -2093,10 +2093,10 @@ def services_to_string(services, line_ending='lf'):
                     output.append('Author ID: {0}'.format(msg.get('AuthorID', '0')))
                     output.append('Time: {0}'.format(msg.get('Time', '')))
                     output.append('Date: {0}'.format(msg.get('Date', '')))
-                    output.append('Edit Time: {0}'.format(msg.get('EditTime', '')))
-                    output.append('Edit Date: {0}'.format(msg.get('EditDate', '')))
-                    output.append('Edit Author: {0}'.format(msg.get('EditAuthor', '')))
-                    output.append('Edit Author ID: {0}'.format(msg.get('EditAuthorID', '0')))
+                    output.append('EditTime: {0}'.format(msg.get('EditTime', '')))
+                    output.append('EditDate: {0}'.format(msg.get('EditDate', '')))
+                    output.append('EditAuthor: {0}'.format(msg.get('EditAuthor', '')))
+                    output.append('EditAuthorID: {0}'.format(msg.get('EditAuthorID', '0')))
                     output.append('SubType: {0}'.format(msg.get('SubType', '')))
                     output.append('SubTitle: {0}'.format(msg.get('SubTitle', '')))
                     output.append('Tags: {0}'.format(msg.get('Tags', '')))
