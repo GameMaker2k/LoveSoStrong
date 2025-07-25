@@ -542,6 +542,24 @@ function parse_lines(array $lines, bool $validate_only = false, bool $verbose = 
                     $current_message = null;
                     if ($verbose) echo "Line {$lineNumber}: {$line} (Ending message post)\n";
                     continue;
+				} elseif ($line === "--- Start Message Body ---") {
+					if ($current_message !== null) {
+						$current_message['Message'] = [];
+						$in_section['message_body'] = true;
+						if ($verbose) echo "Line {$lineNumber}: Starting message body\n";
+					}
+					continue;
+				} elseif ($line === "--- End Message Body ---") {
+					if ($current_message !== null && isset($current_message['Message'])) {
+						$current_message['Message'] = implode("\n", $current_message['Message']);
+						$in_section['message_body'] = false;
+						if ($verbose) echo "Line {$lineNumber}: Ending message body\n";
+					}
+					continue;
+				} elseif ($in_section['message_body'] && $current_message !== null && isset($current_message['Message'])) {
+					 $current_message['Message'][] = $line;
+					 if ($verbose) echo "Line {$lineNumber}: Adding to message body: {$line}\n";
+					 continue;
                 } elseif ($in_section['message_list'] && $key === "Interactions") {
                     $current_service['Interactions'] = array_map('trim', explode(",", $value));
                     if ($verbose) echo "Line {$lineNumber}: Interactions set to " . implode(', ', $current_service['Interactions']) . "\n";
