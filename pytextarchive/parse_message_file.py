@@ -1090,8 +1090,46 @@ def validate_services(services, schema):
             return False, "Service #{0}: {1}".format(idx, msg)
     return _ok()
 
-def validate_services_from_file(filename, schema):
-    services = parse_file(filename, False, False);
+def load_schema(schema_path):
+    """
+    Load a schema from JSON or YAML file, depending on extension.
+    Falls back to JSON if YAML not available.
+    """
+    ext = os.path.splitext(schema_path)[1].lower()
+    with open(schema_path, "r") as f:
+        data = f.read()
+
+    if ext in (".yaml", ".yml"):
+        if HAS_YAML:
+            return yaml.safe_load(data)
+        else:
+            raise ImportError("YAML schema provided, but PyYAML is not installed")
+    else:
+        # default to JSON
+        return json.loads(data)
+
+def validate_services_from_file(filename, schema_or_path):
+    """
+    Validate services in a text archive against a schema.
+    schema_or_path can be:
+        - a dict (already loaded schema)
+        - a path to JSON or YAML schema
+    """
+    # Load schema if it's a string path
+    if isinstance(schema_or_path, (str, bytes)):
+        try:
+            schema = load_schema(schema_or_path)
+        except Exception as e:
+            return False, "Failed to load schema: {0}".format(e)
+    else:
+        schema = schema_or_path
+
+    # Parse archive
+    try:
+        services = parse_file(filename, False, False)
+    except Exception as e:
+        return False, "Failed to parse file: {0}".format(e)
+
     return validate_services(services, schema)
 
 def open_compressed_file(filename):
