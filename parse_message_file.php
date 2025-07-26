@@ -78,6 +78,181 @@ function get_file_encoding_from_string(string $instring)
     return $encoding;
 }
 
+function validate_service_data($service, $schema) {
+    if (!is_array($service)) {
+        return array(false, "Service must be an array/dictionary");
+    }
+
+    if (!isset($schema['Service'])) {
+        return array(false, "Schema missing 'Service' root");
+    }
+    $sroot = $schema['Service'];
+
+    // Helper type tester
+    $is_type = function($value, $expected) {
+        switch ($expected) {
+            case "int":       return is_int($value);
+            case "string":    return is_string($value);
+            case "list":      return is_array($value); // we assume normal PHP arrays as lists
+            case "dict":      return is_array($value); // PHP arrays can be dicts as well
+            case "multiline": return is_string($value);
+            default:          return true; // unknown => accept or reject
+        }
+    };
+
+    $fail = function($msg) { return array(false, $msg); };
+    $ok   = function()     { return array(true, "OK"); };
+
+    // 1) Required keys
+    if (isset($sroot['required_keys']) && is_array($sroot['required_keys'])) {
+        foreach ($sroot['required_keys'] as $key) {
+            if (!array_key_exists($key, $service)) {
+                return $fail("Missing required key '$key' in service");
+            }
+        }
+    }
+
+    // 2) Type checks for top-level keys
+    $types = isset($sroot['types']) && is_array($sroot['types']) ? $sroot['types'] : array();
+    foreach ($service as $key => $value) {
+        if (isset($types[$key]) && !$is_type($value, $types[$key])) {
+            return $fail("Key '$key' should be a ".$types[$key]." but got ".gettype($value));
+        }
+    }
+
+    // 3) Categories
+    $categories = isset($service['Categories']) ? $service['Categories'] : array();
+    $category_ids_by_type = array();
+
+    $cat_schema = isset($sroot['sections']['Categories']) ? $sroot['sections']['Categories'] : array();
+    $cat_keys   = isset($cat_schema['keys'])  ? $cat_schema['keys']  : array();
+    $cat_types  = isset($cat_schema['types']) ? $cat_schema['types'] : array();
+
+    foreach ($categories as $cat) {
+        foreach ($cat_keys as $ck) {
+            if (!isset($cat[$ck])) {
+                return $fail("Category missing required key '$ck'");
+            }
+            if (isset($cat_types[$ck]) && !$is_type($cat[$ck], $cat_types[$ck])) {
+                return $fail("Category key '$ck' should be ".$cat_types[$ck]);
+            }
+        }
+
+        // your parser adds "Type" from the Kind field
+        $ctype = isset($cat['Type']) ? $cat['Type'] : '';
+        if ($ctype !== '') {
+            if (!isset($category_ids_by_type[$ctype])) {
+                $category_ids_by_type[$ctype] = array();
+            }
+            $category_ids_by_type[$ctype][$cat['ID']] = true;
+        }
+    }
+
+    // 4) Users
+    $users = isset($service['Users']) ? $service['Users'] : array();
+    foreach ($users as $uid => $uinfo) {
+        // PHP arrays have string keys possible; assume user IDs should be ints
+        if (!is_int($uid)) {
+            return $fail("User ID '$uid' is not an int");
+        }
+        if (!isset($uinfo['Name']) || !isset($uinfo['Handle'])) {
+            return $fail("User $uid missing Name or Handle");
+        }
+    }
+
+    // 5) MessageThreads
+    $threads = isset($service['MessageThreads']) ? $service['MessageThreads'] : array();
+    $mt_schema = isset($sroot['sections']['MessageThreads']) ? $sroot['sections']['MessageThreads'] : array();
+    $mt_types  = isset($mt_schema['types']) ? $mt_schema['types'] : array();
+
+    $mp_schema = isset($mt_schema['MessagePosts']) ? $mt_schema['MessagePosts'] : array();
+    $mp_types  = isset($mp_schema['types']) ? $mp_schema['types'] : array();
+    $mp_keys   = isset($mp_schema['keys']) ? $mp_schema['keys'] : array();
+
+    foreach ($threads as $tidx => $thread) {
+        if (!isset($thread['Thread']) || !is_int($thread['Thread'])) {
+            return $fail("Thread $tidx missing or invalid 'Thread' ID");
+        }
+
+        foreach ($thread as $k => $v) {
+            if (isset($mt_types[$k]) && !$is_type($v, $mt_types[$k])) {
+                return $fail("Thread ".$thread['Thread']." key '$k' should be ".$mt_types[$k]);
+            }
+        }
+
+        // Collect post IDs
+        $post_ids = array();
+        $messages = isset($thread['Messages']) ? $thread['Messages'] : array();
+
+        // minimal required per message
+        $mp_required = array();
+        foreach ($mp_keys as $k) {
+            if (in_array($k, array("Post", "Author", "Date", "Time"), true)) {
+                $mp_required[] = $k;
+            }
+        }
+
+        foreach ($messages as $msg) {
+            foreach ($mp_required as $rk) {
+                if (!isset($msg[$rk])) {
+                    return $fail("Thread ".$thread['Thread']." post missing required key '$rk'");
+                }
+            }
+            foreach ($msg as $mk => $mv) {
+                if (isset($mp_types[$mk]) && !$is_type($mv, $mp_types[$mk])) {
+                    $postid = isset($msg['Post']) ? $msg['Post'] : 'UNKNOWN';
+                    return $fail("Thread ".$thread['Thread']." Post $postid: key '$mk' should be ".$mp_types[$mk]);
+                }
+            }
+            if (isset($msg['Post']) && is_int($msg['Post'])) {
+                $post_ids[$msg['Post']] = true;
+            }
+        }
+
+        // Validate nested refs and author IDs
+        foreach ($messages as $msg) {
+            $postid = isset($msg['Post']) && is_int($msg['Post']) ? $msg['Post'] : 'UNKNOWN';
+
+            if (isset($msg['Nested']) && is_int($msg['Nested'])) {
+                if ($msg['Nested'] != 0 && !isset($post_ids[$msg['Nested']])) {
+                    return $fail("Thread ".$thread['Thread']." Post $postid: Nested references non-existent Post ".$msg['Nested']);
+                }
+            }
+            if (isset($msg['AuthorID']) && is_int($msg['AuthorID'])) {
+                if (!isset($users[$msg['AuthorID']])) {
+                    return $fail("Thread ".$thread['Thread']." Post $postid: AuthorID ".$msg['AuthorID']." not found in Users");
+                }
+            }
+            if (isset($msg['Polls']) && !is_array($msg['Polls'])) {
+                return $fail("Thread ".$thread['Thread']." Post $postid: 'Polls' must be a list");
+            }
+        }
+    }
+
+    // 6) Cross-check category InSub references
+    foreach ($categories as $cat) {
+        $ctype = isset($cat['Type']) ? $cat['Type'] : '';
+        $insub = isset($cat['InSub']) ? $cat['InSub'] : 0;
+        if ($ctype !== '' && $insub != 0) {
+            if (!isset($category_ids_by_type[$ctype][$insub])) {
+                return $fail("Category ID ".$cat['ID']." InSub=$insub not found among '".$ctype."' IDs");
+            }
+        }
+    }
+
+    return $ok();
+}
+
+function validate_service($service, $schema) {
+    return validate_service_data($service, $schema)
+}
+
+function validate_service_from_file(string $filename, $schema): void
+{
+    $services = parse_file($filename, false, false);
+    validate_service($services, $schema);
+}
+
 /**
  * Opens a file, transparently decompressing it based on its extension.
  * NOTE: This uses PHP's stream wrappers, which is very efficient.
