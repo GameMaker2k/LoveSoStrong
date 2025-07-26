@@ -243,14 +243,34 @@ function validate_service_data($service, $schema) {
     return $ok();
 }
 
-function validate_service($service, $schema) {
+function validate_services($service, $schema) {
     return validate_service_data($service, $schema)
 }
 
-function validate_service_from_file(string $filename, $schema): void
-{
-    $services = parse_file($filename, false, false);
-    validate_service($services, $schema);
+function validate_services_from_file($filename, $schema_or_path) {
+    // Load schema
+    if (is_string($schema_or_path) && file_exists($schema_or_path)) {
+        $schema_content = file_get_contents($schema_or_path);
+        $schema = json_decode($schema_content, true);
+        if ($schema === null) {
+            return array(false, "Failed to decode JSON schema: " . json_last_error_msg());
+        }
+    } else {
+        $schema = $schema_or_path; // assume it's already an array
+        if (!is_array($schema)) {
+            return array(false, "Schema is not an array");
+        }
+    }
+
+    // Parse the archive
+    try {
+        $services = parse_file($filename);
+    } catch (Exception $e) {
+        return array(false, "Failed to parse file: " . $e->getMessage());
+    }
+
+    // Validate all services
+    return validate_services($services, $schema);
 }
 
 /**
