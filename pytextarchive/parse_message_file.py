@@ -41,10 +41,18 @@ except ImportError:
     ftpssl = False
     from ftplib import FTP
 
+# Python 2/3 compatibility helpers
+PY2 = sys.version_info[0] == 2
 try:
-    basestring
-except NameError:
+    basestring  # py2
+except NameError:  # py3
     basestring = str
+try:
+    long  # py2
+except NameError:  # py3
+    long = int
+
+integer_types = (int, long)
 
 # URL Parsing
 try:
@@ -929,6 +937,162 @@ class LzopFile(object):
     def __exit__(self, exc_type, exc_value, traceback):
         self.close()
 
+def _is_type(value, expected):
+    """Return True if value matches the schema 'expected' type label."""
+    if expected == "int":
+        return isinstance(value, integer_types)
+    if expected == "string":
+        return isinstance(value, basestring)
+    if expected == "list":
+        return isinstance(value, list)
+    if expected == "dict":
+        return isinstance(value, dict)
+    if expected == "multiline":
+        # In your parsed structure multiline fields end up as strings
+        return isinstance(value, basestring)
+    # Unknown => accept (or return False to be stricter)
+    return True
+
+def _fail(msg):
+    return False, msg
+
+def _ok():
+    return True, "OK"
+
+def validate_service_data(service, schema):
+    """
+    Validate a single parsed 'service' dict against your JSON schema.
+    Returns (True, 'OK') or (False, 'error message').
+    """
+
+    # 0) Must be a dict
+    if not isinstance(service, dict):
+        return _fail("Service must be a dictionary")
+
+    sroot = schema.get("Service", {})
+
+    # 1) Required keys
+    for key in sroot.get("required_keys", []):
+        if key not in service:
+            return _fail("Missing required key '{0}' in service".format(key))
+
+    # 2) Type checks for top-level keys
+    for key, value in service.items():
+        expected_type = sroot.get("types", {}).get(key)
+        if expected_type and not _is_type(value, expected_type):
+            return _fail("Key '{0}' should be a {1} but got {2}".format(
+                key, expected_type, type(value).__name__))
+
+    # 3) Validate Categories
+    categories = service.get("Categories", [])
+    category_ids_by_type = {}
+    for cat in categories:
+        # keys and types
+        cat_keys = sroot.get("sections", {}).get("Categories", {}).get("keys", [])
+        cat_types = sroot.get("sections", {}).get("Categories", {}).get("types", {})
+        for ck in cat_keys:
+            if ck not in cat:
+                return _fail("Category missing required key '{0}'".format(ck))
+            et = cat_types.get(ck)
+            if et and not _is_type(cat[ck], et):
+                return _fail("Category key '{0}' should be {1}".format(ck, et))
+
+        # record ID sets by "Type"
+        kind = cat.get("Kind", "")
+        # You split that Kind at parse time into 'Type' and 'Level'. We can read them if present:
+        ctype = cat.get("Type", "")  # your parser adds it
+        if ctype:
+            category_ids_by_type.setdefault(ctype, set()).add(cat["ID"])
+
+    # 4) Users
+    users = service.get("Users", {})
+    for uid, u in users.items():
+        if not isinstance(uid, integer_types):
+            return _fail("User ID '{0}' is not an int".format(uid))
+        # Validate required user fields (Name, Handle) if you want:
+        if "Name" not in u or "Handle" not in u:
+            return _fail("User {0} missing Name or Handle".format(uid))
+
+    # 5) MessageThreads and Posts
+    threads = service.get("MessageThreads", [])
+    for t_index, thread in enumerate(threads):
+        # Thread id
+        if "Thread" not in thread or not isinstance(thread["Thread"], integer_types):
+            return _fail("Thread {0} missing or invalid 'Thread' ID".format(t_index))
+
+        # Validate thread fields types
+        ttypes = sroot.get("sections", {}).get("MessageThreads", {}).get("types", {})
+        for k, v in thread.items():
+            et = ttypes.get(k)
+            if et and not _is_type(v, et):
+                return _fail("Thread {0} key '{1}' should be {2}".format(
+                    thread["Thread"], k, et))
+
+        # Build a set of valid post IDs for nested checking
+        post_ids = set()
+        for msg in thread.get("Messages", []):
+            # Validate per-post keys & types
+            mp_schema = sroot.get("sections", {}).get("MessageThreads", {}).get("MessagePosts", {})
+            mp_types = mp_schema.get("types", {})
+            mp_required = [k for k in mp_schema.get("keys", []) if k in ("Post", "Author", "Date", "Time")]
+
+            for rk in mp_required:
+                if rk not in msg:
+                    return _fail("Thread {0} post missing required key '{1}'".format(thread["Thread"], rk))
+
+            for k, v in msg.items():
+                et = mp_types.get(k)
+                if et and not _is_type(v, et):
+                    return _fail("Thread {0} Post {1}: key '{2}' should be {3}".format(
+                        thread["Thread"],
+                        msg.get("Post", "UNKNOWN"),
+                        k, et))
+
+            # Track post id
+            if "Post" in msg and isinstance(msg["Post"], integer_types):
+                post_ids.add(msg["Post"])
+
+        # Now that we know post_ids, validate Nested references and AuthorIDs
+        for msg in thread.get("Messages", []):
+            # Nested
+            if "Nested" in msg and isinstance(msg["Nested"], integer_types):
+                if msg["Nested"] != 0 and msg["Nested"] not in post_ids:
+                    return _fail("Thread {0} Post {1}: Nested references non-existent Post {2}".format(
+                        thread["Thread"], msg.get("Post", "UNKNOWN"), msg["Nested"]))
+
+            # AuthorID must exist in Users (if provided)
+            if "AuthorID" in msg and isinstance(msg["AuthorID"], integer_types):
+                if msg["AuthorID"] not in users:
+                    return _fail("Thread {0} Post {1}: AuthorID {2} not found in Users".format(
+                        thread["Thread"], msg.get("Post", "UNKNOWN"), msg["AuthorID"]))
+
+            # Polls basic type check
+            if "Polls" in msg:
+                if not isinstance(msg["Polls"], list):
+                    return _fail("Thread {0} Post {1}: 'Polls' must be a list".format(
+                        thread["Thread"], msg.get("Post", "UNKNOWN")))
+
+    # 6) Cross-check category InSub references if you want:
+    for cat in categories:
+        ctype = cat.get("Type", "")
+        if ctype and cat.get("InSub", 0) != 0:
+            if cat["InSub"] not in category_ids_by_type.get(ctype, set()):
+                return _fail("Category ID {0} InSub={1} not found among '{2}' IDs".format(
+                    cat["ID"], cat["InSub"], ctype))
+
+    return _ok()
+
+def validate_services(services, schema):
+    """Validate a list of services."""
+    for idx, service in enumerate(services, 1):
+        ok, msg = validate_service_data(service, schema)
+        if not ok:
+            return False, "Service #{0}: {1}".format(idx, msg)
+    return _ok()
+
+def validate_services_from_file(filename, schema):
+    services = parse_file(filename, False, False);
+    return validate_services(services, schema)
 
 def open_compressed_file(filename):
     """ Open a file, trying various compression methods if available. """
