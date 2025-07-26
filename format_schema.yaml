@@ -1,0 +1,131 @@
+Service:
+  required_keys:
+  - Entry
+  - Service
+  - ServiceType
+  - TimeZone
+  optional_keys:
+  - ServiceLocation
+  - Info
+  - Status
+  - Interactions
+  - PinnedMessage
+  - Categorization
+  - Categories
+  - Users
+  - MessageThreads
+  types:
+    Entry: int
+    Service: string
+    ServiceType: string
+    ServiceLocation: string
+    TimeZone: string
+    Info: string
+    Status: list
+    Interactions: list
+    PinnedMessage: int
+    Categorization: dict
+    Categories: list
+    Users: dict
+    MessageThreads: list
+  sections:
+    Categories:
+      keys:
+      - Kind
+      - ID
+      - InSub
+      - Headline
+      - Description
+      types:
+        Kind: string
+        ID: int
+        InSub: int
+        Headline: string
+        Description: string
+    Users:
+      keys:
+      - User
+      - Name
+      - Handle
+      - Email
+      - Phone
+      - Location
+      - Website
+      - Avatar
+      - Banner
+      - Joined
+      - Birthday
+      - HashTags
+      - ExtraFields
+      - Bio
+      - Signature
+      types:
+        User: int
+        Name: string
+        Handle: string
+        Email: string
+        Phone: string
+        Location: string
+        Website: string
+        Avatar: string
+        Banner: string
+        Joined: string
+        Birthday: string
+        HashTags: string
+        ExtraFields: multiline
+        Bio: multiline
+        Signature: multiline
+    MessageThreads:
+      keys:
+      - Thread
+      - Category
+      - Forum
+      - Title
+      - Type
+      - State
+      - Keywords
+      - Messages
+      types:
+        Thread: int
+        Category: list
+        Forum: list
+        Title: string
+        Type: string
+        State: string
+        Keywords: string
+        Messages: list
+      MessagePosts:
+        keys:
+        - Post
+        - PinnedID
+        - Nested
+        - Author
+        - AuthorID
+        - Date
+        - Time
+        - EditDate
+        - EditTime
+        - EditAuthor
+        - EditAuthorID
+        - SubType
+        - SubTitle
+        - Tags
+        - Message
+        - Polls
+        types:
+          Post: int
+          PinnedID: int
+          Nested: int
+          Author: string
+          AuthorID: int
+          Date: string
+          Time: string
+          EditDate: string
+          EditTime: string
+          EditAuthor: string
+          EditAuthorID: int
+          SubType: string
+          SubTitle: string
+          Tags: string
+          Message: multiline
+          Polls: list

@@ -1,0 +1,58 @@
+<!ELEMENT Service (Entry, Service, ServiceType, TimeZone, ServiceLocation?, Info?, Status?, Interactions?, Categories*, Users*, MessageThreads*)>
+<!ELEMENT Entry (#PCDATA)>
+<!ELEMENT Service (#PCDATA)>
+<!ELEMENT ServiceType (#PCDATA)>
+<!ELEMENT ServiceLocation (#PCDATA)>
+<!ELEMENT TimeZone (#PCDATA)>
+<!ELEMENT Info (#PCDATA)>
+<!ELEMENT Status (#PCDATA)>
+<!ELEMENT Interactions (#PCDATA)>
+<!ELEMENT Categories (Kind, ID, InSub, Headline, Description)>
+<!ELEMENT Kind (#PCDATA)>
+<!ELEMENT ID (#PCDATA)>
+<!ELEMENT InSub (#PCDATA)>
+<!ELEMENT Headline (#PCDATA)>
+<!ELEMENT Description (#PCDATA)>
+<!ELEMENT Users (User*)>
+<!ELEMENT User (Name, Handle, Email?, Phone?, Location?, Website?, Avatar?, Banner?, Joined?, Birthday?, HashTags?, ExtraFields?, Bio?, Signature?)>
+<!ELEMENT Name (#PCDATA)>
+<!ELEMENT Handle (#PCDATA)>
+<!ELEMENT Email (#PCDATA)>
+<!ELEMENT Phone (#PCDATA)>
+<!ELEMENT Location (#PCDATA)>
+<!ELEMENT Website (#PCDATA)>
+<!ELEMENT Avatar (#PCDATA)>
+<!ELEMENT Banner (#PCDATA)>
+<!ELEMENT Joined (#PCDATA)>
+<!ELEMENT Birthday (#PCDATA)>
+<!ELEMENT HashTags (#PCDATA)>
+<!ELEMENT ExtraFields (#PCDATA)>
+<!ELEMENT Bio (#PCDATA)>
+<!ELEMENT Signature (#PCDATA)>
+<!ELEMENT MessageThreads (MessageThread*)>
+<!ELEMENT MessageThread (Thread, Category*, Forum*, Title?, Type?, State?, Keywords?, Messages*)>
+<!ELEMENT Thread (#PCDATA)>
+<!ELEMENT Category (#PCDATA)>
+<!ELEMENT Forum (#PCDATA)>
+<!ELEMENT Title (#PCDATA)>
+<!ELEMENT Type (#PCDATA)>
+<!ELEMENT State (#PCDATA)>
+<!ELEMENT Keywords (#PCDATA)>
+<!ELEMENT Messages (MessagePost*)>
+<!ELEMENT MessagePost (Post, PinnedID?, Nested?, Author, AuthorID, Date, Time, EditDate?, EditTime?, EditAuthor?, EditAuthorID?, SubType?, SubTitle?, Tags?, Message, Polls*)>
+<!ELEMENT Post (#PCDATA)>
+<!ELEMENT PinnedID (#PCDATA)>
+<!ELEMENT Nested (#PCDATA)>
+<!ELEMENT Author (#PCDATA)>
+<!ELEMENT AuthorID (#PCDATA)>
+<!ELEMENT Date (#PCDATA)>
+<!ELEMENT Time (#PCDATA)>
+<!ELEMENT EditDate (#PCDATA)>
+<!ELEMENT EditTime (#PCDATA)>
+<!ELEMENT EditAuthor (#PCDATA)>
+<!ELEMENT EditAuthorID (#PCDATA)>
+<!ELEMENT SubType (#PCDATA)>
+<!ELEMENT SubTitle (#PCDATA)>
+<!ELEMENT Tags (#PCDATA)>
+<!ELEMENT Message (#PCDATA)>
+<!ELEMENT Polls (#PCDATA)>
