@@ -159,7 +159,7 @@ except NameError:
 __program_name__ = "PyTextArchive";
 __project__ = __program_name__;
 __project_url__ = "https://github.com/GameMaker2k/PyTextArchive";
-__version_info__ = (0, 4, 6, "RC 1", 1);
+__version_info__ = (0, 4, 8, "RC 1", 1);
 __version_date_info__ = (2025, 7, 26, "RC 1", 1);
 __version_date__ = str(__version_date_info__[0]) + "." + str(__version_date_info__[1]).zfill(2) + "." + str(__version_date_info__[2]).zfill(2);
 __revision__ = __version_info__[3];
