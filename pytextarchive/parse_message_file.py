@@ -2077,6 +2077,10 @@ def to_json(services):
     """ Convert the services data structure to JSON """
     return json.dumps(services, indent=2, ensure_ascii=False)
 
+def to_json_from_file(filename):
+    services = parse_file(filename, False, False);
+    return to_json(services)
+
 def from_json(json_str):
     """ Convert a JSON string back to the services data structure """
     return json.loads(json_str)
@@ -2091,12 +2095,19 @@ def save_to_json_file(services, json_filename):
     json_data = json.dumps(services, indent=2, ensure_ascii=False)
     save_compressed_file(json_data, json_filename)
 
+def save_to_json_from_file(filename, outfile):
+    services = parse_file(filename, False, False);
+    return save_to_json(services, outfile)
 
 def to_yaml(data):
     """Convert data to a YAML string, if possible."""
     if not HAS_YAML:
         return False
     return yaml.safe_dump(data, default_flow_style=False, allow_unicode=True)
+
+def to_yaml_from_file(filename):
+    services = parse_file(filename, False, False);
+    return to_yaml(services)
 
 def from_yaml(yaml_str):
     """Convert a YAML string to a Python data structure."""
@@ -2119,10 +2130,17 @@ def save_to_yaml_file(data, filename):
     save_compressed_file(yaml_data + "\n", filename)
     return True
 
+def save_to_yaml_from_file(filename, outfile):
+    services = parse_file(filename, False, False);
+    return save_to_yaml(services, outfile)
 
 def to_marshal(services):
     """Convert the services data structure to a marshaled byte string"""
     return marshal.dumps(services)
+
+def to_marshal_from_file(filename):
+    services = parse_file(filename, False, False);
+    return to_marshal(services)
 
 def from_marshal(marshal_bytes):
     """Convert a marshaled byte string back to the services data structure"""
@@ -2138,10 +2156,17 @@ def save_to_marshal_file(services, marshal_filename):
     marshal_data = marshal.dumps(services)
     save_compressed_file(marshal_data, marshal_filename, mode='wb')
 
+def save_to_marshal_from_file(filename, outfile):
+    services = parse_file(filename, False, False);
+    return save_to_marshal(services, outfile)
 
 def to_pickle(services):
     """Convert the services data structure to a pickled byte string"""
     return pickle.dumps(services)
+
+def to_pickle_from_file(filename):
+    services = parse_file(filename, False, False);
+    return to_pickle(services)
 
 def from_pickle(pickle_bytes):
     """Convert a pickled byte string back to the services data structure"""
@@ -2157,10 +2182,17 @@ def save_to_pickle_file(services, pickle_filename):
     pickle_data = pickle.dumps(services)
     save_compressed_file(pickle_data, pickle_filename, mode='wb')
 
+def save_to_pickle_from_file(filename, outfile):
+    services = parse_file(filename, False, False);
+    return save_to_pickle(services, outfile)
 
 def to_array(data):
     """Convert data to a string (like a Python literal)."""
     return str(data)
+
+def to_array_from_file(filename):
+    services = parse_file(filename, False, False);
+    return to_array(services)
 
 def from_array(data_str):
     """Convert a string back to data (safe evaluation)."""
@@ -2176,6 +2208,9 @@ def save_to_array_file(data, array_filename):
     data_str = str(data)
     save_compressed_file(data_str + "\n", array_filename)
 
+def save_to_array_from_file(filename, outfile):
+    services = parse_file(filename, False, False);
+    return save_to_array(services, outfile)
 
 def services_to_string(services, line_ending='lf'):
     """
