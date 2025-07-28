@@ -1,19 +1,9 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
+from __future__ import print_function
 import os
 import cherrypy
-
-try:
-    from pytextarchive.parse_message_file import services_to_html_from_file, to_json_from_file
-except ImportError:
-    def services_to_html_from_file(filepath):
-        with open(filepath, "r") as f:
-            return "<pre>{}</pre>".format(f.read())
-    def to_json_from_file(filepath):
-        with open(filepath, "r") as f:
-            return f.read()
+import sys
+from pytextarchive.parse_message_file import services_to_html_from_file, to_json_from_file, to_yaml_from_file
 
 HTML_START = '''<!DOCTYPE html>
 <html lang="en">
@@ -44,9 +34,10 @@ class ArchiveBrowser(object):
         for f in sorted(files):
             base = f[:-4] if f.endswith(".txt") else f
             html_link = '<a href="/{}.html">{}</a>'.format(base, f)
-            txt_link = '<a href="/{}.txt">(source)</a>'.format(base)
+            txt_link = '<a href="/{}.txt">source</a>'.format(base)
             json_link = '<a href="/{}.json">json</a>'.format(base)
-            links.append('  <li>{} {} {}</li>'.format(html_link, txt_link, json_link))
+            yaml_link = '<a href="/{}.yaml">yaml</a>'.format(base)
+            links.append('  <li>{} | {} | {} | {}</li>'.format(html_link, txt_link, json_link, yaml_link))
 
         content = "<h1>Text Archives</h1>\n<ul>\n" + "\n".join(links) + "\n</ul>"
         return HTML_START + content + HTML_END
@@ -78,10 +69,18 @@ class ArchiveBrowser(object):
         elif ext == ".json":
             try:
                 cherrypy.response.headers['Content-Type'] = 'application/json'
-                return to_json_from_file(filepath).encode("utf-8")
+                return to_json_from_file(filepath).encode('utf-8')
             except Exception as e:
                 cherrypy.response.headers['Content-Type'] = 'text/html'
                 return HTML_START + "<h2>Error generating JSON: {}</h2>\n".format(e) + HTML_END
+
+        elif ext == ".yaml":
+            try:
+                cherrypy.response.headers['Content-Type'] = 'application/yaml'
+                return to_yaml_from_file(filepath).encode('utf-8')
+            except Exception as e:
+                cherrypy.response.headers['Content-Type'] = 'text/html'
+                return HTML_START + "<h2>Error generating YAML: {}</h2>\n".format(e) + HTML_END
 
         else:
             return HTML_START + "<h2>Unsupported file type</h2>\n" + HTML_END
