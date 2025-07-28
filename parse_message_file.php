@@ -1454,54 +1454,34 @@ function save_to_json_file(array $services, string $json_filename): void
     save_compressed_file($json_data, $json_filename);
 }
 
+<?php
+
 /**
  * Initialize an empty service structure.
  */
-function init_empty_service(
-    string $entry,
-    string $service_name,
-    string $service_type,
-    string $service_location,
-    string $time_zone = "UTC",
-    string $info = ''
-): array {
+function init_empty_service(int $entry, string $service_name, string $service_type, string $service_location, string $time_zone = "UTC", string $info = ''): array
+{
     return [
         'Entry' => $entry,
         'Service' => $service_name,
         'ServiceType' => $service_type,
         'ServiceLocation' => $service_location,
         'TimeZone' => $time_zone,
+        'Info' => $info,
         'Users' => [],
         'MessageThreads' => [],
         'Categories' => [],
         'Interactions' => [],
         'Categorization' => [],
-        'Info' => $info,
     ];
 }
 
 /**
- * Add a user to the service structure.
+ * Add a user to the service.
+ * Note: Corrected a bug from the original Python where 'Avatar' and 'Banner' were assigned the wrong variable.
  */
-function add_user(
-    array &$service, // Passed by reference
-    string $user_id,
-    string $name,
-    string $handle,
-    ?string $emailaddr,
-    ?string $phonenum,
-    ?string $location,
-    ?string $website,
-    ?string $avatar,
-    ?string $banner,
-    ?string $joined,
-    ?string $birthday,
-    array $hashtags,
-    ?string $pinnedmessage,
-    array $extrafields,
-    string $bio,
-    string $signature
-): void {
+function add_user(array &$service, int $user_id, string $name, string $handle, string $emailaddr, string $phonenum, string $location, string $website, string $avatar, string $banner, string $joined, string $birthday, string $hashtags, int $pinnedmessage, string $extrafields, string $bio, string $signature): void
+{
     $service['Users'][$user_id] = [
         'Name' => $name,
         'Handle' => $handle,
@@ -1517,33 +1497,24 @@ function add_user(
         'PinnedMessage' => $pinnedmessage,
         'ExtraFields' => $extrafields,
         'Bio' => $bio,
-        'Signature' => $signature
+        'Signature' => $signature,
     ];
 }
 
 /**
- * Add a category to the service structure.
+ * Add a category to the service.
  */
-function add_category(
-    array &$service, // Passed by reference
-    string $kind,
-    string $category_type,
-    string $category_level,
-    string $category_id,
-    string $insub,
-    string $headline,
-    string $description
-): void {
-    $category = [
+function add_category(array &$service, string $kind, string $category_type, string $category_level, int $category_id, int $insub, string $headline, string $description): void
+{
+    $service['Categories'][] = [
         'Kind' => "{$kind}, {$category_level}",
         'Type' => $category_type,
         'Level' => $category_level,
         'ID' => $category_id,
         'InSub' => $insub,
         'Headline' => $headline,
-        'Description' => $description
+        'Description' => $description,
     ];
-    $service['Categories'][] = $category; // Append to array
 
     if (!isset($service['Categorization'][$category_type])) {
         $service['Categorization'][$category_type] = [];
@@ -1551,16 +1522,17 @@ function add_category(
     if (!in_array($category_level, $service['Categorization'][$category_type])) {
         $service['Categorization'][$category_type][] = $category_level;
     }
-    if ($insub != '0') {
-        $found = false;
+
+    if ($insub !== 0) {
+        $id_exists = false;
         foreach ($service['Categories'] as $cat) {
-            if ($cat['ID'] == $insub) {
-                $found = true;
+            if ($cat['ID'] === $insub) {
+                $id_exists = true;
                 break;
             }
         }
-        if (!$found) {
-            throw new \ValueError("InSub value '{$insub}' does not match any existing ID in service.");
+        if (!$id_exists) {
+            throw new InvalidArgumentException("InSub value '{$insub}' does not match any existing ID in service.");
         }
     }
 }
@@ -1568,53 +1540,29 @@ function add_category(
 /**
  * Add a message thread to the service.
  */
-function add_message_thread(
-    array &$service, // Passed by reference
-    string $thread_id,
-    string $title,
-    ?string $category,
-    ?string $forum,
-    string $thread_type,
-    string $thread_state,
-    string $thread_keywords
-): void {
-    $thread = [
+function add_message_thread(array &$service, int $thread_id, string $title, string $category, string $forum, string $thread_type, string $thread_state, string $thread_keywords): void
+{
+    $service['MessageThreads'][] = [
         'Thread' => $thread_id,
         'Title' => $title,
-        'Category' => $category ? explode(',', $category) : [],
-        'Forum' => $forum ? explode(',', $forum) : [],
+        'Category' => !empty($category) ? explode(',', $category) : [],
+        'Forum' => !empty($forum) ? explode(',', $forum) : [],
         'Type' => $thread_type,
         'State' => $thread_state,
         'Keywords' => $thread_keywords,
-        'Messages' => []
+        'Messages' => [],
     ];
-    $service['MessageThreads'][] = $thread; // Append to array
 }
 
 /**
- * Add a message post to a thread.
+ * Add a message post to a specific thread.
+ * Note: The original Python code had an undefined 'subtitle' variable, which has been omitted.
  */
-function add_message_post(
-    array &$service, // Passed by reference
-    string $thread_id,
-    string $author,
-    string $authorid,
-    string $time,
-    string $date,
-    ?string $edittime,
-    ?string $editdate,
-    ?string $editauthor,
-    ?string $editauthorid,
-    string $subtype,
-    array $tags,
-    string $post_id,
-    ?string $pinned_id,
-    string $nested,
-    string $message
-): void {
-    foreach ($service['MessageThreads'] as &$thread) { // Note the & to modify the thread
+function add_message_post(array &$service, int $thread_id, string $author, int $authorid, string $time, string $date, string $edittime, string $editdate, string $editauthor, int $editauthorid, string $subtype, string $tags, int $post_id, int $pinned_id, int $nested, string $message): void
+{
+    foreach ($service['MessageThreads'] as &$thread) {
         if ($thread['Thread'] === $thread_id) {
-            $new_post = [
+            $thread['Messages'][] = [
                 'Author' => $author,
                 'AuthorID' => $authorid,
                 'Time' => $time,
@@ -1628,90 +1576,170 @@ function add_message_post(
                 'Post' => $post_id,
                 'PinnedID' => $pinned_id,
                 'Nested' => $nested,
-                'Message' => $message
+                'Message' => $message,
             ];
-            $thread['Messages'][] = $new_post;
-            return;
+            return; // Exit after adding the post
         }
     }
-    throw new \ValueError("Thread ID {$thread_id} not found in service.");
+    throw new InvalidArgumentException("Thread ID {$thread_id} not found in service.");
 }
+
+/**
+ * Add a poll to a specific message post.
+ */
+function add_poll(array &$service, int $thread_id, int $post_id, int $poll_num, string $question, array $answers, array $results, array $percentages, int $votes): void
+{
+    foreach ($service['MessageThreads'] as &$thread) {
+        if ($thread['Thread'] === $thread_id) {
+            foreach ($thread['Messages'] as &$message) {
+                if ($message['Post'] === $post_id) {
+                    if (!isset($message['Polls'])) {
+                        $message['Polls'] = [];
+                    }
+                    $message['Polls'][] = [
+                        'Num' => $poll_num,
+                        'Question' => $question,
+                        'Answers' => $answers,
+                        'Results' => $results,
+                        'Percentage' => $percentages,
+                        'Votes' => $votes,
+                    ];
+                    return; // Exit after adding the poll
+                }
+            }
+            throw new InvalidArgumentException("Post ID {$post_id} not found in thread {$thread_id}.");
+        }
+    }
+    throw new InvalidArgumentException("Thread ID {$thread_id} not found in service.");
+}
+
+/**
+ * Add a new service to the list of services.
+ */
+function add_service(array &$services, int $entry, string $service_name, string $service_type, string $service_location, string $time_zone = "UTC", ?string $info = null): array
+{
+    $new_service = [
+        'Entry' => $entry,
+        'Service' => $service_name,
+        'ServiceType' => $service_type,
+        'ServiceLocation' => $service_location,
+        'TimeZone' => $time_zone,
+        'Info' => $info ?? '',
+        'Interactions' => [],
+        'Status' => [],
+        'Categorization' => ['Categories' => [], 'Forums' => []],
+        'Categories' => [],
+        'Users' => [],
+        'MessageThreads' => [],
+    ];
+    $services[] = $new_service;
+    return $new_service; // Return the newly created service
+}
+
+<?php
 
 /**
  * Remove a user from the service.
  */
-function remove_user(array &$service, string $user_id): void
+function remove_user(array &$service, int $user_id): void
 {
     if (isset($service['Users'][$user_id])) {
         unset($service['Users'][$user_id]);
     } else {
-        throw new \ValueError("User ID {$user_id} not found in service.");
+        throw new InvalidArgumentException("User ID {$user_id} not found in service.");
     }
 }
 
 /**
  * Remove a category from the service.
  */
-function remove_category(array &$service, string $category_id): void
+function remove_category(array &$service, int $category_id): void
 {
-    $index_to_remove = -1;
-    foreach ($service['Categories'] as $index => $category) {
+    $key_to_remove = null;
+    foreach ($service['Categories'] as $key => $category) {
         if ($category['ID'] === $category_id) {
-            $index_to_remove = $index;
+            $key_to_remove = $key;
             break;
         }
     }
 
-    if ($index_to_remove !== -1) {
-        array_splice($service['Categories'], $index_to_remove, 1);
+    if ($key_to_remove !== null) {
+        unset($service['Categories'][$key_to_remove]);
+        // Optional: Re-index the array to prevent gaps
+        $service['Categories'] = array_values($service['Categories']);
     } else {
-        throw new \ValueError("Category ID {$category_id} not found in service.");
+        throw new InvalidArgumentException("Category ID {$category_id} not found in service.");
     }
 }
 
 /**
  * Remove a message thread from the service.
  */
-function remove_message_thread(array &$service, string $thread_id): void
+function remove_message_thread(array &$service, int $thread_id): void
 {
-    $index_to_remove = -1;
-    foreach ($service['MessageThreads'] as $index => $thread) {
+    $key_to_remove = null;
+    foreach ($service['MessageThreads'] as $key => $thread) {
         if ($thread['Thread'] === $thread_id) {
-            $index_to_remove = $index;
+            $key_to_remove = $key;
             break;
         }
     }
 
-    if ($index_to_remove !== -1) {
-        array_splice($service['MessageThreads'], $index_to_remove, 1);
+    if ($key_to_remove !== null) {
+        unset($service['MessageThreads'][$key_to_remove]);
+        $service['MessageThreads'] = array_values($service['MessageThreads']);
     } else {
-        throw new \ValueError("Thread ID {$thread_id} not found in service.");
+        throw new InvalidArgumentException("Thread ID {$thread_id} not found in service.");
     }
 }
 
 /**
- * Remove a message post from a thread.
+ * Remove a message post from a specific thread.
  */
-function remove_message_post(array &$service, string $thread_id, string $post_id): void
+function remove_message_post(array &$service, int $thread_id, int $post_id): void
 {
     foreach ($service['MessageThreads'] as &$thread) {
         if ($thread['Thread'] === $thread_id) {
-            $index_to_remove = -1;
-            foreach ($thread['Messages'] as $index => $message) {
+            $key_to_remove = null;
+            foreach ($thread['Messages'] as $key => $message) {
                 if ($message['Post'] === $post_id) {
-                    $index_to_remove = $index;
+                    $key_to_remove = $key;
                     break;
                 }
             }
-            if ($index_to_remove !== -1) {
-                array_splice($thread['Messages'], $index_to_remove, 1);
-                return;
+
+            if ($key_to_remove !== null) {
+                unset($thread['Messages'][$key_to_remove]);
+                $thread['Messages'] = array_values($thread['Messages']);
+                return; // Exit after removing
             } else {
-                throw new \ValueError("Post ID {$post_id} not found in thread {$thread_id}.");
+                throw new InvalidArgumentException("Post ID {$post_id} not found in thread {$thread_id}.");
             }
         }
     }
-    throw new \ValueError("Thread ID {$thread_id} not found in service.");
+    throw new InvalidArgumentException("Thread ID {$thread_id} not found in service.");
+}
+
+
+/**
+ * Remove a service from the list of services.
+ */
+function remove_service(array &$services, int $entry): void
+{
+    $key_to_remove = null;
+    foreach ($services as $key => $service) {
+        if ($service['Entry'] === $entry) {
+            $key_to_remove = $key;
+            break;
+        }
+    }
+
+    if ($key_to_remove !== null) {
+        unset($services[$key_to_remove]);
+        $services = array_values($services);
+    } else {
+        throw new InvalidArgumentException("Service entry {$entry} not found.");
+    }
 }
 
 ?>
