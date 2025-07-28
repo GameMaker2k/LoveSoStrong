@@ -1636,8 +1636,6 @@ function add_service(array &$services, int $entry, string $service_name, string 
     return $new_service; // Return the newly created service
 }
 
-<?php
-
 /**
  * Remove a user from the service.
  */
