@@ -21,22 +21,22 @@ def open_text_file(filepath):
     else:
         return io.open(filepath, 'r', encoding='utf-8')
 
-__program_name__ = "PyTextArchive";
-__project__ = __program_name__;
-__project_url__ = "https://github.com/GameMaker2k/PyTextArchive";
-__version_info__ = (0, 4, 8, "RC 1", 1);
-__version_date_info__ = (2025, 7, 26, "RC 1", 1);
-__version_date__ = str(__version_date_info__[0]) + "." + str(__version_date_info__[1]).zfill(2) + "." + str(__version_date_info__[2]).zfill(2);
-__revision__ = __version_info__[3];
-__revision_id__ = "$Id$";
+__program_name__ = "PyTextArchive"
+__project__ = __program_name__
+__project_url__ = "https://github.com/GameMaker2k/PyTextArchive"
+__version_info__ = (0, 4, 10, "RC 1", 1)
+__version_date_info__ = (2025, 7, 26, "RC 1", 1)
+__version_date__ = str(__version_date_info__[0]) + "." + str(__version_date_info__[1]).zfill(2) + "." + str(__version_date_info__[2]).zfill(2)
+__revision__ = __version_info__[3]
+__revision_id__ = "$Id$"
 if(__version_info__[4] is not None):
- __version_date_plusrc__ = __version_date__ + "-" + str(__version_date_info__[4]);
+ __version_date_plusrc__ = __version_date__ + "-" + str(__version_date_info__[4])
 if(__version_info__[4] is None):
- __version_date_plusrc__ = __version_date__;
+ __version_date_plusrc__ = __version_date__
 if(__version_info__[3] is not None):
- __version__ = str(__version_info__[0]) + "." + str(__version_info__[1]) + "." + str(__version_info__[2]) + " " + str(__version_info__[3]);
+ __version__ = str(__version_info__[0]) + "." + str(__version_info__[1]) + "." + str(__version_info__[2]) + " " + str(__version_info__[3])
 if(__version_info__[3] is None):
- __version__ = str(__version_info__[0]) + "." + str(__version_info__[1]) + "." + str(__version_info__[2]);
+ __version__ = str(__version_info__[0]) + "." + str(__version_info__[1]) + "." + str(__version_info__[2])
 
 # API: Service constructor and add helpers
 
